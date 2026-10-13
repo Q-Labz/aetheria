@@ -1,0 +1,7 @@
+---,FromNode,ToNode,BaseCost
+ArchWake_LanternDrift,ArchWake,LanternDrift,35.0
+LanternDrift_ArchWake,LanternDrift,ArchWake,35.0
+LanternDrift_EmberRelay,LanternDrift,EmberRelay,30.0
+EmberRelay_LanternDrift,EmberRelay,LanternDrift,30.0
+ArchWake_EmberRelay,ArchWake,EmberRelay,80.0
+EmberRelay_ArchWake,EmberRelay,ArchWake,80.0
