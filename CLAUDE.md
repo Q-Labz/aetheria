@@ -17,7 +17,8 @@ source of truth for every asset; this file is the order of work.
 
 ## Build order (each phase ends with its check)
 1. **Foundation** — folders; materials M_Emissive, M_Crystal, M_Hostile; import `Source_Art/Meshes/*.fbx`
-   to /Game/Aetheria/Meshes (Uniform Scale 0.01, Nanite on, no collision).
+   to /Game/Aetheria/Meshes and `Source_Art/Environments/*.fbx` to /Game/Aetheria/Environments
+   (Uniform Scale 0.01, Nanite on, no collision).
    Check: SM_CrystalDreadnought bounds ≈ 1,020 uu long.
 2. **Data** — enums E_Background, E_Speaker, E_Faction, E_Encounter; structs S_StarNode, S_LeapRoute,
    S_Line, S_Sequence, S_Counsel, S_CouncilOption; DT_StarNodes and DT_LeapRoutes from `BuildData/*.csv`;

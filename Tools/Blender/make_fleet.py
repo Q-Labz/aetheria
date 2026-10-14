@@ -10,60 +10,17 @@ import math
 import os
 import sys
 
-import bpy
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from aetheria_mesh import mat, part, reset, spike  # noqa: E402
+import aetheria_mesh  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
 OUT = os.path.abspath(args[0] if args else "Meshes")
 os.makedirs(OUT, exist_ok=True)
 
 
-def reset():
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-
-
-def mat(name, rgb, strength):
-    m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
-    m.use_nodes = True
-    bsdf = m.node_tree.nodes["Principled BSDF"]
-    bsdf.inputs["Base Color"].default_value = (*rgb, 1)
-    bsdf.inputs["Emission Color"].default_value = (*rgb, 1)
-    bsdf.inputs["Emission Strength"].default_value = strength
-    bsdf.inputs["Roughness"].default_value = 0.15
-    return m
-
-
-def part(op, name, loc, scale, rot=(0, 0, 0), material=None, **kw):
-    getattr(bpy.ops.mesh, op)(location=loc, rotation=[math.radians(r) for r in rot], **kw)
-    o = bpy.context.active_object
-    o.name, o.scale = name, scale
-    o.data.materials.append(material)
-    return o
-
-
-def spike(name, loc, radius_yz, half_len, material, verts=6, z_squash=1.0):
-    """Cone lying along +X (tip forward)."""
-    return part("primitive_cone_add", name, loc, (radius_yz * z_squash, radius_yz, half_len),
-                (0, 90, 0), material, vertices=verts, radius1=1, radius2=0, depth=2)
-
-
 def finish_and_export(name, parts, bevel=1.0):
-    bpy.ops.object.select_all(action="DESELECT")
-    for p in parts:
-        p.select_set(True)
-    bpy.context.view_layer.objects.active = parts[0]
-    bpy.ops.object.join()
-    bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
-    o = bpy.context.active_object
-    o.name = o.data.name = name
-    b = o.modifiers.new("Bevel", "BEVEL")
-    b.width, b.segments, b.limit_method = bevel, 1, "ANGLE"
-    bpy.ops.object.shade_flat()
-    path = os.path.join(OUT, f"{name}.fbx")
-    bpy.ops.export_scene.fbx(filepath=path, use_selection=True,
-                             apply_scale_options="FBX_SCALE_UNITS", use_mesh_modifiers=True,
-                             mesh_smooth_type="FACE", add_leaf_bones=False, bake_anim=False)
-    dims = tuple(round(d, 1) for d in o.dimensions)
-    print(f"[aetheria] {name}: {len(o.data.polygons)} faces, dims(m)={dims} -> {path}")
+    aetheria_mesh.finish_and_export(name, parts, OUT, bevel)
 
 
 def crystal_dreadnought():
@@ -229,6 +186,89 @@ def boarding_pod():
     finish_and_export("SM_BoardingPod", parts, bevel=0.2)
 
 
+def severant_choir_skiff():
+    """Fast Severant escort; the forward prongs are its Silence choir array."""
+    reset()
+    ash = mat("M_SeverantAsh", (0.55, 0.55, 0.60), 0.2)
+    silence = mat("M_SilenceGlow", (0.30, 0.50, 1.00), 7.0)
+    parts = [
+        spike("Hull", (0, 0, 0), 7, 30, ash, verts=6, z_squash=0.5),
+        spike("ProngL", (22, -6, 0), 1.5, 14, ash, verts=4),
+        spike("ProngR", (22, 6, 0), 1.5, 14, ash, verts=4),
+        part("primitive_ico_sphere_add", "ChoirCore", (8, 0, 2), (3, 3, 3), material=silence,
+             subdivisions=1, radius=1),
+        spike("FinV", (-14, 0, 6), 3, 12, ash, verts=4, z_squash=0.3),
+        part("primitive_cylinder_add", "Drive", (-31, 0, 0), (3, 3, 1.5), (0, 90, 0), silence,
+             vertices=6, radius=1, depth=2),
+    ]
+    finish_and_export("SM_SeverantChoirSkiff", parts, bevel=0.2)
+
+
+def silence_emitter_frigate():
+    """Severant frigate carrying a Silence emitter ring; its pulse interrupts the Prismatic Beam."""
+    reset()
+    ash = mat("M_SeverantAsh", (0.55, 0.55, 0.60), 0.2)
+    silence = mat("M_SilenceGlow", (0.30, 0.50, 1.00), 7.0)
+    parts = [
+        spike("Hull", (0, 0, 0), 16, 90, ash, verts=6, z_squash=0.55),
+        part("primitive_cube_add", "Keel", (-20, 0, -8), (55, 8, 4), material=ash, size=2),
+        part("primitive_torus_add", "EmitterRing", (-15, 0, 30), (26, 26, 26), (90, 0, 90), silence,
+             major_radius=1, minor_radius=0.08, major_segments=16, minor_segments=4),
+        part("primitive_cylinder_add", "Mast", (-15, 0, 14), (2, 2, 9), material=ash,
+             vertices=6, radius=1, depth=2),
+        part("primitive_ico_sphere_add", "EmitterCore", (-15, 0, 30), (6, 6, 6), material=silence,
+             subdivisions=1, radius=1),
+        part("primitive_cylinder_add", "Drive", (-92, 0, 0), (8, 8, 3), (0, 90, 0), silence,
+             vertices=6, radius=1, depth=2),
+    ]
+    finish_and_export("SM_SilenceEmitterFrigate", parts, bevel=0.4)
+
+
+def the_last_silence():
+    """Exarch Sol Ithane's flagship: an ash-glass cathedral hull crowned with Silence spires."""
+    reset()
+    ash = mat("M_SeverantAsh", (0.55, 0.55, 0.60), 0.2)
+    glass = mat("M_AshGlass", (0.70, 0.75, 0.85), 1.5)
+    silence = mat("M_SilenceGlow", (0.30, 0.50, 1.00), 7.0)
+    parts = [
+        spike("Nave", (0, 0, 0), 60, 400, ash, verts=8, z_squash=0.45),
+        part("primitive_cube_add", "Transept", (-120, 0, 0), (40, 130, 16), material=ash, size=2),
+        part("primitive_torus_add", "BowHalo", (300, 0, 0), (55, 55, 55), (0, 90, 0), silence,
+             major_radius=1, minor_radius=0.07, major_segments=16, minor_segments=4),
+    ]
+    for i, x in enumerate((-260, -190, -120, -50, 20, 90)):
+        height = 70 - abs(i - 2.5) * 10
+        parts.append(part("primitive_cone_add", f"Spire{i}", (x, 0, 25 + height / 2),
+                          (9, 9, height / 2), material=glass, vertices=4, radius1=1, radius2=0, depth=2))
+    for side in (-1, 1):
+        parts.append(spike(f"Buttress{side}", (-60, side * 75, -6), 10, 160, ash, verts=4, z_squash=0.4))
+    parts.append(part("primitive_cylinder_add", "Drive", (-410, 0, 0), (34, 34, 10), (0, 90, 0), silence,
+                      vertices=8, radius=1, depth=2))
+    finish_and_export("SM_TheLastSilence", parts, bevel=1.2)
+
+
+def kesh_refuge_tender():
+    """Warden Kesh's damaged refuge tender: a habitat hull ringed with medical modules."""
+    reset()
+    hull = mat("M_RefugeHull", (0.62, 0.58, 0.50), 0.1)
+    ward = mat("M_RefugeLight", (1.00, 0.85, 0.55), 5.0)
+    silence = mat("M_SilenceGlow", (0.30, 0.50, 1.00), 7.0)
+    parts = [
+        part("primitive_uv_sphere_add", "Habitat", (0, 0, 0), (90, 40, 30), material=hull,
+             segments=12, ring_count=8, radius=1),
+        part("primitive_torus_add", "WardRing", (10, 0, 0), (48, 48, 48), (0, 90, 0), ward,
+             major_radius=1, minor_radius=0.1, major_segments=14, minor_segments=4),
+        spike("Prow", (95, 0, 0), 14, 20, hull, verts=6),
+        part("primitive_cylinder_add", "Drive", (-95, 0, 0), (14, 14, 6), (0, 90, 0), silence,
+             vertices=8, radius=1, depth=2),
+    ]
+    for i, angle in enumerate((40, 140, 220, 320)):
+        a = math.radians(angle)
+        parts.append(part("primitive_cube_add", f"MedModule{i}", (-30, 46 * math.cos(a), 34 * math.sin(a)),
+                          (22, 7, 7), material=hull, size=2))
+    finish_and_export("SM_KeshRefugeTender", parts, bevel=0.5)
+
+
 if __name__ == "__main__":
     # Aetheria Fleet (214): 1 Dreadnought, 1 Wayward, 200 Phantom cruisers/carriers, 12 Corsair gunships.
     crystal_dreadnought()
@@ -240,3 +280,8 @@ if __name__ == "__main__":
     # Commander Vance's Iron Tithe.
     tithe_interceptor()
     tithe_cruiser()
+    # Act VII: the Severants and Warden Kesh.
+    severant_choir_skiff()
+    silence_emitter_frigate()
+    the_last_silence()
+    kesh_refuge_tender()

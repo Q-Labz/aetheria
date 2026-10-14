@@ -23,6 +23,11 @@ question → visible consequence → end-of-slice summary.
   Nanite ON, no collision. Assign `M_Crystal` to Dreadnought/Wayward/Phantom slots, `M_Hostile` to Tithe slots.
   Slice uses SM_CrystalDreadnought, SM_PhantomCruiser, SM_CorsairGunship, SM_TitheCruiser, SM_TitheInterceptor;
   SM_Wayward, SM_PhantomCarrier and SM_BoardingPod are ready for roadmap work.
+- Set pieces: import `Source_Art/Environments/*.fbx` to `/Game/Aetheria/Environments` the same way.
+  Dress the maps with them (all optional for the slice's checks):
+  - `L_Command` backdrop: SM_OmegaArch behind the star chart, SM_ArchDebris_A/B drifting nearby.
+  - `L_Combat_LanternDrift`: 4–6 SM_LanternCluster at the arena edge in place of the emissive spheres;
+    when the battle is fought at the Ember Relay (Vance intercepts), add SM_EmberRelay outside the arena.
 - PostProcessVolume per map: Infinite Extent ON, Bloom 1.5, Exposure Min = Max = 1.
 
 ## 1. Enumerations (Data/)
