@@ -314,19 +314,23 @@ All numbers are first-pass; tune so a fight lasts 60–120 s and costs 5–15 Ph
 ```
 BeginPlay → GI ; PC.Manager = self ; spawn at tagged TargetPoints:
    BP_Flagship (→ PC.Flagship), BP_PhantomSquadron "Phantom Squadron I" (→ PC.Squadron1), "Phantom Squadron II"
-   (→ PC.Squadron2), BP_CorsairGunship if OutcastCorsair ; bind each OnShipDestroyed → OnPlayerLost
+   (→ PC.Squadron2), BP_CorsairGunship if OutcastCorsair AND CorsairShipsActive > 0 (→ Corsair) ;
+   bind each OnShipDestroyed → OnPlayerLost
    BP_TitheCruiser + (4 + (PursuitClock>=2 ? 2 : 0)) BP_TitheInterceptor ; AliveEnemies ; bind → OnEnemyLost
-   cache GI Instability/FlagshipHullPct/PhantomShipsActive for Retry
+   cache GI Instability/FlagshipHullPct/PhantomShipsActive/CorsairShipsActive for Retry
    Log: VEX AI "Contact. Sector 7 transponder codes. Commander Vance's picket, Captain."
         COMMANDER VANCE "Key-Bearer. You opened a door that should have stayed shut. I followed you through it."
         VEX AI "Tactical pause engaged. The fleet awaits your orders."
    → Delay 0.2 → PC.SetTacPause(true)                      // battle opens paused: orders first
 OnEnemyLost → AliveEnemies-- → 0 → Victory()
-OnPlayerLost(S) → S == Flagship → Defeat() ; else Log(VexAI,"{Name} lost. Twenty vessels of the Phantom Fleet.")
+OnPlayerLost(S) → S == Flagship → Defeat() ; S == Corsair → bCorsairLost = true ,
+   Log(VexAI,"Corsair gunship lost. One vessel of the Corsair Armada.") ;
+   else Log(VexAI,"{Name} lost. Twenty vessels of the Phantom Fleet.")
 StartSurge() → ChronoCharge -= 30 → living player ships: Custom Time Dilation 2.0, DamageMultiplier *= 2 →
    Log(JaxMercer,"Chrono-Core surge. Fleet temporal acceleration for six seconds.") → Timer EndSurge 6.0 (on the manager)
 EndSurge → restore dilation 1.0, DamageMultiplier /= 2
-Victory() → FlagshipHullPct = Hull/MaxHull ; PhantomShipsActive -= squadron losses ; StoryFlags.Add("LanternCleared") ;
+Victory() → FlagshipHullPct = Hull/MaxHull ; PhantomShipsActive -= squadron losses ;
+   bCorsairLost → CorsairShipsActive -= 1 ; StoryFlags.Add("LanternCleared") ;
    NextScreen="PostCombat" → WBP_AfterAction(victory) → SetTacPause(true)
 Defeat() → WBP_AfterAction(defeat)
 ```
