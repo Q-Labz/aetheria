@@ -71,6 +71,11 @@ supplies the expedition.
 All routes run both ways. The **Ash storms** at AshfallVerge and GlassSea add +10 to every leap out
 of them unless Lyra has charted the route, which teaches the player to chart in hazardous space.
 
+Chart data: `BuildData/ActVII/*.csv`. Checked with `AetheriaStarChartToolset`: even from 0 instability,
+every uncharted route to the Vault ruptures the Star-Drive once. Charting GlassSea→CinderArchive and
+CinderArchive→PyreGate brings the direct line in at 94.4 with no rupture. Drive management is
+mandatory in this act by design.
+
 ## 4. Systems introduced
 
 ### 4.1 The Outpost One supply line
@@ -320,7 +325,10 @@ Commander Vance's fleet withdrew toward Tithe Anchorage. Report ends."
 - **Game Instance:** `SupplyLine`, `SeverantStanding` (Int, −20), `CureStage` (Int), `PendingShipments`
   (Array of struct `S_Shipment {Kind, ArrivesAfterLeaps}`), `WeaveAnchors` (Int), `ArchiveState`,
   `ExarchStatus`, `ArchitectRevelation2`. `ExecuteLeap` decrements shipment timers and applies arrivals.
-- **Data tables:** extend `DT_StarNodes` / `DT_LeapRoutes` with §3; add `DT_Council_Lifeline`,
+- **Star chart schema:** `E_Encounter` gains `Event`; `S_StarNode` gains `HazardSurcharge` (Float, default 0),
+  added to a leap's base cost out of that node unless the route is charted. `GetLeapCost` applies it
+  before the charting multiplier.
+- **Data tables:** import §3 from `BuildData/ActVII/*.csv` into Act VII chart tables; add `DT_Council_Lifeline`,
   `DT_Council_Kesh`, `DT_Council_Records`, `DT_Council_ArchiveFate`, and new `DT_Sequences` rows
   (C1–C3 outcomes, side missions, revelation variants, act report). Author them in
   `BuildData/Narrative/*.json` and import with `AetheriaNarrativeToolset`. The toolset's `TABLES` and

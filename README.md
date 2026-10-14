@@ -14,7 +14,8 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `Tools/Blender/render_fleet_sheet.py` | Renders the contact sheet (`blender --background --python render_fleet_sheet.py -- <meshes_dir> <out.png>`) |
 | `BuildData/*.csv` | Import into DT_StarNodes / DT_LeapRoutes |
 | `BuildData/Narrative/*.json` | Dialogue and council content for DT_Sequences / DT_Council_Relay / DT_Council_Directive |
-| `Plugins/AetheriaTools/` | Editor-only Python toolset (`AetheriaNarrativeToolset`) exposed through Unreal MCP |
+| `Plugins/AetheriaTools/` | Editor-only Python toolsets exposed through Unreal MCP: `AetheriaNarrativeToolset` (story tables) and `AetheriaStarChartToolset` (chart validation, leap costs, route planning) |
+| `BuildData/ActVII/*.csv` | Act VII star chart (nodes with ash-storm hazards, leap routes) |
 | `Docs/Story/ACT_VII_CINDER_ARCHIVE.md` | Story and systems spec for Act VII, the act after the slice |
 | `SLICE_SPEC.md` | Full Blueprint spec for the vertical slice |
 | `CLAUDE.md` | Build order Claude Code follows through Unreal MCP |
@@ -28,7 +29,7 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 ## Tests
 Engine-independent narrative tests (no Unreal needed):
 ```bash
-python -m unittest discover -s Plugins/AetheriaTools/Content/Python -p "test_narrative_core.py" -t Plugins/AetheriaTools/Content/Python
+python -m unittest discover -s Plugins/AetheriaTools/Content/Python -p "test_*_core.py" -t Plugins/AetheriaTools/Content/Python
 ```
-In-editor toolset tests: `Plugins/AetheriaTools/Content/Python/aetheria_tools/tests/test_narrative_toolset.py`
+In-editor toolset tests: `Plugins/AetheriaTools/Content/Python/aetheria_tools/tests/test_*_toolset.py`
 (run through `AutomationTestToolset` via Unreal MCP).

@@ -24,7 +24,8 @@ source of truth for every asset; this file is the order of work.
    then call `AetheriaNarrativeToolset.load_narrative_tables` (plugin `AetheriaTools`) to build
    DT_Sequences, DT_Council_Relay and DT_Council_Directive from `BuildData/Narrative/*.json`.
    Enter E_Speaker / E_Background values with display names exactly as in SLICE_SPEC §1.
-   Check: row counts 3 / 6 / 8 / 4 / 3; `validate_narrative` returns no problems.
+   Check: row counts 3 / 6 / 8 / 4 / 3; `validate_narrative` returns no problems;
+   `AetheriaStarChartToolset.validate_star_chart(DT_StarNodes, DT_LeapRoutes, "ArchWake")` returns no problems.
    Narrative edits go in `BuildData/Narrative/*.json`, then re-run `load_narrative_tables`.
 3. **Game Instance** — BP_AetheriaGameInstance per §4 (already referenced by Config/DefaultEngine.ini).
    Check: compiles; GetLeapCost(EmberRelay) from ArchWake at defaults returns 80 / 105 / overflow.
