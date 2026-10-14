@@ -1,7 +1,8 @@
 # Aetheria: Beyond the Arch — build instructions for Claude Code
 
-Unreal Engine 5 project, **Blueprint only (no C++)**. Build it through the `unreal-mcp` server
-(`.mcp.json`, http://127.0.0.1:8000/mcp) against the live editor. `SLICE_SPEC.md` is the
+Unreal Engine **5.8** project: Blueprints on top of one C++ game module (`Source/Aetheria`). Build it through
+the `unreal-mcp` server against the live editor; the server URL is in `.mcp.json` (http://127.0.0.1:8010/mcp),
+and the editor auto-starts it via `Config/DefaultEditorPerProjectUserSettings.ini`. `SLICE_SPEC.md` is the
 source of truth for every asset; this file is the order of work.
 
 ## Rules
@@ -9,8 +10,12 @@ source of truth for every asset; this file is the order of work.
   At session start also run `AgentSkillToolset.ListSkills` and follow any relevant project skill.
 - Save all before and after each phase. Stop PIE before creating assets.
 - Read every tool result. Compile each Blueprint after editing it; a failed compile stops the phase.
-- Never add C++ classes or a Source/ folder (the AetheriaTools plugin is Python-only). Game logic lives in Blueprints; editor Python is allowed
-  only for bulk asset setup (imports, folders), never for runtime logic.
+- C++ lives only in the `Aetheria` game module (`Source/Aetheria`): `AAetheriaCharacter`, `AAetheriaPlayerController`
+  and `AAetheriaGameMode` are the parents of BP_TopDownCharacter / BP_TopDownController / BP_TopDownGameMode.
+  C++ may be added there; don't add other modules, and keep the AetheriaTools plugin Python-only. After a C++ change,
+  rebuild (or Live Coding) before touching the Blueprints that depend on it. Slice gameplay in SLICE_SPEC.md stays in
+  Blueprints unless it moves to C++ deliberately. Editor Python is allowed only for bulk asset setup (imports,
+  folders), never for runtime logic.
 - Canon is fixed: names, ship classes, counts (214 ships = 1 Dreadnought + 1 Wayward + 200 Phantom + 12 Corsair),
   abilities. Narrator/AI lines use a formal naval-briefing register.
 - Crew and AI advise; the player decides. Never auto-resolve a choice.
