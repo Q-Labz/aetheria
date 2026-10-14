@@ -4,13 +4,26 @@
 Kept free of `unreal` imports so it can be tested with plain Python.
 """
 SHIPS_FOLDER = "/Game/Aetheria/Ships"
+MESHES_FOLDER = "/Game/Aetheria/Meshes"
 GAME_INSTANCE = "/Game/Aetheria/Core/BP_AetheriaGameInstance"
 BASE_SHIP = "BP_ShipBase"
 
-# Of the canon 214 ships (1 Dreadnought + 1 Wayward + 200 Phantom + 12 Corsair), the slice tracks
-# the Phantom Fleet, in squadrons of 20.
 PHANTOM_FLEET = 200
 PHANTOM_SQUADRON_SIZE = 20
+CORSAIR_ARMADA = 12
+
+# Canon fleet: 214 ships. "active" is the CampaignState key holding the class's current strength,
+# None for the Dreadnought, which is always present; "blueprint" is None where the slice has none.
+ROSTER = (
+    {"ship_class": "Crystal Dreadnought", "canon_count": 1, "active": None,
+     "mesh": "SM_CrystalDreadnought", "blueprint": "BP_Flagship"},
+    {"ship_class": "Wayward", "canon_count": 1, "active": "wayward_available",
+     "mesh": "SM_Wayward", "blueprint": None},
+    {"ship_class": "Phantom Fleet", "canon_count": PHANTOM_FLEET, "active": "phantom_ships_active",
+     "mesh": "SM_PhantomCruiser", "blueprint": "BP_PhantomSquadron"},
+    {"ship_class": "Corsair Armada", "canon_count": CORSAIR_ARMADA, "active": "corsair_ships_active",
+     "mesh": "SM_CorsairGunship", "blueprint": "BP_CorsairGunship"},
+)
 
 # First-pass stat defaults from §9. Numbers are tuning targets, not canon.
 BASE_STATS = {
@@ -56,7 +69,8 @@ SHIPS = {
         "meshes": {"HullMesh": "SM_TitheCruiser"},
     },
 }
-GAME_INSTANCE_CANON = {"PhantomShipsActive": PHANTOM_FLEET}
+GAME_INSTANCE_CANON = {"PhantomShipsActive": PHANTOM_FLEET, "WaywardAvailable": True,
+                       "CorsairShipsActive": CORSAIR_ARMADA}
 
 # Combat level layout (§7). Locations in uu.
 GAME_MODE = "GM_Tactical"
@@ -79,6 +93,29 @@ DIRECTIONAL_LIGHT, POST_PROCESS = "DirectionalLight", "PostProcessVolume"
 
 def ship_path(ship):
     return f"{SHIPS_FOLDER}/{ship}"
+
+
+def mesh_path(mesh):
+    return f"{MESHES_FOLDER}/{mesh}"
+
+
+def fleet_roster(state):
+    """Each canon ship class with its active count in the given campaign state.
+
+    Returns dicts with ship_class, canon_count, active_count, mesh and blueprint (asset paths;
+    blueprint is empty where the slice has none).
+    """
+    roster = []
+    for entry in ROSTER:
+        key = entry["active"]
+        active = 1 if key is None else int(state[key])
+        if not 0 <= active <= entry["canon_count"]:
+            raise ValueError(f"{key} is {state[key]}; the {entry['ship_class']} numbers "
+                             f"0 to {entry['canon_count']}.")
+        roster.append({"ship_class": entry["ship_class"], "canon_count": entry["canon_count"],
+                       "active_count": active, "mesh": mesh_path(entry["mesh"]),
+                       "blueprint": ship_path(entry["blueprint"]) if entry["blueprint"] else ""})
+    return roster
 
 
 def read_names(ship):
@@ -108,15 +145,17 @@ def ship_stats(ship, properties):
     return [(name, float(properties[name]), float(spec)) for name, spec in expected.items()]
 
 
-def validate_fleet(ships, game_instance):
-    """Problems with the ship Blueprints and Game Instance against fleet canon. Empty means valid.
+def validate_fleet(ships, game_instance, imported_meshes):
+    """Problems with the ship Blueprints, Game Instance and roster meshes against fleet canon.
+    Empty means valid.
 
     ships: ship name -> None if the asset is missing, else a dict with "is_ship" (derives from
     BP_ShipBase), "properties" (variable -> default; absent if the variable does not exist),
     "tags" and "meshes" (component name -> mesh asset name or None).
     game_instance: None if missing, else variable -> default.
+    imported_meshes: names of the ROSTER meshes that exist as assets.
     """
-    problems = []
+    problems = [f"{mesh_path(e['mesh'])}: not imported yet." for e in ROSTER if e["mesh"] not in imported_meshes]
     for ship, spec in SHIPS.items():
         info = ships.get(ship)
         if info is None:

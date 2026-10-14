@@ -18,7 +18,7 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `Tools/Blender/render_fleet_sheet.py` | Renders a contact sheet of any asset folder (`blender --background --python render_fleet_sheet.py -- <assets_dir> <out.png>`) |
 | `BuildData/*.csv` | Import into DT_StarNodes / DT_LeapRoutes |
 | `BuildData/Narrative/*.json` | Dialogue and council content for DT_Sequences / DT_Council_Relay / DT_Council_Directive |
-| `Plugins/AetheriaTools/` | Editor-only Python toolsets exposed through Unreal MCP: `AetheriaNarrativeToolset` (story tables, council-path previews), `AetheriaStarChartToolset` (chart validation, leap costs, route planning) and `AetheriaCombatToolset` (fleet canon, ship stats, combat-level layout) |
+| `Plugins/AetheriaTools/` | Editor-only Python toolsets exposed through Unreal MCP: `AetheriaNarrativeToolset` (story tables, council-path previews), `AetheriaStarChartToolset` (chart validation, leap costs, route planning) and `AetheriaCombatToolset` (fleet roster, fleet canon, ship stats, combat-level layout) |
 | `BuildData/ActVII/*.csv` | Act VII star chart (nodes with ash-storm hazards, leap routes) |
 | `Docs/Story/ACT_VII_CINDER_ARCHIVE.md` | Story and systems spec for Act VII, the act after the slice |
 | `SLICE_SPEC.md` | Full Blueprint spec for the vertical slice |

@@ -60,7 +60,8 @@ question → visible consequence → end-of-slice summary.
 ## 4. Game Instance — `BP_AetheriaGameInstance` (Core/)
 **Variables (defaults):** CaptainName String "" · Background E_Background SynodEnvoy · Instability Float 25 ·
 ChronoCharge Float 60 · FlagshipHullPct Float 1.0 · CrewInjured Int 0 · BioGelDoses Int 2 ·
-SpireRecalibrations Int 1 · PhantomShipsActive Int 200 · PursuitClock Int 0 · CurrentNode Name ArchWake ·
+SpireRecalibrations Int 1 · PhantomShipsActive Int 200 ·
+WaywardAvailable Bool true · CorsairShipsActive Int 12 · PursuitClock Int 0 · CurrentNode Name ArchWake ·
 ChartedRoutes Set<Name> · StoryFlags Set<Name> · ArchitectLeaning Int 0 · ArchitectExposure Int 0 ·
 FirstRuptureAbsorbed Bool false · CrewLoyalty Map<E_Speaker,Int> = {TalaVane:50, JaxMercer:50, ArisThorne:50,
 NixNull:50, Lyra:50, Cormaker:40} · NextScreen Name "NewGame" (NewGame | PostCombat | StarMap) · LastReport Text

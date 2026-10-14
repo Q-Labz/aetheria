@@ -43,10 +43,22 @@ class CampaignState(unreal.StructBase):
     instability = unreal.uproperty(float, meta={"ToolTip": "Star-Drive instability, 0-100."})
     chrono_charge = unreal.uproperty(float, meta={"ToolTip": "Chrono-Core charge, 0-100."})
     phantom_ships_active = unreal.uproperty(int)
+    wayward_available = unreal.uproperty(bool)
+    corsair_ships_active = unreal.uproperty(int)
     spire_recalibrations = unreal.uproperty(int)
     architect_leaning = unreal.uproperty(int, meta={"ToolTip": "-100 (Dominion) to 100 (Custodian)."})
     crew_loyalty = unreal.uproperty(unreal.Map(str, int), meta={"ToolTip": "E_Speaker value to loyalty, -100 to 100."})
     story_flags = unreal.uproperty(unreal.Array(str))
+
+
+def campaign_state_dict(state: CampaignState) -> dict:
+    """A CampaignState as the plain dict narrative_core works with."""
+    return {
+        "background": state.background,
+        **{key: getattr(state, key) for key in core.START_STATE},
+        "crew_loyalty": {str(k): v for k, v in state.crew_loyalty.items()},
+        "story_flags": [str(f) for f in state.story_flags],
+    }
 
 
 @unreal.ustruct()
@@ -171,15 +183,8 @@ class AetheriaNarrativeToolset(unreal.ToolsetDefinition):
             directive: DT_Council_Directive row name.
         """
         data = AetheriaNarrativeToolset._load_valid_source()
-        before = {
-            "background": state.background, "instability": state.instability,
-            "chrono_charge": state.chrono_charge, "phantom_ships_active": state.phantom_ships_active,
-            "spire_recalibrations": state.spire_recalibrations, "architect_leaning": state.architect_leaning,
-            "crew_loyalty": {str(k): v for k, v in state.crew_loyalty.items()},
-            "story_flags": [str(f) for f in state.story_flags],
-        }
         try:
-            after = core.council_path(data, before, relay, directive)
+            after = core.council_path(data, campaign_state_dict(state), relay, directive)
         except (KeyError, ValueError) as error:
             raise ValueError(error.args[0]) from None
         return CouncilPathPreview(disposition=core.disposition(after["architect_leaning"]),

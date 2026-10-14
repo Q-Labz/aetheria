@@ -111,6 +111,7 @@ class NarrativeCoreTest(unittest.TestCase):
         self.assertEqual(guild["crew_loyalty"]["JaxMercer"], 65)
         self.assertEqual(synod["crew_loyalty"], core.START_LOYALTY)
         self.assertEqual((synod["instability"], synod["phantom_ships_active"]), (25.0, 200))
+        self.assertEqual((synod["wayward_available"], synod["corsair_ships_active"]), (True, 12))
 
     def test_starting_state_raises_on_unknown_background(self):
         with self.assertRaises(ValueError):

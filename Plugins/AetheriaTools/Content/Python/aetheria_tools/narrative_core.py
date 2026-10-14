@@ -31,7 +31,8 @@ START_LOYALTY = {"TalaVane": 50, "JaxMercer": 50, "ArisThorne": 50, "NixNull": 5
 BACKGROUND_LOYALTY = {"GuildEngineer": ("JaxMercer", 15), "CoalitionVanguard": ("TalaVane", 15),
                       "OutcastCorsair": ("Cormaker", 20)}
 START_STATE = {"instability": 25.0, "chrono_charge": 60.0, "phantom_ships_active": 200,
-               "spire_recalibrations": 1, "architect_leaning": 0}
+               "wayward_available": True, "corsair_ships_active": 12, "spire_recalibrations": 1,
+               "architect_leaning": 0}
 
 
 def load_source(source_dir):

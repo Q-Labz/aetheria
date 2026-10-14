@@ -40,7 +40,7 @@ supplies the expedition.
 | `ArchitectFullAccess` / `ArchitectSandboxed` / `ArchitectRefused` / `SynodRite` | Change the Architect's lines in every council below. |
 | `SquadronIIIAlienated` | Phantom Squadron III (20 ships) is unavailable in battles; Nix side mission §7.3 can probe it. |
 | `ArchitectSilent` | The Architect does not speak until Council C2. |
-| `Instability`, `PursuitClock`, `CrewInjured`, `FlagshipHullPct`, `PhantomShipsActive`, `CrewLoyalty` | Carry over unchanged. Pursuit resets to 0 at the act start; Vance's main fleet re-acquires the wake. |
+| `Instability`, `PursuitClock`, `CrewInjured`, `FlagshipHullPct`, `PhantomShipsActive`, `WaywardAvailable`, `CorsairShipsActive`, `CrewLoyalty` | Carry over unchanged. Pursuit resets to 0 at the act start; Vance's main fleet re-acquires the wake. |
 | `SpireRecalibrations`, `BioGelDoses` | Carry over; resupplied through the supply line (§4.1). |
 
 ## 3. Star chart
@@ -220,7 +220,7 @@ Severant agents, guided by Ithane's archive maps, probe Aetheria Prime. The Harm
 but they are close to the waterfall.
 - **Go dark:** the Spire diverts power to the canopy; no shipments for two leaps. Sets `OutpostDark`.
 - **Let the Architect mask the valley:** shipments continue; Leaning −5, `ArchitectExposure` +1. Architect: "They will see nothing. I am very good at being unseen."
-- **Send the Wayward home to deal with it:** the Wayward is unavailable for the rest of the act (it is
+- **Send the Wayward home to deal with it:** `WaywardAvailable` = false for the rest of the act (it is
   not used in Act VII battles otherwise); the agents are captured. Sets `SeverantAgentsCaptured`
   (Act VIII intelligence on the Iron Tithe's grafts). Tala loyalty +5.
 

@@ -2,6 +2,7 @@ import unreal
 import toolset_registry
 
 from aetheria_tools import combat_core as core
+from aetheria_tools.narrative_toolset import CampaignState, campaign_state_dict
 
 
 @unreal.ustruct()
@@ -13,18 +14,40 @@ class ShipStat(unreal.StructBase):
     spec_value = unreal.uproperty(float, meta={"ToolTip": "First-pass value from SLICE_SPEC §9."})
 
 
+@unreal.ustruct()
+class FleetClass(unreal.StructBase):
+    """One canon ship class of the Key-Bearer's fleet."""
+
+    ship_class = unreal.uproperty(str)
+    canon_count = unreal.uproperty(int, meta={"ToolTip": "Ships of this class in the canon 214-ship fleet."})
+    active_count = unreal.uproperty(int, meta={"ToolTip": "Ships still answering to the fleet in the given state."})
+    mesh = unreal.uproperty(str, meta={"ToolTip": "Static mesh asset path."})
+    blueprint = unreal.uproperty(str, meta={"ToolTip": "Ship Blueprint asset path. Empty if the slice has none."})
+
+
 @unreal.uclass()
 class AetheriaCombatToolset(unreal.ToolsetDefinition):
-    """Checks Aetheria's tactical combat slice: the ship Blueprints against fleet canon (classes,
-    names, squadron and fleet sizes, abilities, meshes), their stats against first-pass values,
-    and the combat level's spawn layout."""
+    """Aetheria's fleet and tactical combat slice: the canon fleet roster and its strength in a
+    campaign state, checks of the ship Blueprints against fleet canon (classes, names, squadron
+    and fleet sizes, abilities, meshes), their stats against first-pass values, and the combat
+    level's spawn layout."""
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def get_fleet_roster(state: CampaignState) -> list[FleetClass]:
+        """Lists the four canon ship classes and how many of each are active in a campaign state.
+
+        Args:
+            state: Campaign state to read Wayward, Phantom and Corsair strength from.
+        """
+        return [FleetClass(**entry) for entry in core.fleet_roster(campaign_state_dict(state))]
 
     @toolset_registry.tool_call
     @staticmethod
     def validate_fleet() -> list[str]:
         """Checks the ship Blueprints in /Game/Aetheria/Ships and BP_AetheriaGameInstance against
         fleet canon: missing Blueprints or variables, wrong parent class, canon names and counts,
-        actor tags and hull meshes. Stat values are not compared.
+        actor tags, hull meshes and roster meshes not imported. Stat values are not compared.
 
         Returns:
             Problems found. Empty when the fleet matches canon.
@@ -34,7 +57,9 @@ class AetheriaCombatToolset(unreal.ToolsetDefinition):
         blueprint = AetheriaCombatToolset._blueprint(core.GAME_INSTANCE)
         if blueprint is not None:
             game_instance = AetheriaCombatToolset._properties(blueprint, core.GAME_INSTANCE_CANON)
-        return core.validate_fleet(ships, game_instance)
+        imported = {e["mesh"] for e in core.ROSTER
+                    if unreal.EditorAssetLibrary.does_asset_exist(core.mesh_path(e["mesh"]))}
+        return core.validate_fleet(ships, game_instance, imported)
 
     @toolset_registry.tool_call
     @staticmethod

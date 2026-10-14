@@ -16,7 +16,7 @@ def built_fleet():
         properties.update(spec.get("canon", {}))
         ships[ship] = {"is_ship": True, "properties": properties, "tags": list(spec.get("tags", ())),
                        "meshes": dict(spec.get("meshes", {}))}
-    return ships, dict(core.GAME_INSTANCE_CANON)
+    return ships, dict(core.GAME_INSTANCE_CANON), {e["mesh"] for e in core.ROSTER}
 
 
 def actor(kind, location, tags=(), label=None, **extra):
@@ -35,21 +35,32 @@ def built_level():
 
 class FleetTest(unittest.TestCase):
     def setUp(self):
-        self.ships, self.game_instance = built_fleet()
+        self.ships, self.game_instance, self.meshes = built_fleet()
 
     def problems(self):
-        return "\n".join(core.validate_fleet(self.ships, self.game_instance))
+        return "\n".join(core.validate_fleet(self.ships, self.game_instance, self.meshes))
 
     def test_fleet_built_to_spec_is_valid(self):
-        self.assertEqual(core.validate_fleet(self.ships, self.game_instance), [])
+        self.assertEqual(core.validate_fleet(self.ships, self.game_instance, self.meshes), [])
 
     def test_canon_counts_add_up(self):
-        self.assertEqual(1 + 1 + core.PHANTOM_FLEET + 12, 214)
+        self.assertEqual(sum(e["canon_count"] for e in core.ROSTER), 214)
         self.assertEqual(core.PHANTOM_FLEET % core.PHANTOM_SQUADRON_SIZE, 0)
+
+    def test_reports_roster_mesh_not_imported(self):
+        self.meshes.discard("SM_Wayward")
+        self.assertIn("/Game/Aetheria/Meshes/SM_Wayward: not imported yet.", self.problems())
+
+    def test_reports_wayward_and_corsair_defaults(self):
+        self.game_instance["WaywardAvailable"] = False
+        del self.game_instance["CorsairShipsActive"]
+        problems = self.problems()
+        self.assertIn("WaywardAvailable is False, canon is True", problems)
+        self.assertIn("missing variable 'CorsairShipsActive'", problems)
 
     def test_reports_missing_assets(self):
         self.ships["BP_TitheCruiser"] = None
-        problems = core.validate_fleet(self.ships, None)
+        problems = core.validate_fleet(self.ships, None, self.meshes)
         self.assertIn("/Game/Aetheria/Ships/BP_TitheCruiser: not created yet.", problems)
         self.assertIn(f"{core.GAME_INSTANCE}: not created yet.", problems)
 
@@ -68,7 +79,7 @@ class FleetTest(unittest.TestCase):
         del self.ships["BP_Flagship"]["properties"]["BeamDamage"]
         del self.ships["BP_ShipBase"]["properties"]["MaxHull"]
         del self.ships["BP_Flagship"]["properties"]["MaxHull"]
-        problems = core.validate_fleet(self.ships, self.game_instance)
+        problems = core.validate_fleet(self.ships, self.game_instance, self.meshes)
         self.assertIn("BP_Flagship: missing variable 'BeamDamage'.", problems)
         self.assertIn("BP_ShipBase: missing variable 'MaxHull'.", problems)
         self.assertEqual(sum("'MaxHull'" in p for p in problems), 2)  # base, plus the flagship's override
@@ -87,7 +98,30 @@ class FleetTest(unittest.TestCase):
 
     def test_stat_drift_is_not_a_canon_problem(self):
         self.ships["BP_TitheCruiser"]["properties"]["MaxHull"] = 5200
-        self.assertEqual(core.validate_fleet(self.ships, self.game_instance), [])
+        self.assertEqual(core.validate_fleet(self.ships, self.game_instance, self.meshes), [])
+
+
+class FleetRosterTest(unittest.TestCase):
+    STATE = {"wayward_available": True, "phantom_ships_active": 200, "corsair_ships_active": 12}
+
+    def test_roster_at_full_strength(self):
+        roster = {e["ship_class"]: e for e in core.fleet_roster(self.STATE)}
+        self.assertEqual(list(roster), ["Crystal Dreadnought", "Wayward", "Phantom Fleet", "Corsair Armada"])
+        self.assertEqual(sum(e["active_count"] for e in roster.values()), 214)
+        self.assertEqual(roster["Wayward"]["blueprint"], "")
+        self.assertEqual(roster["Corsair Armada"]["blueprint"], "/Game/Aetheria/Ships/BP_CorsairGunship")
+        self.assertEqual(roster["Wayward"]["mesh"], "/Game/Aetheria/Meshes/SM_Wayward")
+
+    def test_roster_reflects_losses(self):
+        state = dict(self.STATE, wayward_available=False, phantom_ships_active=180, corsair_ships_active=9)
+        active = {e["ship_class"]: e["active_count"] for e in core.fleet_roster(state)}
+        self.assertEqual(active, {"Crystal Dreadnought": 1, "Wayward": 0, "Phantom Fleet": 180,
+                                  "Corsair Armada": 9})
+
+    def test_roster_raises_for_impossible_strength(self):
+        for key, value in (("corsair_ships_active", 13), ("phantom_ships_active", -5)):
+            with self.assertRaises(ValueError):
+                core.fleet_roster(dict(self.STATE, **{key: value}))
 
 
 class ShipStatsTest(unittest.TestCase):
