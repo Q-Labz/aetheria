@@ -4,6 +4,7 @@ import unreal
 from toolset_registry.tests.tool_call_test_case import ToolCallTestCase  # confirm path against engine tests
 
 from aetheria_tools.combat_toolset import AetheriaCombatToolset
+from aetheria_tools.narrative_toolset import AetheriaNarrativeToolset
 
 COMBAT_LEVEL = "/Game/Aetheria/Maps/L_Combat_LanternDrift"
 COMMAND_LEVEL = "/Game/Aetheria/Maps/L_Command"
@@ -15,6 +16,20 @@ class AetheriaCombatToolsetTestCase(ToolCallTestCase):
     def test_validate_fleet_clean_for_slice(self):
         """The slice's ship Blueprints match fleet canon."""
         self.assertEqual(AetheriaCombatToolset.validate_fleet(), [])
+
+    def test_get_fleet_roster_counts_214_at_start(self):
+        """A new campaign fields the whole canon fleet."""
+        state = AetheriaNarrativeToolset.get_starting_campaign_state("OutcastCorsair")
+        roster = AetheriaCombatToolset.get_fleet_roster(state)
+        self.assertEqual(sum(c.active_count for c in roster), 214)
+        self.assertEqual({c.ship_class: c.canon_count for c in roster}["Corsair Armada"], 12)
+
+    def test_get_fleet_roster_raises_for_impossible_strength(self):
+        """Raises when a state fields more Corsairs than the armada has."""
+        state = AetheriaNarrativeToolset.get_starting_campaign_state("OutcastCorsair")
+        state.corsair_ships_active = 30
+        with self.assertToolRaisesRuntimeError():
+            AetheriaCombatToolset.get_fleet_roster(state)
 
     def test_get_ship_stats_reads_flagship(self):
         """Reads the flagship's stats, beam stats included."""
