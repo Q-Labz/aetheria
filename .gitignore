@@ -1,0 +1,57 @@
+# Unreal Engine generated folders
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+Build/*/**
+!Build/*/
+Build/*/**/*.pdb
+.vs/
+.vscode/
+.idea/
+*.code-workspace
+
+# Plugin build output
+Plugins/**/Binaries/
+Plugins/**/Intermediate/
+
+# Visual Studio / Rider generated project files
+*.sln
+*.slnx
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.vcxproj*
+*.xcodeproj
+*.xcworkspace
+*.user
+
+# Compiled / debug output
+*.pdb
+*.obj
+*.o
+*.lib
+*.a
+*.dll
+*.exe
+*.so
+*.dylib
+*.ipa
+*.app
+*.target
+*.modules
+*.patch_*.*
+
+# Cooked / packaged builds
+*.pak
+*.ucas
+*.utoc
+
+# Crash dumps, logs, misc
+*.dmp
+*.log
+*.tmp
+Thumbs.db
+.DS_Store
