@@ -15,6 +15,7 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `BuildData/*.csv` | Import into DT_StarNodes / DT_LeapRoutes |
 | `BuildData/Narrative/*.json` | Dialogue and council content for DT_Sequences / DT_Council_Relay / DT_Council_Directive |
 | `Plugins/AetheriaTools/` | Editor-only Python toolset (`AetheriaNarrativeToolset`) exposed through Unreal MCP |
+| `Docs/Story/ACT_VII_CINDER_ARCHIVE.md` | Story and systems spec for Act VII, the act after the slice |
 | `SLICE_SPEC.md` | Full Blueprint spec for the vertical slice |
 | `CLAUDE.md` | Build order Claude Code follows through Unreal MCP |
 
