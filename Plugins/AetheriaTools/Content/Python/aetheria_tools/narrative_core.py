@@ -26,6 +26,13 @@ TABLES = {
 CUSTODIAN_THRESHOLD = 20
 DOMINION_THRESHOLD = -20
 
+# BP_AetheriaGameInstance defaults and ApplyBackgroundStart (SLICE_SPEC §4).
+START_LOYALTY = {"TalaVane": 50, "JaxMercer": 50, "ArisThorne": 50, "NixNull": 50, "Lyra": 50, "Cormaker": 40}
+BACKGROUND_LOYALTY = {"GuildEngineer": ("JaxMercer", 15), "CoalitionVanguard": ("TalaVane", 15),
+                      "OutcastCorsair": ("Cormaker", 20)}
+START_STATE = {"instability": 25.0, "chrono_charge": 60.0, "phantom_ships_active": 200,
+               "spire_recalibrations": 1, "architect_leaning": 0}
+
 
 def load_source(source_dir):
     """Returns {table name: rows} read from <source_dir>/<table>.json."""
@@ -79,7 +86,7 @@ def architect_outcomes(data):
     for background in BACKGROUNDS:
         for relay in _available(data["DT_Council_Relay"], background):
             for directive in _available(data["DT_Council_Directive"], background):
-                leaning = max(-100, min(100, relay["LeaningDelta"] + directive["LeaningDelta"]))
+                leaning = _clamp(relay["LeaningDelta"] + directive["LeaningDelta"], -100, 100)
                 outcomes.append({
                     "background": background, "relay": relay["Name"],
                     "directive": directive["Name"], "leaning": leaning,
@@ -102,8 +109,7 @@ def resolve_sequence(data, sequence, background, flags, captain_name):
     rows = {r["Name"]: r for r in data["DT_Sequences"]}
     if sequence not in rows:
         raise KeyError(f"Unknown sequence '{sequence}'. Known: {', '.join(sorted(rows))}.")
-    if background not in BACKGROUNDS:
-        raise ValueError(f"Unknown background '{background}'. Known: {', '.join(BACKGROUNDS)}.")
+    _check_background(background)
     resolved = []
     for line in rows[sequence]["Lines"]:
         flag = line.get("RequiredFlag", "None")
@@ -114,6 +120,38 @@ def resolve_sequence(data, sequence, background, flags, captain_name):
     return resolved
 
 
+def starting_state(background):
+    """Campaign state after captain creation: Game Instance defaults plus the background's
+    loyalty bonus. Keys: background, the START_STATE keys, crew_loyalty, story_flags."""
+    _check_background(background)
+    loyalty = dict(START_LOYALTY)
+    if background in BACKGROUND_LOYALTY:
+        officer, delta = BACKGROUND_LOYALTY[background]
+        loyalty[officer] = _clamp(loyalty[officer] + delta, -100, 100)
+    return {"background": background, **START_STATE, "crew_loyalty": loyalty, "story_flags": []}
+
+
+def council_path(data, state, relay, directive):
+    """State after choosing a Relay option, a Directive option and the Architect's consequence.
+
+    Mirrors ApplyOption (SLICE_SPEC §4) and ApplyArchitectConsequence (§6). Returns a new state.
+    """
+    _check_background(state["background"])
+    state = {**state, "crew_loyalty": dict(state["crew_loyalty"]), "story_flags": list(state["story_flags"])}
+    for table, name in (("DT_Council_Relay", relay), ("DT_Council_Directive", directive)):
+        _apply_option(state, _option(data, table, name, state["background"]))
+    leaning = disposition(state["architect_leaning"])
+    if leaning == "Custodian":
+        state["instability"] = max(0.0, state["instability"] - 30)
+        state["spire_recalibrations"] += 1
+    elif leaning == "Dominion":
+        state["phantom_ships_active"] -= 20
+        _add_flag(state, "SquadronIIIAlienated")
+    else:
+        _add_flag(state, "ArchitectSilent")
+    return state
+
+
 def to_import_json(rows):
     """Serializes rows in the JSON layout DataTable import expects."""
     return json.dumps(rows, ensure_ascii=False)
@@ -122,6 +160,40 @@ def to_import_json(rows):
 def _available(options, background):
     return [o for o in options
             if not o.get("RequiresBackground") or o.get("RequiredBackground") == background]
+
+
+def _option(data, table, name, background):
+    rows = {r["Name"]: r for r in data[table]}
+    if name not in rows:
+        raise KeyError(f"Unknown {table} option '{name}'. Known: {', '.join(sorted(rows))}.")
+    if rows[name] not in _available(data[table], background):
+        raise ValueError(f"{table} option '{name}' is not offered to a {background}.")
+    return rows[name]
+
+
+def _apply_option(state, option):
+    state["architect_leaning"] = _clamp(state["architect_leaning"] + option["LeaningDelta"], -100, 100)
+    loyalty = state["crew_loyalty"]
+    for officer, delta in option.get("LoyaltyDeltas", {}).items():
+        loyalty[officer] = _clamp(loyalty.get(officer, 0) + delta, -100, 100)
+    state["instability"] = _clamp(state["instability"] + option.get("InstabilityDelta", 0.0), 0.0, 100.0)
+    state["chrono_charge"] = _clamp(state["chrono_charge"] + option.get("ChronoDelta", 0.0), 0.0, 100.0)
+    if option.get("SetFlag", "None") != "None":
+        _add_flag(state, option["SetFlag"])
+
+
+def _add_flag(state, flag):
+    if flag not in state["story_flags"]:
+        state["story_flags"].append(flag)
+
+
+def _clamp(value, low, high):
+    return max(low, min(high, value))
+
+
+def _check_background(background):
+    if background not in BACKGROUNDS:
+        raise ValueError(f"Unknown background '{background}'. Known: {', '.join(BACKGROUNDS)}.")
 
 
 def _validate_line(line, where, set_flags):

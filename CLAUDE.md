@@ -33,8 +33,10 @@ source of truth for every asset; this file is the order of work.
 4. **Input** — IA_* (Trigger when Paused = TRUE on all) and IMC_Tactical per §5.
 5. **Ships** — BP_BeamVFX, BP_ShipBase, BP_Flagship, BP_PhantomSquadron, BP_CorsairGunship,
    BP_TitheInterceptor, BP_TitheCruiser, WBP_ShipBar, BP_MoveMarker per §9.
+   Check: `AetheriaCombatToolset.validate_fleet()` returns no problems.
 6. **Combat** — BP_CommandPawn, BP_TacticalController, BP_CombatManager, GM_Tactical, WBP_CombatHUD,
    WBP_AfterAction; level L_Combat_LanternDrift with tagged TargetPoints per §7/§10.
+   Check: with the combat map open, `AetheriaCombatToolset.validate_combat_level()` returns no problems.
    Check (PIE on the combat map): opens paused; Q + click while paused queues the beam; Space fires it;
    enemies die; victory report shows.
 7. **Command layer** — GM_Command, PC_Command, WBP_CaptainCreation, WBP_Dialogue, WBP_StarMap,
