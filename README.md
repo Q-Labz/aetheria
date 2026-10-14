@@ -12,6 +12,8 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `Source_Art/Meshes/*.fbx` | Placeholder fleet: Crystal Dreadnought (1,020 m), Phantom cruiser, Tithe interceptor, Tithe cruiser |
 | `Tools/Blender/make_fleet.py` | Regenerates those meshes (`blender --background --python make_fleet.py -- <out_dir>`) |
 | `BuildData/*.csv` | Import into DT_StarNodes / DT_LeapRoutes |
+| `BuildData/Narrative/*.json` | Dialogue and council content for DT_Sequences / DT_Council_Relay / DT_Council_Directive |
+| `Plugins/AetheriaTools/` | Editor-only Python toolset (`AetheriaNarrativeToolset`) exposed through Unreal MCP |
 | `SLICE_SPEC.md` | Full Blueprint spec for the vertical slice |
 | `CLAUDE.md` | Build order Claude Code follows through Unreal MCP |
 
@@ -20,3 +22,11 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
    ModelContextProtocol plugin must exist in your engine build).
 2. Open `Aetheria.uproject` (choose to create the Content folder if asked). The MCP server starts automatically.
 3. In this folder, run `claude` and say: "Build the game following CLAUDE.md, starting at phase 1."
+
+## Tests
+Engine-independent narrative tests (no Unreal needed):
+```bash
+python -m unittest discover -s Plugins/AetheriaTools/Content/Python -p "test_narrative_core.py" -t Plugins/AetheriaTools/Content/Python
+```
+In-editor toolset tests: `Plugins/AetheriaTools/Content/Python/aetheria_tools/tests/test_narrative_toolset.py`
+(run through `AutomationTestToolset` via Unreal MCP).

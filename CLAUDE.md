@@ -9,7 +9,7 @@ source of truth for every asset; this file is the order of work.
   At session start also run `AgentSkillToolset.ListSkills` and follow any relevant project skill.
 - Save all before and after each phase. Stop PIE before creating assets.
 - Read every tool result. Compile each Blueprint after editing it; a failed compile stops the phase.
-- Never add C++ classes or a Source/ folder. Game logic lives in Blueprints; editor Python is allowed
+- Never add C++ classes or a Source/ folder (the AetheriaTools plugin is Python-only). Game logic lives in Blueprints; editor Python is allowed
   only for bulk asset setup (imports, folders), never for runtime logic.
 - Canon is fixed: names, ship classes, counts (214 ships = 1 Dreadnought + 1 Wayward + 200 Phantom + 12 Corsair),
   abilities. Narrator/AI lines use a formal naval-briefing register.
@@ -21,8 +21,11 @@ source of truth for every asset; this file is the order of work.
    Check: SM_CrystalDreadnought bounds ≈ 1,020 uu long.
 2. **Data** — enums E_Background, E_Speaker, E_Faction, E_Encounter; structs S_StarNode, S_LeapRoute,
    S_Line, S_Sequence, S_Counsel, S_CouncilOption; DT_StarNodes and DT_LeapRoutes from `BuildData/*.csv`;
-   DT_Sequences, DT_Council_Relay, DT_Council_Directive from SLICE_SPEC §11.
-   Check: row counts 3 / 6 / 8 / 4 / 3.
+   then call `AetheriaNarrativeToolset.load_narrative_tables` (plugin `AetheriaTools`) to build
+   DT_Sequences, DT_Council_Relay and DT_Council_Directive from `BuildData/Narrative/*.json`.
+   Enter E_Speaker / E_Background values with display names exactly as in SLICE_SPEC §1.
+   Check: row counts 3 / 6 / 8 / 4 / 3; `validate_narrative` returns no problems.
+   Narrative edits go in `BuildData/Narrative/*.json`, then re-run `load_narrative_tables`.
 3. **Game Instance** — BP_AetheriaGameInstance per §4 (already referenced by Config/DefaultEngine.ini).
    Check: compiles; GetLeapCost(EmberRelay) from ArchWake at defaults returns 80 / 105 / overflow.
 4. **Input** — IA_* (Trigger when Paused = TRUE on all) and IMC_Tactical per §5.
