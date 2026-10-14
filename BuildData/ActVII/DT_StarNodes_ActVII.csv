@@ -1,0 +1,10 @@
+---,NodeID,DisplayName,Description,MapPos,Encounter,HazardSurcharge
+EmberRelay,EmberRelay,"Ember Relay","The relay where the Beacon's second layer was decoded.","(X=120.000000,Y=420.000000)",Council,0.0
+AshfallVerge,AshfallVerge,"The Ashfall Verge","Ash storms around a dead Severant convoy.","(X=330.000000,Y=200.000000)",Event,10.0
+GlassSea,GlassSea,"The Glass Sea","Orbit of a vitrified ocean world.","(X=420.000000,Y=520.000000)",Combat,10.0
+TetherPoint,TetherPoint,"The Tether Point","A quiet gravity well between superclusters.","(X=560.000000,Y=140.000000)",Event,0.0
+CinderArchive,CinderArchive,"Cinder Archive","Precursor archive world of ash and glass.","(X=700.000000,Y=400.000000)",Council,0.0
+QuietHollow,QuietHollow,"The Quiet Hollow","Warden Kesh's refuge in a hollowed moon.","(X=860.000000,Y=220.000000)",Event,0.0
+PyreGate,PyreGate,"The Pyre Gate","Severant fortress over the Archive's poles.","(X=900.000000,Y=520.000000)",Combat,0.0
+TitheMarker,TitheMarker,"Tithe Anchorage Marker","Outer marker of Commander Vance's anchorage.","(X=720.000000,Y=640.000000)",Combat,0.0
+VaultOfRecords,VaultOfRecords,"The Vault of Records","The Archive core.","(X=1080.000000,Y=420.000000)",Council,0.0

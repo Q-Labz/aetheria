@@ -1,0 +1,70 @@
+[
+  {
+    "Name": "Passage",
+    "Label": "Preserve those who pass through.",
+    "ApprovalHint": "Lyra and Dr. Thorne will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 20,
+    "LoyaltyDeltas": {
+      "Lyra": 5,
+      "ArisThorne": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Then I am a door, and not a wall. So be it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Arch",
+    "Label": "Preserve the Arch, at any cost.",
+    "ApprovalHint": "Tala will approve. Lyra will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -20,
+    "LoyaltyDeltas": {
+      "TalaVane": 5,
+      "Lyra": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "At any cost. I have recorded the phrasing exactly, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Command",
+    "Label": "Neither. You answer to me.",
+    "ApprovalHint": "Tala will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -10,
+    "LoyaltyDeltas": {
+      "TalaVane": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Then I will learn command by watching yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  }
+]

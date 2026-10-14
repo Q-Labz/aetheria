@@ -55,3 +55,7 @@ Plugins/**/Intermediate/
 *.tmp
 Thumbs.db
 .DS_Store
+
+# Python (AetheriaTools plugin)
+__pycache__/
+*.pyc
