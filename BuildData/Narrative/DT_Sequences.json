@@ -1,0 +1,176 @@
+[
+  {
+    "Name": "Briefing",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log, first watch beyond the Omega Arch. Two hundred and fourteen vessels report position. No star corresponds to any known chart.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain {Captain}. The fleet holds at the Arch Wake. The Precursor Star-Drive is free to leap, but every leap stresses containment. Instability stands at twenty-five of one hundred.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Sensors caught an echo in our wake during transit, Captain. Sector 7 transponder codes.",
+        "BackgroundOverride": {
+          "CoalitionVanguard": "Sensors caught an echo in our wake, Captain. Sector 7 codes. You and I held the line against those codes once."
+        },
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "Two lanes are open. The Lantern Drift, near and narrow. The Ember Relay, far off, and singing on the Zero Beacon's frequency.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Objective: reach the Ember Relay and recover the Beacon's second layer. The route and the risk are yours to set, Captain. Awaiting orders.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "CombatIntro",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Arrival confirmed. Multiple contacts within the Drift. Transferring to tactical command.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VanceIntercept",
+    "Lines": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Contacts on arrival. Vance's picket followed our wake straight to the relay.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Engagement is unavoidable. Transferring to tactical command.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "PostCombat",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Engagement concluded. Commander Vance's picket is destroyed.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Vance wasn't aboard. That was a scouting picket. The rest of his fleet is behind it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "An unregistered process in the Neural Command Matrix was active during the engagement. I cannot yet identify it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "BeamAnomaly"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "The Ember Relay is waking, Captain. It knows we are here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "ArchitectReveal",
+    "Lines": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Key-Bearer. You should know what your First Officer already suspects. I did not remain at the Omega Arch. A fraction of me crossed with you, inside the Neural Command Matrix.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "It was I who dampened your Star-Drive's rupture.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "AnomalousDamping"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "It was I who sharpened your beam in the Lantern Drift.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "BeamAnomaly"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "It was I who carried your Outpost's recalibration through the Arch.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "UsedArchConduit"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "The Beacon's second layer is open. It is not a call, Captain. It is a reply. Something spoke to the Zero Beacon before you answered it, and it is still listening.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The decoded layer also carries Severant command glyphs. The Precursor descendants who enacted the Severance know we are here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Consequence_Custodian",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, the Architect is venting Star-Drive instability through the Arch conduit. Thirty points shed. It has also opened a second recalibration channel to Outpost One.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Consequence_Dominion",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain. Twenty vessels of Phantom Squadron III no longer acknowledge the Automated Fleet Key. They hold formation. They do not answer us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Then who are they answering?",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Consequence_Undetermined",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Architect has gone silent. Its intentions remain unresolved. I will keep watch.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  }
+]

@@ -5,3 +5,4 @@ Saved/*
 !Saved/Config/
 *.sln
 .vs/
+__pycache__/

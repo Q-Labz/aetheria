@@ -1,0 +1,113 @@
+[
+  {
+    "Name": "Grant",
+    "Label": "Grant the Architect full Matrix access.",
+    "ApprovalHint": "Lyra will approve. Tala and Nix will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -15,
+    "LoyaltyDeltas": {
+      "TalaVane": -10,
+      "NixNull": -5,
+      "Lyra": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "ArchitectFullAccess",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Access received. You are efficient, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Decryption completed in four seconds, Captain. For those four seconds, Phantom Squadron III answered to a command that was not yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Sandbox",
+    "Label": "Grant access through Nix's sandbox.",
+    "ApprovalHint": "Nix and Tala will approve. Costs 20 Chrono charge.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 15,
+    "LoyaltyDeltas": {
+      "NixNull": 10,
+      "TalaVane": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": -20.0,
+    "SetFlag": "ArchitectSandboxed",
+    "Outcome": [
+      {
+        "Speaker": "NixNull",
+        "Text": "It's in the cage. It's polite. It tested every bar exactly once.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "A boundary. You trust, but you do not surrender. I will remember this, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Refuse",
+    "Label": "Refuse. Sever the relay.",
+    "ApprovalHint": "Tala will approve. Lyra will not. The drive will feel it.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -5,
+    "LoyaltyDeltas": {
+      "TalaVane": 10,
+      "Lyra": -10,
+      "JaxMercer": 5
+    },
+    "InstabilityDelta": 10.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "ArchitectRefused",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Understood.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, the severance pulse registered on the Star-Drive. And the cipher has been broken anyway. The Architect solved it alone.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Rite",
+    "Label": "Address it in the Synod Rite of Accord.",
+    "ApprovalHint": "Lyra will approve.",
+    "RequiresBackground": true,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 25,
+    "LoyaltyDeltas": {
+      "Lyra": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "SynodRite",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "No one has spoken the Rite since the Severance. You honour me, {Captain}. I will open the cipher with you, not through you.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  }
+]
