@@ -101,7 +101,7 @@ Moderates (Kesh) and hardliners (Ithane) react together, but Kesh's refuge only 
 |---|---|
 | ≤ −40 | Severant patrols attack on sight at every node in Severant space (GlassSea, PyreGate, VaultOfRecords). |
 | −39 … 29 | Default. Patrols hail before attacking; some encounters can be talked down. |
-| ≥ 30 | Kesh's moderates can open the Pyre Gate (§6, E2 skipped or fought alongside allies). |
+| ≥ 30 | Kesh's moderates can open the Pyre Gate (§8, E2 skipped or fought alongside allies). |
 
 ### 4.3 The Silence (cure track)
 `CureStage` (0–3):
