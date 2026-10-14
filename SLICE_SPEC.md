@@ -20,7 +20,9 @@ question → visible consequence → end-of-slice summary.
     Emissive = Fresnel(Exponent 3) × (0.3,0.8,1.0) × 8.
   - `M_Hostile`: Default Lit; BaseColor (0.25,0.04,0.02), Emissive = Fresnel × (1,0.2,0.05) × 4.
 - Meshes: import `Source_Art/Meshes/*.fbx` to `/Game/Aetheria/Meshes` with Import Uniform Scale **0.01**,
-  Nanite ON, no collision. Assign `M_Crystal` to Dreadnought/Phantom slots, `M_Hostile` to Tithe slots.
+  Nanite ON, no collision. Assign `M_Crystal` to Dreadnought/Wayward/Phantom slots, `M_Hostile` to Tithe slots.
+  Slice uses SM_CrystalDreadnought, SM_PhantomCruiser, SM_CorsairGunship, SM_TitheCruiser, SM_TitheInterceptor;
+  SM_Wayward, SM_PhantomCarrier and SM_BoardingPod are ready for roadmap work.
 - PostProcessVolume per map: Infinite Extent ON, Bloom 1.5, Exposure Min = Max = 1.
 
 ## 1. Enumerations (Data/)
@@ -291,7 +293,7 @@ Before Parent BeginPlay: MaxHull = 150×20 ; Instability ≥ 80 → DamageMultip
 Phantom response degraded.") ; Nix loyalty ≥ 60 → +0.1. FireTick override: WeaponDamage = 3 × AliveShips
 (= Ceil(Hull/150)). On damage: remove instances down to AliveShips. Bar shows "{Name} {Alive}/20".
 
-**BP_CorsairGunship** (OutcastCorsair only): Hull 1200, Shield 300, flak: every 0.3 s, 8 damage to ALL hostiles within 1500.
+**BP_CorsairGunship** (OutcastCorsair only, mesh SM_CorsairGunship): Hull 1200, Shield 300, flak: every 0.3 s, 8 damage to ALL hostiles within 1500.
 
 **BP_TitheInterceptor**: VanceRemnant, Hull 500, Shield 150, Speed 1300, Turn 120, Dmg 20 / 0.6 s, Range 2500, SM_TitheInterceptor.
 **BP_TitheCruiser** "Picket Cruiser 'Tithe of Sector 7'": Hull 4000, Shield 1500, Speed 500, Dmg 90 / 1.5 s, Range 4500,
