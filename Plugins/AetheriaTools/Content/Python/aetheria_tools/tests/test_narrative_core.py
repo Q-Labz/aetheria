@@ -105,6 +105,54 @@ class NarrativeCoreTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             core.resolve_sequence(self.data, "Briefing", "Pirate", set(), "X")
 
+    def test_starting_state_applies_background_bonus(self):
+        guild = core.starting_state("GuildEngineer")
+        synod = core.starting_state("SynodEnvoy")
+        self.assertEqual(guild["crew_loyalty"]["JaxMercer"], 65)
+        self.assertEqual(synod["crew_loyalty"], core.START_LOYALTY)
+        self.assertEqual((synod["instability"], synod["phantom_ships_active"]), (25.0, 200))
+
+    def test_starting_state_raises_on_unknown_background(self):
+        with self.assertRaises(ValueError):
+            core.starting_state("Pirate")
+
+    def test_grant_then_arch_alienates_squadron_three(self):
+        before = core.starting_state("SynodEnvoy")
+        after = core.council_path(self.data, before, "Grant", "Arch")
+        self.assertEqual(after["architect_leaning"], -35)
+        self.assertEqual(after["phantom_ships_active"], 180)
+        self.assertEqual(after["story_flags"], ["ArchitectFullAccess", "SquadronIIIAlienated"])
+        self.assertEqual(after["crew_loyalty"]["TalaVane"], 45)
+        self.assertEqual(before["phantom_ships_active"], 200)  # input is not modified
+
+    def test_sandbox_then_passage_makes_a_custodian(self):
+        before = dict(core.starting_state("GuildEngineer"), instability=70.0)
+        after = core.council_path(self.data, before, "Sandbox", "Passage")
+        self.assertEqual(after["architect_leaning"], 35)
+        self.assertEqual((after["instability"], after["spire_recalibrations"]), (40.0, 2))
+        self.assertEqual(after["chrono_charge"], 40.0)
+        self.assertEqual(after["crew_loyalty"]["NixNull"], 60)
+
+    def test_sandbox_then_arch_leaves_the_architect_silent(self):
+        after = core.council_path(self.data, core.starting_state("SynodEnvoy"), "Sandbox", "Arch")
+        self.assertEqual(core.disposition(after["architect_leaning"]), "Undetermined")
+        self.assertIn("ArchitectSilent", after["story_flags"])
+
+    def test_council_path_clamps_values(self):
+        before = dict(core.starting_state("SynodEnvoy"), instability=95.0, chrono_charge=5.0)
+        refuse = core.council_path(self.data, before, "Refuse", "Command")
+        sandbox = core.council_path(self.data, before, "Sandbox", "Command")
+        self.assertEqual(refuse["instability"], 100.0)
+        self.assertEqual(sandbox["chrono_charge"], 0.0)
+
+    def test_council_path_raises_for_option_not_offered(self):
+        with self.assertRaises(ValueError):
+            core.council_path(self.data, core.starting_state("GuildEngineer"), "Rite", "Passage")
+
+    def test_council_path_raises_for_unknown_option(self):
+        with self.assertRaises(KeyError):
+            core.council_path(self.data, core.starting_state("SynodEnvoy"), "Grant", "Nope")
+
 
 if __name__ == "__main__":
     unittest.main()

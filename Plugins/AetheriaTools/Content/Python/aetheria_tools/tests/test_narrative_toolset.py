@@ -68,3 +68,34 @@ class AetheriaNarrativeToolsetTestCase(ToolCallTestCase):
         """Raises for a background that does not exist."""
         with self.assertToolRaisesRuntimeError():
             AetheriaNarrativeToolset.preview_sequence("Briefing", "Pirate", [], "Rhen")
+
+    def test_get_starting_campaign_state_applies_background(self):
+        """Starts from the Game Instance defaults plus the background's loyalty bonus."""
+        state = AetheriaNarrativeToolset.get_starting_campaign_state("OutcastCorsair")
+        self.assertEqual(state.crew_loyalty["Cormaker"], 60)
+        self.assertEqual(state.phantom_ships_active, 200)
+
+    def test_get_starting_campaign_state_raises_on_unknown_background(self):
+        """Raises for a background that does not exist."""
+        with self.assertToolRaisesRuntimeError():
+            AetheriaNarrativeToolset.get_starting_campaign_state("Pirate")
+
+    def test_preview_council_path_grant_arch_is_dominion(self):
+        """Grant + Arch costs the Phantom Fleet twenty ships."""
+        state = AetheriaNarrativeToolset.get_starting_campaign_state("SynodEnvoy")
+        preview = AetheriaNarrativeToolset.preview_council_path(state, "Grant", "Arch")
+        self.assertEqual(preview.disposition, "Dominion")
+        self.assertEqual(preview.state.phantom_ships_active, 180)
+        self.assertIn("SquadronIIIAlienated", list(preview.state.story_flags))
+
+    def test_preview_council_path_raises_for_option_not_offered(self):
+        """Raises when the Rite is chosen by a non-Synod captain."""
+        state = AetheriaNarrativeToolset.get_starting_campaign_state("GuildEngineer")
+        with self.assertToolRaisesRuntimeError():
+            AetheriaNarrativeToolset.preview_council_path(state, "Rite", "Passage")
+
+    def test_preview_council_path_raises_for_unknown_option(self):
+        """Raises for a council row that does not exist."""
+        state = AetheriaNarrativeToolset.get_starting_campaign_state("SynodEnvoy")
+        with self.assertToolRaisesRuntimeError():
+            AetheriaNarrativeToolset.preview_council_path(state, "Grant", "Nope")

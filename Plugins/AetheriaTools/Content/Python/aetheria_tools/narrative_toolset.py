@@ -35,6 +35,28 @@ class NarrativeLine(unreal.StructBase):
     text = unreal.uproperty(str)
 
 
+@unreal.ustruct()
+class CampaignState(unreal.StructBase):
+    """The BP_AetheriaGameInstance values the councils read or change."""
+
+    background = unreal.uproperty(str, meta={"ToolTip": "Captain background (E_Background value)."})
+    instability = unreal.uproperty(float, meta={"ToolTip": "Star-Drive instability, 0-100."})
+    chrono_charge = unreal.uproperty(float, meta={"ToolTip": "Chrono-Core charge, 0-100."})
+    phantom_ships_active = unreal.uproperty(int)
+    spire_recalibrations = unreal.uproperty(int)
+    architect_leaning = unreal.uproperty(int, meta={"ToolTip": "-100 (Dominion) to 100 (Custodian)."})
+    crew_loyalty = unreal.uproperty(unreal.Map(str, int), meta={"ToolTip": "E_Speaker value to loyalty, -100 to 100."})
+    story_flags = unreal.uproperty(unreal.Array(str))
+
+
+@unreal.ustruct()
+class CouncilPathPreview(unreal.StructBase):
+    """Where a pair of council choices leaves the campaign."""
+
+    disposition = unreal.uproperty(str, meta={"ToolTip": "Custodian, Dominion or Undetermined."})
+    state = unreal.uproperty(CampaignState, meta={"ToolTip": "After both options and the Architect's consequence."})
+
+
 @unreal.uclass()
 class AetheriaNarrativeToolset(unreal.ToolsetDefinition):
     """Aetheria's story content: imports the dialogue and council DataTables from the
@@ -126,6 +148,42 @@ class AetheriaNarrativeToolset(unreal.ToolsetDefinition):
         except KeyError as error:
             raise ValueError(error.args[0]) from None
         return [NarrativeLine(speaker=s, text=t) for s, t in lines]
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def get_starting_campaign_state(background: str) -> CampaignState:
+        """Campaign state right after captain creation, including the background's loyalty bonus.
+
+        Args:
+            background: E_Background value of the Captain.
+        """
+        return CampaignState(**core.starting_state(background))
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def preview_council_path(state: CampaignState, relay: str, directive: str) -> CouncilPathPreview:
+        """Applies a Relay council choice, a Directive council choice and the resulting Architect
+        consequence to a campaign state, as the game would, using the narrative source.
+
+        Args:
+            state: Campaign state on arrival at the Ember Relay council.
+            relay: DT_Council_Relay row name. Must be offered to the state's background.
+            directive: DT_Council_Directive row name.
+        """
+        data = AetheriaNarrativeToolset._load_valid_source()
+        before = {
+            "background": state.background, "instability": state.instability,
+            "chrono_charge": state.chrono_charge, "phantom_ships_active": state.phantom_ships_active,
+            "spire_recalibrations": state.spire_recalibrations, "architect_leaning": state.architect_leaning,
+            "crew_loyalty": {str(k): v for k, v in state.crew_loyalty.items()},
+            "story_flags": [str(f) for f in state.story_flags],
+        }
+        try:
+            after = core.council_path(data, before, relay, directive)
+        except (KeyError, ValueError) as error:
+            raise ValueError(error.args[0]) from None
+        return CouncilPathPreview(disposition=core.disposition(after["architect_leaning"]),
+                                  state=CampaignState(**after))
 
     @staticmethod
     def _source_dir() -> str:
