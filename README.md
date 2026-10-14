@@ -9,9 +9,12 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `Config/` | Game Instance class, startup maps, Enhanced Input defaults, packaging map list |
 | `Saved/Config/WindowsEditor/EditorPerProjectUserSettings.ini` | Auto-starts the Unreal MCP server with the editor |
 | `.mcp.json` | Connects Claude Code to the editor's MCP server |
-| `Source_Art/Meshes/*.fbx` | Placeholder fleet: Crystal Dreadnought (1,020 m), the Wayward, Phantom battle-cruiser and heavy carrier, Corsair salvage gunship and boarding pod, Iron Tithe cruiser and interceptor. Contact sheet: `Source_Art/fleet_sheet.png` |
+| `Source_Art/Meshes/*.fbx` | Placeholder fleet: Crystal Dreadnought (1,020 m), the Wayward, Phantom battle-cruiser and heavy carrier, Corsair salvage gunship and boarding pod, Iron Tithe cruiser and interceptor, and Act VII's Severant choir-skiff, Silence emitter frigate, *The Last Silence* and Kesh's refuge tender. Contact sheet: `Source_Art/fleet_sheet.png` |
+| `Source_Art/Environments/*.fbx` | Act VI–VII set pieces: Omega Arch, Ember Relay, Lantern Drift cluster, Arch Wake debris, Pyre Gate bastion and pylon, Vault of Records, Glass Sea shards. Contact sheet: `Source_Art/environment_sheet.png` |
 | `Tools/Blender/make_fleet.py` | Regenerates those meshes (`blender --background --python make_fleet.py -- <out_dir>`) |
-| `Tools/Blender/render_fleet_sheet.py` | Renders the contact sheet (`blender --background --python render_fleet_sheet.py -- <meshes_dir> <out.png>`) |
+| `Tools/Blender/make_environments.py` | Regenerates the set pieces (`blender --background --python make_environments.py -- <out_dir>`) |
+| `Tools/Blender/aetheria_mesh.py` | Shared mesh helpers used by both generators |
+| `Tools/Blender/render_fleet_sheet.py` | Renders a contact sheet of any asset folder (`blender --background --python render_fleet_sheet.py -- <assets_dir> <out.png>`) |
 | `BuildData/*.csv` | Import into DT_StarNodes / DT_LeapRoutes |
 | `BuildData/Narrative/*.json` | Dialogue and council content for DT_Sequences / DT_Council_Relay / DT_Council_Directive |
 | `Plugins/AetheriaTools/` | Editor-only Python toolsets exposed through Unreal MCP: `AetheriaNarrativeToolset` (story tables) and `AetheriaStarChartToolset` (chart validation, leap costs, route planning) |

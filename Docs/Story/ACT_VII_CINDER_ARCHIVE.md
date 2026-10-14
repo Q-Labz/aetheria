@@ -336,5 +336,6 @@ Commander Vance's fleet withdrew toward Tithe Anchorage. Report ends."
 - **Combat:** `BP_SeverantSkiff`, `BP_SilenceEmitter` (component: telegraph ring + pulse that calls
   `Flagship.InterruptBeam()` and `CombatManager.EndSurge()`), `BP_SeverantBastion` (pylon-gated core),
   `BP_LastSilence` (Ithane's flagship), and a defend-objective variant of `BP_CombatManager`.
-- **Meshes needed:** Severant Choir-skiff, Silence emitter frigate, Bastion + pylons, *The Last Silence*,
-  Kesh's refuge tender. Add to `Tools/Blender/make_fleet.py`.
+- **Meshes (generated):** ships in `Source_Art/Meshes/`: SM_SeverantChoirSkiff, SM_SilenceEmitterFrigate,
+  SM_TheLastSilence, SM_KeshRefugeTender. Set pieces in `Source_Art/Environments/`: SM_SeverantBastion and
+  SM_BastionPylon (E2), SM_VaultOfRecords (C3/E4), SM_GlassShardField (GlassSea, E1).
