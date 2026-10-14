@@ -9,6 +9,7 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `Config/` | Game Instance class, startup maps, Enhanced Input defaults, packaging map list |
 | `Saved/Config/WindowsEditor/EditorPerProjectUserSettings.ini` | Auto-starts the Unreal MCP server with the editor |
 | `.mcp.json` | Connects Claude Code to the editor's MCP server |
+| `setup.bat`, `Tools/setup.ps1` | One-time Windows setup: choose the engine, update the project file, open the editor |
 | `Source_Art/Meshes/*.fbx` | Placeholder fleet: Crystal Dreadnought (1,020 m), the Wayward, Phantom battle-cruiser and heavy carrier, Corsair salvage gunship and boarding pod, Iron Tithe cruiser and interceptor, and Act VII's Severant choir-skiff, Silence emitter frigate, *The Last Silence* and Kesh's refuge tender. Contact sheet: `Source_Art/fleet_sheet.png` |
 | `Source_Art/Environments/*.fbx` | Act VI–VII set pieces: Omega Arch, Ember Relay, Lantern Drift cluster, Arch Wake debris, Pyre Gate bastion and pylon, Vault of Records, Glass Sea shards. Contact sheet: `Source_Art/environment_sheet.png` |
 | `Tools/Blender/make_fleet.py` | Regenerates those meshes (`blender --background --python make_fleet.py -- <out_dir>`) |
@@ -23,11 +24,12 @@ Narrative fleet-command RPG with real-time-with-pause combat. UE5, Blueprint onl
 | `SLICE_SPEC.md` | Full Blueprint spec for the vertical slice |
 | `CLAUDE.md` | Build order Claude Code follows through Unreal MCP |
 
-## Start building
-1. Set `EngineAssociation` in `Aetheria.uproject` to your engine version (it is set to 5.7; the
-   ModelContextProtocol plugin must exist in your engine build).
-2. Open `Aetheria.uproject` (choose to create the Content folder if asked). The MCP server starts automatically.
-3. In this folder, run `claude` and say: "Build the game following CLAUDE.md, starting at phase 1."
+## Start building (Windows)
+1. Clone the repo next to your other projects, e.g. `cd D:\` then `git clone https://github.com/Q-Labz/aetheria.git`.
+2. Double-click `setup.bat`. It lists your installed engines, points `Aetheria.uproject` at the newest one that
+   has the Unreal MCP plugin (`ModelContextProtocol`), and opens the editor, which starts the MCP server.
+   Options: `setup.bat -Engine 5.6` picks a version; `setup.bat -NoLaunch` only updates the project file.
+3. In the same folder, run `claude` and say: "Build the game following CLAUDE.md, starting at phase 1."
 
 ## Tests
 Engine-independent narrative tests (no Unreal needed):
