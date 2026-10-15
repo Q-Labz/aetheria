@@ -110,6 +110,7 @@ protected:
 // ---------------------------------------------------------------------------------------------
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueFinished);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDialogueLine, E_Speaker, Speaker);
 
 /** Plays a list of lines, skipping those whose RequiredFlag is not set. WBP_Dialogue is a Blueprint child. */
 UCLASS(Abstract, Blueprintable)
@@ -128,6 +129,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Dialogue")
 	FOnDialogueFinished OnDialogueFinished;
+
+	/** Raised as each visible line is shown, with its speaker (the bridge director frames them) */
+	UPROPERTY(BlueprintAssignable, Category="Dialogue")
+	FOnDialogueLine OnLineShown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue", meta=(ExposeOnSpawn="true"))
 	TArray<FS_Line> Lines;

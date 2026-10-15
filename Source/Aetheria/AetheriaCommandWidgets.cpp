@@ -353,6 +353,7 @@ void UAetheriaDialogue::ShowCurrent(bool bDeferFinish)
 			{
 				LineText->SetText(Out);
 			}
+			OnLineShown.Broadcast(Lines[Index].Speaker);
 			return;
 		}
 		++Index;

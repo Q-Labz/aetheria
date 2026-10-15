@@ -15,6 +15,7 @@ class UAetheriaDialogue;
 class UAetheriaStarMap;
 class UAetheriaCouncil;
 class UAetheriaSliceEnd;
+class AAetheriaBridgeDirector;
 
 /**
  *  Drives the command level's screen flow (SLICE_SPEC.md section 6): captain creation, dialogue,
@@ -66,6 +67,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Flow")
 	TObjectPtr<UAetheriaGameInstance> GI;
 
+	/** The bridge's camera director, when L_Command has one */
+	UPROPERTY(BlueprintReadOnly, Category="Flow")
+	TObjectPtr<AAetheriaBridgeDirector> Director;
+
 	/** What happens when the current dialogue ends */
 	UPROPERTY(BlueprintReadOnly, Category="Flow")
 	FName AfterDialogue;
@@ -116,6 +121,12 @@ protected:
 
 	UFUNCTION()
 	void OnSequenceDone();
+
+	UFUNCTION()
+	void OnLineShown(E_Speaker Speaker);
+
+	/** Cuts the bridge camera to a named shot, if there is a director */
+	void ShowShot(FName Shot);
 
 	/** Points the view at the level's camera tagged CommandCamera */
 	void UseCommandCamera();

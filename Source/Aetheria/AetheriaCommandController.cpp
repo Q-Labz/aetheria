@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaCommandController.h"
+#include "AetheriaBridgeDirector.h"
 #include "AetheriaCommandWidgets.h"
 #include "AetheriaGameInstance.h"
 #include "Aetheria.h"
@@ -55,6 +56,7 @@ void AAetheriaCommandController::BeginPlay()
 	using namespace AetheriaFlow;
 
 	GI = Cast<UAetheriaGameInstance>(GetGameInstance());
+	Director = AAetheriaBridgeDirector::Find(this);
 	UseCommandCamera();
 	FocusWidget(nullptr);
 
@@ -80,6 +82,12 @@ void AAetheriaCommandController::BeginPlay()
 
 void AAetheriaCommandController::UseCommandCamera()
 {
+	if (Director)
+	{
+		Director->ShowShot(Director->WideShot);
+		return;
+	}
+
 	TArray<AActor*> Cameras;
 	UGameplayStatics::GetAllActorsOfClassWithTag(this, ACameraActor::StaticClass(), AetheriaFlow::CameraTag, Cameras);
 	if (Cameras.Num() == 0)
@@ -105,6 +113,7 @@ void AAetheriaCommandController::FocusWidget(UUserWidget* Widget)
 
 void AAetheriaCommandController::ShowCreation()
 {
+	ShowShot(Director ? Director->WideShot : NAME_None);
 	if (UClass* Class = CreationClass.LoadSynchronous())
 	{
 		if (UAetheriaCaptainCreation* Creation = CreateWidget<UAetheriaCaptainCreation>(this, Class))
@@ -123,6 +132,7 @@ void AAetheriaCommandController::ShowStarMap()
 	{
 		GI->NextScreen = AetheriaFlow::StarMap;
 	}
+	ShowShot(Director ? Director->ChartShot : NAME_None);
 
 	if (UClass* Class = StarMapClass.LoadSynchronous())
 	{
@@ -162,6 +172,7 @@ void AAetheriaCommandController::PlayLines(const TArray<FS_Line>& Lines, FName A
 
 	Dialogue->SetLines(Lines);
 	Dialogue->OnDialogueFinished.AddDynamic(this, &AAetheriaCommandController::OnSequenceDone);
+	Dialogue->OnLineShown.AddDynamic(this, &AAetheriaCommandController::OnLineShown);
 	Dialogue->AddToViewport(5);
 	FocusWidget(Dialogue);
 }
@@ -240,9 +251,26 @@ void AAetheriaCommandController::OnArrive(E_Encounter Encounter)
 	}
 }
 
+void AAetheriaCommandController::OnLineShown(E_Speaker Speaker)
+{
+	if (Director)
+	{
+		Director->ShowSpeaker(Speaker);
+	}
+}
+
+void AAetheriaCommandController::ShowShot(FName Shot)
+{
+	if (Director && !Shot.IsNone())
+	{
+		Director->ShowShot(Shot);
+	}
+}
+
 void AAetheriaCommandController::ShowCouncil(UDataTable* Table, FName Key)
 {
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
+	ShowShot(Director ? Director->CouncilShot : NAME_None);
 
 	if (UClass* Class = CouncilClass.LoadSynchronous())
 	{
@@ -283,6 +311,7 @@ void AAetheriaCommandController::ApplyArchitectConsequence()
 void AAetheriaCommandController::ShowSliceEnd()
 {
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
+	ShowShot(Director ? Director->WideShot : NAME_None);
 
 	if (UClass* Class = SliceEndClass.LoadSynchronous())
 	{
