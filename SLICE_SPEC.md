@@ -1,7 +1,10 @@
-# Aetheria: Beyond the Arch — Vertical Slice Spec (UE5, Blueprint only)
+# Aetheria: Beyond the Arch — Vertical Slice Spec (UE 5.8, Blueprints + C++)
 
 Canonical build spec. `CLAUDE.md` gives the build order; this file gives the exact contents.
 Notation: `→` = exec flow, `[Node]` = Blueprint node. All assets live under `/Game/Aetheria/`.
+Written as a Blueprint-only spec. Where the build moved a part to C++ in the `Aetheria` module (the Unreal MCP
+Blueprint tools cannot create enum-typed variables/parameters or Blueprint struct/enum members), a
+**C++ (built)** note says so; the C++ keeps the names, defaults and behaviour given here unless the note says otherwise.
 
 Slice flow: name the Captain and pick a background → Vex AI briefing → star chart (Arch Wake / Lantern
 Drift / Ember Relay; Instability starts at 25) → leaping to the Lantern Drift (or straight to the Ember
@@ -12,15 +15,15 @@ question → visible consequence → end-of-slice summary.
 ---
 
 ## 0. Project
-- Blank Blueprint project (already scaffolded: `Aetheria.uproject`, `Config/*.ini`).
-- Folders: Core, Data, Input, Ships, Combat, UI, Maps, Materials, Meshes.
+- UE 5.8 C++ project, game module `Source/Aetheria` (already scaffolded: `Aetheria.uproject`, `Config/*.ini`).
+- Folders: Core, Data, Input, Ships, Combat, UI, Maps, Materials, Meshes, Environments.
 - Materials (placeholders):
   - `M_Emissive`: Unlit; Vector Param `Color` × Scalar Param `Glow` (20) → Emissive. Beams, rings, tracers.
   - `M_Crystal`: Default Lit; BaseColor (0.05,0.15,0.25), Metallic 0.3, Roughness 0.1,
     Emissive = Fresnel(Exponent 3) × (0.3,0.8,1.0) × 8.
   - `M_Hostile`: Default Lit; BaseColor (0.25,0.04,0.02), Emissive = Fresnel × (1,0.2,0.05) × 4.
-- Meshes: import `Source_Art/Meshes/*.fbx` to `/Game/Aetheria/Meshes` with Import Uniform Scale **0.01**,
-  Nanite ON, no collision. Assign `M_Crystal` to Dreadnought/Wayward/Phantom slots, `M_Hostile` to Tithe slots.
+- Meshes: import `Source_Art/Meshes/*.fbx` to `/Game/Aetheria/Meshes` with Import Uniform Scale **1.0**
+  (changed from 0.01: the FBXs are already in UE units; SM_CrystalDreadnought = 1,018.5 uu), Nanite ON, no collision. Assign `M_Crystal` to Dreadnought/Wayward/Phantom slots, `M_Hostile` to Tithe slots.
   Slice uses SM_CrystalDreadnought, SM_PhantomCruiser, SM_CorsairGunship, SM_TitheCruiser, SM_TitheInterceptor;
   SM_Wayward, SM_PhantomCarrier and SM_BoardingPod are ready for roadmap work.
 - Set pieces: import `Source_Art/Environments/*.fbx` to `/Game/Aetheria/Environments` the same way.
@@ -30,7 +33,9 @@ question → visible consequence → end-of-slice summary.
     when the battle is fought at the Ember Relay (Vance intercepts), add SM_EmberRelay outside the arena.
 - PostProcessVolume per map: Infinite Extent ON, Bloom 1.5, Exposure Min = Max = 1.
 
-## 1. Enumerations (Data/)
+## 1. Enumerations
+**C++ (built):** `UENUM`s in `Source/Aetheria/AetheriaTypes.h` (`/Script/Aetheria.E_*`), not assets in Data/.
+Display names are the value names; there is no separate display-name step.
 | Enum | Values |
 |---|---|
 | `E_Background` | SynodEnvoy, GuildEngineer, CoalitionVanguard, OutcastCorsair |
@@ -38,8 +43,10 @@ question → visible consequence → end-of-slice summary.
 | `E_Faction` | Player, VanceRemnant |
 | `E_Encounter` | None, Combat, Council |
 
-## 2. Structures (Data/)
-- `S_StarNode`: NodeID (Name), DisplayName (Text), Description (Text), MapPos (Vector2D), Encounter (E_Encounter)
+## 2. Structures
+**C++ (built):** `USTRUCT`s in `AetheriaTypes.h` (C++ `FS_*`, reflected as `/Script/Aetheria.S_*`), not assets in Data/.
+- `S_StarNode`: NodeID (Name), DisplayName (Text), Description (Text), MapPos (Vector2D), Encounter (E_Encounter),
+  HazardSurcharge (Float, optional, default 0 — added for the Act VII chart; read by `validate_star_chart`, 0 in the slice)
 - `S_LeapRoute`: FromNode (Name), ToNode (Name), BaseCost (Float)
 - `S_Line`: Speaker (E_Speaker), Text (Text), BackgroundOverride (Map E_Background→Text), RequiredFlag (Name, default None)
 - `S_Sequence`: Lines (Array S_Line)
@@ -58,6 +65,10 @@ question → visible consequence → end-of-slice summary.
 - `DT_Council_Relay`, `DT_Council_Directive` (S_CouncilOption) — rows in §11.
 
 ## 4. Game Instance — `BP_AetheriaGameInstance` (Core/)
+**C++ (built):** all variables, the dispatcher and the functions below are in `UAetheriaGameInstance`
+(`Source/Aetheria/AetheriaGameInstance.*`) under these names (BlueprintCallable / BlueprintPure);
+`BP_AetheriaGameInstance` is an empty Blueprint child. Automation tests `Aetheria.GameInstance.LeapCost` and
+`Aetheria.GameInstance.Rupture` (`Source/Aetheria/Tests/`) cover the leap-cost and rupture math.
 **Variables (defaults):** CaptainName String "" · Background E_Background SynodEnvoy · Instability Float 25 ·
 ChronoCharge Float 60 · FlagshipHullPct Float 1.0 · CrewInjured Int 0 · BioGelDoses Int 2 ·
 SpireRecalibrations Int 1 · PhantomShipsActive Int 200 · PursuitClock Int 0 · CurrentNode Name ArchWake ·
@@ -82,9 +93,10 @@ PreviewRupture(Excess)→HullLossPct,Injured,Desync   (Pure)
   HullLossPct = 0.08 + E*0.012 ; Injured = 1 + Floor(E/8) ; Desync = 2*Floor(E/5)
 ExecuteLeap(To)→E_Encounter
   GetLeapCost(To) → !Found → return None
-  Instability >= 80 → CrewInjured += 1 ; LastReport += "Containment bleed: 1 crew injured."
+  Instability >= 80 → CrewInjured += 1 ; Bleed = " Containment bleed: 1 crew injured."
   WillOverflow ? ResolveRupture(Projected-100)
                : (Instability = Projected ; LastReport = "Stellar Leap complete. Containment holding.")
+  LastReport += Bleed            // built: appended after the leap/rupture report, so it isn't overwritten
   CurrentNode = To → return DT_StarNodes[To].Encounter → Call OnCampaignStateChanged
 ResolveRupture(Excess)
   PreviewRupture(Excess) → H,I,D
@@ -250,6 +262,13 @@ Tick → bAimingBeam → Flagship.ShowPreview(CursorToPlane())
 ```
 
 ## 9. Ships
+**C++ (built):** the logic below is C++ — `AAetheriaShipBase`, `AAetheriaFlagship`, `AAetheriaPhantomSquadron`,
+`AAetheriaCorsairGunship`, `AAetheriaTitheCruiser`, `AAetheriaBeamVFX`, `AAetheriaMoveMarker` and the widget base
+`UAetheriaShipBar` (`Source/Aetheria/`). The assets are thin children holding stats and meshes: BP_BeamVFX, BP_ShipBase,
+BP_Flagship, BP_PhantomSquadron, BP_CorsairGunship, BP_TitheCruiser in Ships/; BP_TitheInterceptor (Ships/) is a child of
+BP_ShipBase (no C++ class of its own); BP_MoveMarker is in **Combat/**; WBP_ShipBar is in **UI/**.
+Every `Log(Speaker, Text)` a ship makes (Thorne's undermanned line, beam charging/anomaly, Nix's matrix strain, Vance's
+taunt) is raised as **`OnShipMessage(Ship, Speaker, Text)`**; the combat manager forwards it to the HUD comms log.
 **BP_BeamVFX**: Cylinder (no collision, M_Emissive). `Setup(Start,End,Width,Color,Life)`: location midpoint,
 rotation Make Rot from Z(End−Start), scale (W/100, W/100, Len/100), dynamic material Color, Life>0 → Set Life Span.
 
@@ -259,7 +278,7 @@ HealthBar (WidgetComponent, Screen space, 140×22, WBP_ShipBar, Z+500).
 Vars: DisplayName, Faction, MaxHull 500, MaxShield 150, ShieldRegenPerSec 10, ShieldRegenDelay 3, MoveSpeed 900,
 TurnSpeed 60, WeaponRange 3500, WeaponDamage 20, FireInterval 1.0, AggroRange 7000, DamageMultiplier 1.0,
 bTargetsFlagship false; runtime Hull, Shield, MoveTarget, bHasMoveOrder, AttackTarget, bIsDead, LastHitTime, Manager.
-Dispatchers: OnShipDestroyed(Ship), OnShipDamaged(Ship).
+Dispatchers: OnShipDestroyed(Ship), OnShipDamaged(Ship), OnShipMessage(Ship, Speaker, Text) (built: comms lines).
 ```
 BeginPlay → Hull/Shield = max → Timer FireTick (FireInterval, loop) → Timer RegenTick (0.25, loop) →
    enemy → Timer AIThink (1.0, loop) → HealthBar widget SetOwnerShip(self)      // timers halt while paused
@@ -315,6 +334,8 @@ BeginPlay → GI ; PC.Manager = self ; spawn at tagged TargetPoints:
    BP_Flagship (→ PC.Flagship), BP_PhantomSquadron "Phantom Squadron I" (→ PC.Squadron1), "Phantom Squadron II"
    (→ PC.Squadron2), BP_CorsairGunship if OutcastCorsair ; bind each OnShipDestroyed → OnPlayerLost
    BP_TitheCruiser + (4 + (PursuitClock>=2 ? 2 : 0)) BP_TitheInterceptor ; AliveEnemies ; bind → OnEnemyLost
+   every ship: bind OnShipMessage → HUD.Log(Speaker, Text). Spawn deferred and bind before finishing the spawn:
+   ships post lines in BeginPlay (Thorne, Nix), which a bind after a plain spawn would miss
    cache GI Instability/FlagshipHullPct/PhantomShipsActive for Retry
    Log: VEX AI "Contact. Sector 7 transponder codes. Commander Vance's picket, Captain."
         COMMANDER VANCE "Key-Bearer. You opened a door that should have stayed shut. I followed you through it."
