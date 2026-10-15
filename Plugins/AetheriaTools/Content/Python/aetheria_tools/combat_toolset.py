@@ -3,6 +3,9 @@ import toolset_registry
 
 from aetheria_tools import combat_core as core
 
+# C++ parent of every ship (Source/Aetheria/AetheriaShipBase.h)
+NATIVE_SHIP_BASE = "/Script/Aetheria.AetheriaShipBase"
+
 
 @unreal.ustruct()
 class ShipStat(unreal.StructBase):
@@ -97,9 +100,11 @@ class AetheriaCombatToolset(unreal.ToolsetDefinition):
         if blueprint is None:
             return None
         cls = blueprint.generated_class()
-        base = unreal.load_class(None, f"{core.ship_path(core.BASE_SHIP)}.{core.BASE_SHIP}_C")
+        # Ships derive from BP_ShipBase, or from the C++ ship classes it shares a parent with
+        bases = [unreal.load_class(None, f"{core.ship_path(core.BASE_SHIP)}.{core.BASE_SHIP}_C"),
+                 unreal.load_class(None, NATIVE_SHIP_BASE)]
         return {
-            "is_ship": base is not None and unreal.MathLibrary.class_is_child_of(cls, base),
+            "is_ship": any(b is not None and unreal.MathLibrary.class_is_child_of(cls, b) for b in bases),
             "properties": AetheriaCombatToolset._properties(blueprint, core.read_names(ship)),
             "tags": [str(t) for t in unreal.get_default_object(cls).get_editor_property("tags")],
             "meshes": AetheriaCombatToolset._component_meshes(blueprint),
