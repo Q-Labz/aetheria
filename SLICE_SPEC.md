@@ -348,7 +348,8 @@ StartSurge() → ChronoCharge -= 30 → living player ships: Custom Time Dilatio
 EndSurge → restore dilation 1.0, DamageMultiplier /= 2
 Victory() → FlagshipHullPct = Hull/MaxHull ; PhantomShipsActive -= squadron losses ; StoryFlags.Add("LanternCleared") ;
    NextScreen="PostCombat" → WBP_AfterAction(victory) → SetTacPause(true)
-Defeat() → WBP_AfterAction(defeat)
+Defeat() → restore cached GI values ; NextScreen="StarMap" (Return to Command withdraws to the star map, never the
+   PostCombat debrief) → WBP_AfterAction(defeat) → SetTacPause(true)
 ```
 **WBP_AfterAction** — Victory: "MISSION REPORT — ENGAGEMENT AT THE LANTERN DRIFT / Result: Hostile picket destroyed. /
 Crystal Dreadnought hull integrity: {H}%. / Phantom Fleet losses: {L} vessels. Fleet strength: {X} of 200. / Prismatic

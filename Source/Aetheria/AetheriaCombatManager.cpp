@@ -362,6 +362,13 @@ void AAetheriaCombatManager::Defeat()
 	bBattleOver = true;
 	EndSurge();
 
+	// the engagement is undone: Retry reopens it, Return to Command withdraws to the star map, not the victory debrief
+	RestoreCachedCampaign();
+	if (UAetheriaGameInstance* GI = GetAetheriaGameInstance())
+	{
+		GI->NextScreen = TEXT("StarMap");
+	}
+
 	ShowAfterAction(false, FText::FromString(TEXT("MISSION REPORT")),
 		FText::FromString(TEXT("The Crystal Dreadnought has been lost. The Key-Bearer's flag is struck. The armada scatters into the dark.")));
 
@@ -396,15 +403,20 @@ void AAetheriaCombatManager::ReturnToCommand()
 
 void AAetheriaCombatManager::RetryEngagement()
 {
+	RestoreCachedCampaign();
+
+	UGameplayStatics::SetGamePaused(this, false);
+	UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this)));
+}
+
+void AAetheriaCombatManager::RestoreCachedCampaign()
+{
 	if (UAetheriaGameInstance* GI = GetAetheriaGameInstance())
 	{
 		GI->Instability = CachedInstability;
 		GI->FlagshipHullPct = CachedFlagshipHullPct;
 		GI->PhantomShipsActive = CachedPhantomShipsActive;
 	}
-
-	UGameplayStatics::SetGamePaused(this, false);
-	UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this)));
 }
 
 UAetheriaGameInstance* AAetheriaCombatManager::GetAetheriaGameInstance() const
