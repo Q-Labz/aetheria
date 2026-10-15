@@ -6,6 +6,8 @@ import toolset_registry
 from aetheria_tools import narrative_core as core
 
 STRUCT_FOLDER = "/Game/Aetheria/Data"
+# Row structs are defined in C++ (Source/Aetheria/AetheriaTypes.h); STRUCT_FOLDER is the Blueprint fallback.
+NATIVE_STRUCT_PACKAGE = "/Script/Aetheria"
 
 
 @unreal.ustruct()
@@ -70,7 +72,7 @@ class AetheriaNarrativeToolset(unreal.ToolsetDefinition):
         BuildData/Narrative/*.json, then saves them. Nothing is written if the source has problems.
 
         Args:
-            destination: Content folder for the tables. Row structs are always read from
+            destination: Content folder for the tables. Row structs come from the Aetheria C++ module, else
                 /Game/Aetheria/Data.
 
         Returns:
@@ -199,14 +201,25 @@ class AetheriaNarrativeToolset(unreal.ToolsetDefinition):
         return data
 
     @staticmethod
+    def _find_row_struct(struct_name: str):
+        """The C++ row struct from the Aetheria module, or a Blueprint struct asset of the same name."""
+        native = unreal.load_object(None, f"{NATIVE_STRUCT_PACKAGE}.{struct_name}")
+        if native is not None:
+            return native
+        struct_path = f"{STRUCT_FOLDER}/{struct_name}"
+        if unreal.EditorAssetLibrary.does_asset_exist(struct_path):
+            return unreal.EditorAssetLibrary.load_asset(struct_path)
+        return None
+
+    @staticmethod
     def _get_or_create_table(destination: str, table: str, struct_name: str) -> unreal.DataTable:
         asset_path = f"{destination}/{table}"
         if unreal.EditorAssetLibrary.does_asset_exist(asset_path):
             return unreal.EditorAssetLibrary.load_asset(asset_path)
-        struct_path = f"{STRUCT_FOLDER}/{struct_name}"
-        row_struct = unreal.EditorAssetLibrary.load_asset(struct_path)
+        row_struct = AetheriaNarrativeToolset._find_row_struct(struct_name)
         if row_struct is None:
-            raise ValueError(f"Row struct {struct_path} does not exist; create it first (CLAUDE.md phase 2).")
+            raise ValueError(f"Row struct {struct_name} not found in {NATIVE_STRUCT_PACKAGE} or {STRUCT_FOLDER}; "
+                             "build the Aetheria module first (CLAUDE.md phase 2).")
         factory = unreal.DataTableFactory()
         factory.set_editor_property("struct", row_struct)
         data_table = unreal.AssetToolsHelpers.get_asset_tools().create_asset(
