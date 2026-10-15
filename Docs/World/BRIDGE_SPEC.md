@@ -88,3 +88,20 @@ characters get a subtle look-at toward the camera. Lip-sync is out of scope (no 
 3. B4 crew, one at a time: create via tool → user finishes face/hair/wardrobe in Creator → Assemble → place →
    replace stand-in. Check: each officer appears at their station and is framed in their shot.
 4. Package check: Windows Shipping still cooks with 0 errors (MetaHumans raise the build size substantially).
+
+## B4 status and hand-off (MetaHuman Creator)
+
+Created by tool in `/Game/Aetheria/Crew/<Name>/MH_<Name>`: TalaVane, JaxMercer, ArisThorne, NixNull, Lyra, Cormaker,
+with body shape (masculine/feminine, fat, muscularity, height), skin tone and eye colour from the table above.
+Lyra's eyes are the palest cool option; the toolset has no violet, so set the violet tint in the Creator.
+
+Finish each in the Creator (double-click the asset):
+1. **Face:** start from a preset close to the look, then blend or sculpt (age, jaw, nose); Tala's jaw scar and
+   Cormaker's scarred brow are skin details.
+2. **Hair, brows, beard:** per the table (Jax: shaved head and short beard; Thorne: silver, tied back; Nix: asymmetric
+   bleached undercut; Lyra: long dark braid; Cormaker: salt-and-pepper beard; Tala: close-cropped dark).
+3. **Wardrobe:** nearest available outfit; uniform colours come later with material overrides.
+4. **Assemble:** "UE Optimized" quality, output in the same folder. Texture synthesis needs the Epic account sign-in.
+
+After assembly, the stand-in mannequins in L_Command's `Bridge/Crew` folder are swapped for the assembled
+Blueprints at the same transforms (same actor tags, so the shots still frame them).
