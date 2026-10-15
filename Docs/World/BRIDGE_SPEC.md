@@ -105,3 +105,26 @@ Finish each in the Creator (double-click the asset):
 
 After assembly, the stand-in mannequins in L_Command's `Bridge/Crew` folder are swapped for the assembled
 Blueprints at the same transforms (same actor tags, so the shots still frame them).
+
+### B4 done (scripted)
+The Creator steps were scripted instead of done by hand: `aetheria_tools.crew_toolset.AetheriaCrewToolset`
+(`finish_crew` → face coefficients from an Epic preset, grooms and DefaultGarment from the engine wardrobe;
+`rig_crew` → face rig and texture sources from the MetaHuman service, needs the editor's Epic sign-in;
+`build_crew` → UE Optimized/Medium assembly into `/Game/Aetheria/Crew/<Name>`, shared rig assets in `Crew/Common`).
+Assemble one character per editor session: memory from an assembly is only released when the editor exits
+(two in a row ran the editor out of commit memory).
+
+| Crew | Preset face | Grooms |
+|---|---|---|
+| Tala Vane | Jelena | Hair_S_Pixie, Eyebrows_M_Natural |
+| Jax Mercer | Kelvin | (shaved) Eyebrows_M_Thick, Beard_S_Full |
+| Dr. Aris Thorne | Walter | Hair_S_LowPonytail, Eyebrows_M_Messy |
+| Nix "Null" | Aoi | Hair_M_SideSweptFringe, Eyebrows_S_FlatThin |
+| Lyra | Celeste | Hair_M_TwistedBraids, Eyebrows_M_Fine |
+| Cmdr. Cormaker | Lorenzo | Hair_S_RecedeMessy, Eyebrows_L_Scraggly, Beard_L_Full |
+
+The assembled `BP_MH_<Name>` replace the mannequins in L_Command (same tags, turned toward their shot camera);
+officer shots are 35 mm head-and-shoulders. Open items: the engine ships only the plain DefaultGarment (white
+shirt and shorts; its colour is internal to the material), so uniforms need outfit assets; hair melanin is
+the default; the bodies play MM_Idle in single-node mode (verify it animates; otherwise retarget an idle);
+Cormaker is no longer an amber hologram.
