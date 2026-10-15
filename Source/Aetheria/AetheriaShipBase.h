@@ -141,6 +141,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visuals")
 	FLinearColor TracerColor = FLinearColor(0.3f, 0.8f, 1.0f);
 
+	/** Blaster bolt width and speed (uu, uu/s); bolts are visual, damage lands when fired */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visuals")
+	float BoltWidth = 14.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visuals")
+	float BoltSpeed = 9000.0f;
+
 	// ---- Events ----
 
 	UPROPERTY(BlueprintAssignable, Category="Ship")
@@ -217,6 +224,9 @@ protected:
 
 	/** False while the ship must hold still (the flagship charging its beam) */
 	virtual bool CanManeuver() const { return true; }
+
+	/** Fires a blaster bolt from the muzzle at Target */
+	void FireBolt(const AActor* Target, float Width) const;
 
 	/** Spawns a BP_BeamVFX between two points */
 	AAetheriaBeamVFX* SpawnBeam(const FVector& Start, const FVector& End, float Width, const FLinearColor& Color, float Life) const;

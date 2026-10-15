@@ -3,6 +3,7 @@
 #include "AetheriaFlagship.h"
 #include "AetheriaBeamVFX.h"
 #include "AetheriaGameInstance.h"
+#include "AetheriaWeaponVFX.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -93,6 +94,13 @@ void AAetheriaFlagship::FireBeam(FVector Target)
 	SetActorRotation(FRotator(0.0f, BeamDir.Rotation().Yaw, 0.0f));
 	PostComms(E_Speaker::VexAI, TEXT("Prismatic array charging."));
 
+	// charge flare swelling at the emitter; its lifespan pauses with the game like the charge timer
+	if (AAetheriaImpactFlash* Flare = AAetheriaImpactFlash::Spawn(GetWorld(), GetMuzzle()->GetComponentLocation(),
+		FLinearColor(0.6f, 0.9f, 1.0f), BeamRadius * 2.4f, BeamChargeTime, 300.0f, true))
+	{
+		Flare->AttachToComponent(GetMuzzle(), FAttachmentTransformRules::KeepWorldTransform);
+	}
+
 	// a world timer: halts while paused, and a Chrono Surge's dilation shortens it (intended)
 	GetWorldTimerManager().SetTimer(BeamChargeTimer, this, &AAetheriaFlagship::DischargeBeam, BeamChargeTime, false);
 }
@@ -126,6 +134,7 @@ void AAetheriaFlagship::DischargeBeam()
 	for (AAetheriaShipBase* Victim : Victims)
 	{
 		UGameplayStatics::ApplyDamage(Victim, BeamDamage * DamageMultiplier * ArchitectBoost, nullptr, this, UDamageType::StaticClass());
+		AAetheriaImpactFlash::Spawn(GetWorld(), Victim->GetActorLocation(), FLinearColor(0.85f, 0.95f, 1.0f), 500.0f, 0.6f, 600.0f);
 		if (!Victim->IsAlive())
 		{
 			++Kills;

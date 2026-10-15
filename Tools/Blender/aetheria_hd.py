@@ -161,7 +161,7 @@ class Ship:
         return all(self.inside(poly, cx + sx * hx, cy + sy * hy) for sx in (-1, 1) for sy in (-1, 1))
 
     def panel_grid(self, faces, cell=(18.0, 10.0), height=(0.3, 1.4), gap=0.7, keep=0.9,
-                   split=0.35, slots=(HULL, HULL, HULL, DARK)):
+                   split=0.35, slots=(HULL,) * 9 + (DARK,)):
         """Orderly hull panelling: a grid of raised plates aligned with the ship, separated by
         panel-line gaps, clipped to each face. Some cells split into four smaller plates."""
         for face in list(faces):

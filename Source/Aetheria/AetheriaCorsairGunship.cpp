@@ -15,6 +15,9 @@ AAetheriaCorsairGunship::AAetheriaCorsairGunship()
 	MaxHull = 1200.0f;
 	MaxShield = 300.0f;
 	FireInterval = 0.3f;
+	TracerColor = FLinearColor(1.0f, 0.6f, 0.15f);
+	BoltWidth = 8.0f;
+	BoltSpeed = 12000.0f;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Mesh(TEXT("/Game/Aetheria/Meshes/SM_CorsairGunship.SM_CorsairGunship"));
 	if (Mesh.Succeeded())
@@ -45,6 +48,6 @@ void AAetheriaCorsairGunship::FireTick()
 	for (AAetheriaShipBase* Target : Targets)
 	{
 		UGameplayStatics::ApplyDamage(Target, FlakDamage * DamageMultiplier, nullptr, this, UDamageType::StaticClass());
-		SpawnBeam(GetMuzzle()->GetComponentLocation(), Target->GetActorLocation(), 15.0f, TracerColor, 0.08f);
+		FireBolt(Target, BoltWidth);
 	}
 }

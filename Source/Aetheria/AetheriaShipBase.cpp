@@ -4,6 +4,7 @@
 #include "AetheriaBeamVFX.h"
 #include "AetheriaGameInstance.h"
 #include "AetheriaShipBar.h"
+#include "AetheriaWeaponVFX.h"
 #include "Aetheria.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
@@ -287,7 +288,7 @@ void AAetheriaShipBase::FireTick()
 	}
 
 	UGameplayStatics::ApplyDamage(Target, WeaponDamage * DamageMultiplier, nullptr, this, UDamageType::StaticClass());
-	SpawnBeam(Muzzle->GetComponentLocation(), Target->GetActorLocation(), 25.0f, TracerColor, 0.12f);
+	FireBolt(Target, BoltWidth);
 }
 
 float AAetheriaShipBase::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -335,10 +336,18 @@ void AAetheriaShipBase::Die()
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	OnShipDestroyed.Broadcast(this);
 
-	// brief flash where the ship was
+	// fireball with a white-hot core and a few secondary bursts around the hull
 	const FVector Location = GetActorLocation();
-	SpawnBeam(Location - FVector(0.0f, 0.0f, 200.0f), Location + FVector(0.0f, 0.0f, 200.0f),
-		Collision->GetScaledSphereRadius() * 1.5f, FLinearColor::White, 0.25f);
+	const float Radius = Collision->GetScaledSphereRadius();
+	UWorld* World = GetWorld();
+	AAetheriaImpactFlash::Spawn(World, Location, FLinearColor(1.0f, 0.45f, 0.12f), Radius * 3.0f, 1.1f, 1500.0f);
+	AAetheriaImpactFlash::Spawn(World, Location, FLinearColor(1.0f, 0.9f, 0.75f), Radius * 1.4f, 0.45f, 800.0f);
+	for (int32 Burst = 0; Burst < 3; ++Burst)
+	{
+		const FVector Offset = FMath::VRand() * Radius * FMath::FRandRange(0.4f, 0.9f);
+		AAetheriaImpactFlash::Spawn(World, Location + FVector(Offset.X, Offset.Y, Offset.Z * 0.3f),
+			FLinearColor(1.0f, 0.55f, 0.2f), Radius * FMath::FRandRange(0.8f, 1.4f), FMath::FRandRange(0.5f, 0.9f), 300.0f);
+	}
 
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
@@ -374,6 +383,14 @@ void AAetheriaShipBase::AIThink()
 	else if (Flagship)
 	{
 		IssueMove(Flagship->GetActorLocation());
+	}
+}
+
+void AAetheriaShipBase::FireBolt(const AActor* Target, float Width) const
+{
+	if (Target)
+	{
+		AAetheriaLaserBolt::Spawn(GetWorld(), Muzzle->GetComponentLocation(), Target->GetActorLocation(), TracerColor, Width, BoltSpeed);
 	}
 }
 
