@@ -72,6 +72,24 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Battle")
 	bool bBattleOver = false;
 
+	/** Battle staged from DT_Battles (Act VII); None = the slice's Lantern Drift engagement */
+	UPROPERTY(BlueprintReadOnly, Category="Battle")
+	FName BattleId = NAME_None;
+
+	UPROPERTY(BlueprintReadOnly, Category="Battle")
+	FS_Battle Battle;
+
+	UPROPERTY(BlueprintReadOnly, Category="Battle")
+	TArray<TObjectPtr<AAetheriaShipBase>> EnemyShips;
+
+	/** Objective ships still alive (battle won when it reaches 0, if the battle has objectives) */
+	UPROPERTY(BlueprintReadOnly, Category="Battle")
+	int32 AliveObjectives = 0;
+
+	/** Defend battles: seconds left to hold */
+	UPROPERTY(BlueprintReadOnly, Category="Battle")
+	float HoldRemaining = 0.0f;
+
 	// ---- Values restored by Retry Engagement ----
 
 	UPROPERTY(BlueprintReadOnly, Category="Retry")
@@ -143,6 +161,14 @@ protected:
 
 	/** Posts lines held back until the HUD existed */
 	void FlushPendingLog();
+
+	/** Spawns a DT_Battles row's groups; false when the row is missing or empty */
+	bool SpawnBattle(UAetheriaGameInstance* GI, TArray<AAetheriaShipBase*>& OutEnemies);
+
+	/** Defend timer and the enemies' withdrawal check, once a second */
+	void BattleTick();
+
+	FTimerHandle BattleTimer;
 
 	UPROPERTY()
 	TArray<TObjectPtr<AAetheriaShipBase>> SurgedShips;

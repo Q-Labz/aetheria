@@ -6,10 +6,12 @@ if hasattr(unreal, "ToolsetRegistry"):
     from aetheria_tools.narrative_toolset import AetheriaNarrativeToolset
     from aetheria_tools.starchart_toolset import AetheriaStarChartToolset
     from aetheria_tools.crew_toolset import AetheriaCrewToolset
+    from aetheria_tools.playtest_toolset import AetheriaPlaytestToolset
 
     unreal.ToolsetRegistry.register_toolset_class(AetheriaCombatToolset)
     unreal.ToolsetRegistry.register_toolset_class(AetheriaNarrativeToolset)
     unreal.ToolsetRegistry.register_toolset_class(AetheriaStarChartToolset)
+    unreal.ToolsetRegistry.register_toolset_class(AetheriaPlaytestToolset)
     if hasattr(unreal, "MetaHumanCharacterEditorSubsystem"):
         unreal.ToolsetRegistry.register_toolset_class(AetheriaCrewToolset)
 else:

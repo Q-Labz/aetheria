@@ -82,9 +82,21 @@ class AetheriaNarrativeToolset(unreal.ToolsetDefinition):
         results = []
         for table, (struct_name, _) in core.TABLES.items():
             data_table = AetheriaNarrativeToolset._get_or_create_table(destination, table, struct_name)
-            json_rows = core.to_import_json(data[table])
+            json_rows = core.to_import_json(data[table], table)
             if not unreal.DataTableFunctionLibrary.fill_data_table_from_json_string(data_table, json_rows):
                 raise RuntimeError(f"Import into {data_table.get_path_name()} failed; see the Output Log.")
+            if not unreal.EditorAssetLibrary.save_loaded_asset(data_table):
+                raise RuntimeError(f"Could not save {data_table.get_path_name()}.")
+            row_names = unreal.DataTableFunctionLibrary.get_data_table_row_names(data_table)
+            results.append(NarrativeTableInfo(table=data_table.get_path_name(), row_count=len(row_names)))
+
+        # act charts kept as CSV beside the slice chart (BuildData/ActVII)
+        build_data = os.path.dirname(AetheriaNarrativeToolset._source_dir())
+        for table, (struct_name, relative) in core.CSV_TABLES.items():
+            csv_path = os.path.join(build_data, relative)
+            data_table = AetheriaNarrativeToolset._get_or_create_table(destination, table, struct_name)
+            if not unreal.DataTableFunctionLibrary.fill_data_table_from_csv_file(data_table, csv_path):
+                raise RuntimeError(f"CSV import of {csv_path} into {data_table.get_path_name()} failed; see the Output Log.")
             if not unreal.EditorAssetLibrary.save_loaded_asset(data_table):
                 raise RuntimeError(f"Could not save {data_table.get_path_name()}.")
             row_names = unreal.DataTableFunctionLibrary.get_data_table_row_names(data_table)

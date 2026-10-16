@@ -66,7 +66,16 @@ void AAetheriaCommandController::BeginPlay()
 		return;
 	}
 
-	if (GI->NextScreen == PostCombat)
+	if (GI->CurrentAct >= 7 && GI->NextScreen == TEXT("ActStart"))
+	{
+		GI->NextScreen = StarMap;
+		PlaySequence(TEXT("ActVII_Opening"), TEXT("ToNode"));
+	}
+	else if (GI->CurrentAct >= 7 && GI->NextScreen == PostCombat)
+	{
+		AfterDataBattle();
+	}
+	else if (GI->NextScreen == PostCombat)
 	{
 		PlaySequence(TEXT("PostCombat"), AfterCombat);
 	}
@@ -224,11 +233,262 @@ void AAetheriaCommandController::OnSequenceDone()
 	{
 		ShowSliceEnd();
 	}
+	else if (After == TEXT("ToNode"))
+	{
+		RunNode(GI ? GI->CurrentNode : NAME_None);
+	}
+	else if (After == TEXT("AfterArrival"))
+	{
+		ContinueNode();
+	}
+	else if (After == TEXT("CouncilIntro"))
+	{
+		const FName Council = PendingNextCouncil;
+		PendingNextCouncil = NAME_None;
+		ShowDataCouncil(Council);
+	}
+	else if (After == TEXT("AfterCouncil"))
+	{
+		if (!PendingStartBattle.IsNone())
+		{
+			const FName Battle = PendingStartBattle;
+			PendingStartBattle = NAME_None;
+			StartBattle(Battle);
+		}
+		else if (!PendingNextCouncil.IsNone() && CanHoldCouncil(PendingNextCouncil))
+		{
+			const FName Council = PendingNextCouncil;
+			PendingNextCouncil = NAME_None;
+			ShowDataCouncil(Council);
+		}
+		else
+		{
+			PendingNextCouncil = NAME_None;
+			ContinueNode();
+		}
+	}
+	else if (After == TEXT("ToBattle"))
+	{
+		const FName Battle = PendingStartBattle;
+		PendingStartBattle = NAME_None;
+		StartBattle(Battle);
+	}
+	else if (After == TEXT("AfterDebrief"))
+	{
+		if (GI && GI->StoryFlags.Contains(TEXT("ActVIIFinaleWon")) && !GI->StoryFlags.Contains(TEXT("ActVIIComplete")))
+		{
+			PlayActEnd();
+		}
+		else
+		{
+			ContinueNode();
+		}
+	}
+	else if (After == TEXT("AfterRevelation") && GI)
+	{
+		// the act-end mission report, built from the campaign state
+		TArray<FS_Line> Report;
+		FS_Line Line;
+		Line.Speaker = E_Speaker::Narrator;
+		Line.Text = FText::FromString(FString::Printf(
+			TEXT("MISSION REPORT — THE CINDER ARCHIVE. The Vault of Records is %s. Severant standing: %s. The Silence: %s. Supply line: %s. Phantom Fleet strength: %d of 200. Commander Vance's fleet withdrew toward Tithe Anchorage. Report ends."),
+			*GI->GetState(TEXT("ArchiveState")).ToString(), *GI->StandingBand().ToString(),
+			GI->StoryFlags.Contains(TEXT("CureDelivered")) ? TEXT("cured") : TEXT("untreated"),
+			*GI->GetState(TEXT("SupplyLine")).ToString(), GI->PhantomShipsActive));
+		Report.Add(Line);
+		GI->StoryFlags.Add(TEXT("ActVIIComplete"));
+		PlayLines(Report, End);
+	}
+}
+
+bool AAetheriaCommandController::CanHoldCouncil(FName Council) const
+{
+	if (!GI || Council.IsNone() || GI->StoryFlags.Contains(FName(*(TEXT("Council_") + Council.ToString()))))
+	{
+		return false;
+	}
+	const UDataTable* Defs = GI->CouncilsTable.LoadSynchronous();
+	const FS_CouncilDef* Def = Defs ? Defs->FindRow<FS_CouncilDef>(Council, TEXT("CanHoldCouncil"), false) : nullptr;
+	if (!Def)
+	{
+		return false;
+	}
+	for (const FName& Flag : Def->RequiredFlags)
+	{
+		if (!GI->StoryFlags.Contains(Flag))
+		{
+			return false;
+		}
+	}
+	const UDataTable* Options = Def->Options.LoadSynchronous();
+	bool bAny = false;
+	if (Options)
+	{
+		Options->ForeachRow<FS_CouncilOption>(TEXT("CanHoldCouncil"), [this, &bAny](const FName&, const FS_CouncilOption& Option)
+		{
+			bAny |= GI->IsOptionAvailable(Option);
+		});
+	}
+	return bAny;
+}
+
+void AAetheriaCommandController::StartActVII()
+{
+	if (GI)
+	{
+		GI->StartActVII();
+	}
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, CommandLevel);
+}
+
+void AAetheriaCommandController::RunNode(FName Node)
+{
+	if (!GI)
+	{
+		return;
+	}
+	UWidgetLayoutLibrary::RemoveAllWidgets(this);
+
+	// Iron Tithe ambush: the pursuit caught up
+	if (GI->PursuitClock >= 5 && !GI->StoryFlags.Contains(TEXT("AmbushSprung")))
+	{
+		GI->StoryFlags.Add(TEXT("AmbushSprung"));
+		GI->PursuitClock = 0;
+		PendingStartBattle = TEXT("Ambush");
+		PlaySequence(TEXT("Ambush_Intro"), TEXT("ToBattle"));
+		return;
+	}
+
+	const UDataTable* Events = GI->ActVIINodeEventsTable.LoadSynchronous();
+	const FS_NodeEvent* Event = Events ? Events->FindRow<FS_NodeEvent>(Node, TEXT("RunNode"), false) : nullptr;
+	const FName Visited(*(TEXT("Visited_") + Node.ToString()));
+	if (Event && !GI->StoryFlags.Contains(Visited))
+	{
+		GI->StoryFlags.Add(Visited);
+		for (const FName& Flag : Event->ArrivalFlags)
+		{
+			GI->StoryFlags.Add(Flag);
+		}
+		if (!Event->ArrivalSequence.IsNone())
+		{
+			PlaySequence(Event->ArrivalSequence, TEXT("AfterArrival"));
+			return;
+		}
+	}
+	ContinueNode();
+}
+
+void AAetheriaCommandController::ContinueNode()
+{
+	if (!GI)
+	{
+		return;
+	}
+	const UDataTable* Events = GI->ActVIINodeEventsTable.LoadSynchronous();
+	if (const FS_NodeEvent* Event = Events ? Events->FindRow<FS_NodeEvent>(GI->CurrentNode, TEXT("ContinueNode"), false) : nullptr)
+	{
+		for (const FName& Council : Event->Councils)
+		{
+			if (CanHoldCouncil(Council))
+			{
+				const UDataTable* Defs = GI->CouncilsTable.LoadSynchronous();
+				const FS_CouncilDef* Def = Defs ? Defs->FindRow<FS_CouncilDef>(Council, TEXT("ContinueNode"), false) : nullptr;
+				if (Def && !Def->Intro.IsNone())
+				{
+					PendingNextCouncil = Council;
+					PlaySequence(Def->Intro, TEXT("CouncilIntro"));
+				}
+				else
+				{
+					ShowDataCouncil(Council);
+				}
+				return;
+			}
+		}
+	}
+	ShowStarMap();
+}
+
+void AAetheriaCommandController::ShowDataCouncil(FName Council)
+{
+	UWidgetLayoutLibrary::RemoveAllWidgets(this);
+	ShowShot(Director ? Director->CouncilShot : NAME_None);
+
+	if (UClass* Class = CouncilClass.LoadSynchronous())
+	{
+		if (UAetheriaCouncil* Widget = CreateWidget<UAetheriaCouncil>(this, Class))
+		{
+			Widget->SetupDef(Council);
+			Widget->AddToViewport();
+			FocusWidget(Widget);
+		}
+	}
+}
+
+void AAetheriaCommandController::OnCouncilChosen(FName Council, const FS_CouncilOption& Opt)
+{
+	if (GI)
+	{
+		GI->StoryFlags.Add(FName(*(TEXT("Council_") + Council.ToString())));
+	}
+	PendingNextCouncil = Opt.NextCouncil;
+	PendingStartBattle = Opt.StartBattle;
+	PlayLines(Opt.Outcome, TEXT("AfterCouncil"));
+}
+
+void AAetheriaCommandController::StartBattle(FName Battle)
+{
+	if (GI)
+	{
+		GI->PendingBattle = Battle;
+		GI->NextScreen = AetheriaFlow::PostCombat;
+	}
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, CombatLevel);
+}
+
+void AAetheriaCommandController::AfterDataBattle()
+{
+	const FName Battle = GI ? GI->PendingBattle : NAME_None;
+	if (GI)
+	{
+		GI->PendingBattle = NAME_None;
+		GI->NextScreen = AetheriaFlow::StarMap;
+	}
+	const UDataTable* Battles = GI ? GI->BattlesTable.LoadSynchronous() : nullptr;
+	const FS_Battle* Row = Battles ? Battles->FindRow<FS_Battle>(Battle, TEXT("AfterDataBattle"), false) : nullptr;
+	if (Row && !Row->Debrief.IsNone())
+	{
+		PlaySequence(Row->Debrief, TEXT("AfterDebrief"));
+	}
+	else
+	{
+		AfterDialogue = TEXT("AfterDebrief");
+		OnSequenceDone();
+	}
+}
+
+void AAetheriaCommandController::PlayActEnd()
+{
+	if (!GI)
+	{
+		return;
+	}
+	const FName State = GI->LeaningState();
+	const FName Revelation = State == TEXT("Custodian") ? FName(TEXT("Guardian"))
+		: State == TEXT("Dominion") ? FName(TEXT("Warden")) : FName(TEXT("Unresolved"));
+	GI->States.Add(TEXT("ArchitectRevelation2"), Revelation);
+	PlaySequence(FName(*(TEXT("Revelation_") + Revelation.ToString())), TEXT("AfterRevelation"));
 }
 
 void AAetheriaCommandController::OnArrive(E_Encounter Encounter)
 {
 	using namespace AetheriaFlow;
+
+	if (GI && GI->CurrentAct >= 7)
+	{
+		RunNode(GI->CurrentNode);
+		return;
+	}
 
 	const bool bCleared = GI && GI->StoryFlags.Contains(LanternCleared);
 	const bool bAtRelay = GI && GI->CurrentNode == EmberRelay;

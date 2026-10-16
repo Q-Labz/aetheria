@@ -493,9 +493,26 @@ void UAetheriaStarMap::BuildDefaultLayout()
 		AddToBox(Box, Button, FMargin(0.0f, 3.0f));
 	}
 
+	// Act VII: Outpost One supply orders
+	SupplyLabel = MakeText(WidgetTree, TEXT("SupplyLabel"), TEXT("OUTPOST ONE — ORDER A SHIPMENT"), 11, Dim, true);
+	AddToBox(Box, SupplyLabel, FMargin(0.0f, 12.0f, 0.0f, 2.0f));
+	UHorizontalBox* Supplies = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("SupplyRow"));
+	SupplyRow = Supplies;
+	OrderBioGelButton = MakeButton(WidgetTree, TEXT("OrderBioGelButton"), TEXT("BIO-GEL"), 11);
+	OrderSeedsButton = MakeButton(WidgetTree, TEXT("OrderSeedsButton"), TEXT("SEEDS"), 11);
+	OrderRefitButton = MakeButton(WidgetTree, TEXT("OrderRefitButton"), TEXT("REFIT"), 11);
+	OrderSpireButton = MakeButton(WidgetTree, TEXT("OrderSpireButton"), TEXT("SPIRE"), 11);
+	for (UButton* Button : { OrderBioGelButton.Get(), OrderSeedsButton.Get(), OrderRefitButton.Get(), OrderSpireButton.Get() })
+	{
+		AddToRow(Supplies, Button, FMargin(0.0f, 0.0f, 4.0f, 0.0f));
+	}
+	AddToBox(Box, Supplies, FMargin(0.0f, 2.0f));
+
 	UWidget* Spacer = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("Spacer"));
 	AddToBox(Box, Spacer, FMargin(0.0f), true);
 
+	ActStatusText = MakeText(WidgetTree, TEXT("ActStatusText"), FString(), 12, Amber, true);
+	AddToBox(Box, ActStatusText, FMargin(0.0f, 8.0f, 0.0f, 0.0f));
 	StatusText = MakeText(WidgetTree, TEXT("StatusText"), FString(), 12, Dim, true);
 	AddToBox(Box, StatusText, FMargin(0.0f, 8.0f));
 	MatrixNote = MakeText(WidgetTree, TEXT("MatrixNote"), TEXT("NEURAL MATRIX: unregistered process present."), 12, Amber, true);
@@ -530,7 +547,7 @@ void UAetheriaStarMap::NativeConstruct()
 	// one button per star, placed at its chart position
 	NodeButtons.Reset();
 	NodePositions.Reset();
-	const UDataTable* Nodes = GI->StarNodesTable.LoadSynchronous();
+	const UDataTable* Nodes = GI->GetStarNodes();
 	UClass* ButtonClass = NodeButtonClass.LoadSynchronous();
 	if (Nodes && ButtonClass && MapCanvas)
 	{
@@ -557,6 +574,10 @@ void UAetheriaStarMap::NativeConstruct()
 	if (HoldButton) { HoldButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleHold); }
 	if (RecalButton) { RecalButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleRecalibrate); }
 	if (TreatButton) { TreatButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleTreat); }
+	if (OrderBioGelButton) { OrderBioGelButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleOrderBioGel); }
+	if (OrderSeedsButton) { OrderSeedsButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleOrderSeeds); }
+	if (OrderRefitButton) { OrderRefitButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleOrderRefit); }
+	if (OrderSpireButton) { OrderSpireButton->OnClicked.AddUniqueDynamic(this, &UAetheriaStarMap::HandleOrderSpire); }
 
 	GI->OnCampaignStateChanged.AddUniqueDynamic(this, &UAetheriaStarMap::HandleStateChanged);
 	Refresh();
@@ -605,7 +626,7 @@ void UAetheriaStarMap::Refresh()
 		}
 	}
 
-	const UDataTable* Nodes = GI->StarNodesTable.LoadSynchronous();
+	const UDataTable* Nodes = GI->GetStarNodes();
 	const bool bHasDestination = !SelectedNode.IsNone() && SelectedNode != GI->CurrentNode;
 	const FName Shown = bHasDestination ? SelectedNode : GI->CurrentNode;
 	if (const FS_StarNode* Node = Nodes ? Nodes->FindRow<FS_StarNode>(Shown, TEXT("StarMap"), false) : nullptr)
@@ -638,11 +659,19 @@ void UAetheriaStarMap::Refresh()
 	}
 	else
 	{
-		const UDataTable* Routes = GI->LeapRoutesTable.LoadSynchronous();
+		const UDataTable* Routes = GI->GetLeapRoutes();
 		const FS_LeapRoute* Route = Routes ? Routes->FindRow<FS_LeapRoute>(GI->RouteName(SelectedNode), TEXT("StarMap"), false) : nullptr;
 
 		TArray<FString> Parts;
 		Parts.Add(FString::Printf(TEXT("Base %g"), Route ? Route->BaseCost : Cost));
+		if (!bCharted)
+		{
+			const FS_StarNode* From = Nodes ? Nodes->FindRow<FS_StarNode>(GI->CurrentNode, TEXT("StarMap"), false) : nullptr;
+			if (From && From->HazardSurcharge > 0.0f)
+			{
+				Parts.Add(FString::Printf(TEXT("Ash storm +%g"), From->HazardSurcharge));
+			}
+		}
 		if (bCharted) { Parts.Add(TEXT("Charted ×0.5")); }
 		if (GI->Instability >= 50.0f) { Parts.Add(TEXT("Strain ×1.25")); }
 		if (GI->Background == E_Background::GuildEngineer) { Parts.Add(TEXT("Guild ×0.9")); }
@@ -714,7 +743,54 @@ void UAetheriaStarMap::Refresh()
 		FMath::RoundToInt(GI->ChronoCharge), FMath::RoundToInt(GI->FlagshipHullPct * 100.0f), GI->CrewInjured,
 		GI->BioGelDoses, GI->PhantomShipsActive, GI->PursuitClock));
 	SetShown(MatrixNote, GI->ArchitectExposure > 0);
+
+	// Act VII
+	const bool bActVII = GI->CurrentAct >= 7;
+	SetShown(SupplyLabel, bActVII);
+	SetShown(SupplyRow, bActVII);
+	SetShown(ActStatusText, bActVII);
+	if (bActVII)
+	{
+		const bool bCanOrder = !bBusy && GI->CanOrderShipment();
+		for (UButton* Button : { OrderBioGelButton.Get(), OrderSeedsButton.Get(), OrderRefitButton.Get(), OrderSpireButton.Get() })
+		{
+			SetEnabled(Button, bCanOrder);
+		}
+
+		const FName Line = GI->GetState(TEXT("SupplyLine"));
+		FString Supply = Line == TEXT("None") ? FString(TEXT("not chosen")) : Line.ToString();
+		if ((Line == TEXT("WeaveLane") || Line == TEXT("JointLane")) && !GI->IsSupplyLineReady())
+		{
+			const int32 Anchors = (GI->StoryFlags.Contains(TEXT("Anchor_GlassSea")) ? 1 : 0) + (GI->StoryFlags.Contains(TEXT("Anchor_TetherPoint")) ? 1 : 0);
+			Supply += FString::Printf(TEXT(" (anchors %d/2: chart routes at the Glass Sea and the Tether Point)"), Anchors);
+		}
+		if (GI->OutpostDarkLeaps > 0)
+		{
+			Supply += FString::Printf(TEXT(" (Outpost One dark: %d leap(s))"), GI->OutpostDarkLeaps);
+		}
+		if (GI->PendingShipments.Num() > 0)
+		{
+			Supply += FString::Printf(TEXT(" · %d shipment(s) en route"), GI->PendingShipments.Num());
+		}
+		SetText(ActStatusText, FString::Printf(TEXT("SEVERANT STANDING %d (%s) · CURE: %s · SUPPLY: %s"),
+			GI->SeverantStanding, *GI->StandingBand().ToString(), *GI->CureStatus(), *Supply));
+	}
 }
+
+void UAetheriaStarMap::Order(FName Kind)
+{
+	if (UAetheriaGameInstance* GI = GetAetheriaGameInstance())
+	{
+		GI->OrderShipment(Kind);
+		ShowToast(GI->LastReport, 3.0f);
+		Refresh();
+	}
+}
+
+void UAetheriaStarMap::HandleOrderBioGel() { Order(TEXT("BioGel")); }
+void UAetheriaStarMap::HandleOrderSeeds() { Order(TEXT("Seeds")); }
+void UAetheriaStarMap::HandleOrderRefit() { Order(TEXT("Refit")); }
+void UAetheriaStarMap::HandleOrderSpire() { Order(TEXT("Spire")); }
 
 int32 UAetheriaStarMap::NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect,
 	FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
@@ -722,7 +798,7 @@ int32 UAetheriaStarMap::NativePaint(const FPaintArgs& Args, const FGeometry& All
 	const int32 MaxLayer = Super::NativePaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 
 	const UAetheriaGameInstance* GI = GetAetheriaGameInstance();
-	const UDataTable* Routes = GI ? GI->LeapRoutesTable.Get() : nullptr;
+	const UDataTable* Routes = GI ? GI->GetLeapRoutes() : nullptr;
 	if (!Routes || !MapCanvas)
 	{
 		return MaxLayer;
@@ -978,6 +1054,26 @@ void UAetheriaCouncil::Setup(UDataTable* InCouncilTable, FName InCouncilKey)
 	}
 }
 
+void UAetheriaCouncil::SetupDef(FName InCouncilDef)
+{
+	CouncilDef = InCouncilDef;
+	CouncilTable = nullptr;
+	CouncilKey = InCouncilDef;
+	if (const UAetheriaGameInstance* GI = GetAetheriaGameInstance())
+	{
+		const UDataTable* Defs = GI->CouncilsTable.LoadSynchronous();
+		if (const FS_CouncilDef* Def = Defs ? Defs->FindRow<FS_CouncilDef>(CouncilDef, TEXT("Council"), false) : nullptr)
+		{
+			CouncilTable = Def->Options.LoadSynchronous();
+		}
+	}
+	bChosen = false;
+	if (GetCachedWidget().IsValid())
+	{
+		Populate();
+	}
+}
+
 void UAetheriaCouncil::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -993,10 +1089,33 @@ void UAetheriaCouncil::Populate()
 {
 	const UAetheriaGameInstance* GI = GetAetheriaGameInstance();
 
-	E_Speaker SituationSpeaker;
+	E_Speaker SituationSpeaker = E_Speaker::VexAI;
 	FString Situation;
 	TArray<FS_Counsel> Counsel;
-	GetCouncilText(CouncilKey, SituationSpeaker, Situation, Counsel);
+	const UDataTable* Defs = GI ? GI->CouncilsTable.LoadSynchronous() : nullptr;
+	const FS_CouncilDef* Def = (!CouncilDef.IsNone() && Defs) ? Defs->FindRow<FS_CouncilDef>(CouncilDef, TEXT("Council"), false) : nullptr;
+	if (Def)
+	{
+		SituationSpeaker = Def->SituationSpeaker;
+		Situation = Def->Situation.ToString();
+		for (const FS_Counsel& Entry : Def->Counsel)
+		{
+			if ((!Entry.RequiredFlag.IsNone() && !GI->StoryFlags.Contains(Entry.RequiredFlag))
+				|| (!Entry.ForbiddenFlag.IsNone() && GI->StoryFlags.Contains(Entry.ForbiddenFlag)))
+			{
+				continue;
+			}
+			Counsel.Add(Entry);
+		}
+		if (TitleText)
+		{
+			TitleText->SetText(Def->Title.IsEmpty() ? FText::FromString(TEXT("COUNCIL OF COMMAND")) : Def->Title);
+		}
+	}
+	else
+	{
+		GetCouncilText(CouncilKey, SituationSpeaker, Situation, Counsel);
+	}
 
 	if (SituationText)
 	{
@@ -1022,7 +1141,7 @@ void UAetheriaCouncil::Populate()
 		UClass* ButtonClass = OptionButtonClass.LoadSynchronous();
 		CouncilTable->ForeachRow<FS_CouncilOption>(TEXT("Council"), [this, GI, ButtonClass](const FName& RowName, const FS_CouncilOption& Option)
 		{
-			if (Option.RequiresBackground && (!GI || Option.RequiredBackground != GI->Background))
+			if (!GI || !GI->IsOptionAvailable(Option))
 			{
 				return;
 			}
@@ -1049,12 +1168,18 @@ void UAetheriaCouncil::ChooseOption(const FS_CouncilOption& Opt)
 	}
 
 	AAetheriaCommandController* PC = GetCommandController();
-	const FName After = CouncilKey == TEXT("Relay") ? FName(TEXT("AfterRelay")) : FName(TEXT("AfterDirective"));
 	RemoveFromParent();
-	if (PC)
+	if (!PC)
 	{
-		PC->PlayLines(Opt.Outcome, After);
+		return;
 	}
+	if (!CouncilDef.IsNone())
+	{
+		PC->OnCouncilChosen(CouncilDef, Opt);
+		return;
+	}
+	const FName After = CouncilKey == TEXT("Relay") ? FName(TEXT("AfterRelay")) : FName(TEXT("AfterDirective"));
+	PC->PlayLines(Opt.Outcome, After);
 }
 
 // ---- UAetheriaSliceEnd -------------------------------------------------------------------------
@@ -1069,6 +1194,8 @@ void UAetheriaSliceEnd::BuildDefaultLayout()
 	AddToBox(Box, SummaryText, FMargin(0.0f), true);
 
 	UHorizontalBox* Row = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("Buttons"));
+	ContinueButton = MakeButton(WidgetTree, TEXT("ContinueButton"), TEXT("CONTINUE: ACT VII — THE CINDER ARCHIVE"), 15);
+	AddToRow(Row, ContinueButton, FMargin(0.0f, 0.0f, 16.0f, 0.0f));
 	NewCommandButton = MakeButton(WidgetTree, TEXT("NewCommandButton"), TEXT("NEW COMMAND"), 15);
 	QuitButton = MakeButton(WidgetTree, TEXT("QuitButton"), TEXT("QUIT"), 15);
 	AddToRow(Row, NewCommandButton, FMargin(0.0f, 0.0f, 16.0f, 0.0f));
@@ -1082,11 +1209,17 @@ void UAetheriaSliceEnd::NativeConstruct()
 
 	if (NewCommandButton) { NewCommandButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleNewCommand); }
 	if (QuitButton) { QuitButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleQuit); }
+	if (ContinueButton) { ContinueButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleContinue); }
 
 	const UAetheriaGameInstance* GI = GetAetheriaGameInstance();
+	SetShown(ContinueButton, GI && GI->CurrentAct < 7);
 	if (!GI || !SummaryText)
 	{
 		return;
+	}
+	if (GI->CurrentAct >= 7 && TitleText)
+	{
+		TitleText->SetText(FText::FromString(TEXT("END OF ACT VII — THE CINDER ARCHIVE")));
 	}
 
 	TArray<FString> Lines;
@@ -1103,6 +1236,14 @@ void UAetheriaSliceEnd::NativeConstruct()
 	}
 	Lines.Add(TEXT(""));
 	Lines.Add(FString::Printf(TEXT("ARCHITECT DISPOSITION: %s (%d)"), *GI->LeaningState().ToString(), GI->ArchitectLeaning));
+	if (GI->CurrentAct >= 7)
+	{
+		Lines.Add(FString::Printf(TEXT("SEVERANT STANDING: %d (%s) · THE SILENCE: %s"), GI->SeverantStanding, *GI->StandingBand().ToString(),
+			GI->StoryFlags.Contains(TEXT("CureDelivered")) ? TEXT("cured") : TEXT("untreated")));
+		Lines.Add(FString::Printf(TEXT("SUPPLY LINE: %s · THE ARCHIVE: %s · EXARCH ITHANE: %s · SECOND REVELATION: %s"),
+			*GI->GetState(TEXT("SupplyLine")).ToString(), *GI->GetState(TEXT("ArchiveState")).ToString(),
+			*GI->GetState(TEXT("ExarchStatus")).ToString(), *GI->GetState(TEXT("ArchitectRevelation2")).ToString()));
+	}
 
 	SummaryText->SetText(FText::FromString(FString::Join(Lines, TEXT("\n"))));
 }
@@ -1112,6 +1253,14 @@ void UAetheriaSliceEnd::HandleNewCommand()
 	if (AAetheriaCommandController* PC = GetCommandController())
 	{
 		PC->NewCommand();
+	}
+}
+
+void UAetheriaSliceEnd::HandleContinue()
+{
+	if (AAetheriaCommandController* PC = GetCommandController())
+	{
+		PC->StartActVII();
 	}
 }
 

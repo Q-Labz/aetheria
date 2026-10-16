@@ -1,0 +1,158 @@
+[
+  {
+    "Name": "Preserve",
+    "Label": "Preserve the Archive and defend it.",
+    "ApprovalHint": "Battle: hold the Vault for 120 seconds.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Defensive positions around the Vault pylons.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 29,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 20,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "ArchiveState": "Preserved",
+      "ExarchStatus": "Alive"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "E4_Defend"
+  },
+  {
+    "Name": "PreserveAllied",
+    "Label": "Preserve the Archive and defend it, with Kesh's skiffs.",
+    "ApprovalHint": "Battle: hold the Vault for 120 seconds. Kesh's moderates join.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "WardenKesh",
+        "Text": "My skiffs are with you, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": 30,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 20,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "ArchiveState": "Preserved",
+      "ExarchStatus": "Alive"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "E4_DefendAllied"
+  },
+  {
+    "Name": "Break",
+    "Label": "Break the Archive and take the record by force.",
+    "ApprovalHint": "Battle: destroy Ithane's flagship, The Last Silence.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Then we finish it here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": -50,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "ArchiveState": "Broken",
+      "ExarchStatus": "Dead"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "E4_Assault"
+  },
+  {
+    "Name": "PeaceRite",
+    "Label": "Peace of the Rite.",
+    "ApprovalHint": "The Severant council deposes Ithane. Vance attacks alone.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "The Choirs have spoken over me. So be it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Then I will do this myself.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "RiteParley"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": 0,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 30,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "ArchiveState": "Preserved",
+      "ExarchStatus": "Deposed"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "E4_Vance"
+  }
+]

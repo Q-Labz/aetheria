@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "GameFramework/Actor.h"
 #include "AetheriaTypes.generated.h"
 
 /**
@@ -36,7 +37,9 @@ enum class E_Speaker : uint8
 	Lyra,
 	Cormaker,
 	CoreArchitect,
-	CommanderVance
+	CommanderVance,
+	WardenKesh,
+	ExarchIthane
 };
 
 /** Side a ship fights for */
@@ -53,7 +56,8 @@ enum class E_Encounter : uint8
 {
 	None,
 	Combat,
-	Council
+	Council,
+	Event
 };
 
 /** A star on the Stellar Leap chart (DT_StarNodes) */
@@ -143,6 +147,14 @@ struct FS_Counsel
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Counsel")
 	TMap<E_Background, FText> BackgroundOverride;
+
+	/** Counsel is shown only if this story flag is set (None: always) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Counsel")
+	FName RequiredFlag = NAME_None;
+
+	/** Counsel is hidden if this story flag is set (None: never) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Counsel")
+	FName ForbiddenFlag = NAME_None;
 };
 
 /** A council choice and its consequences (DT_Council_Relay, DT_Council_Directive) */
@@ -180,4 +192,176 @@ struct FS_CouncilOption : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option")
 	TArray<FS_Line> Outcome;
+
+	// ---- Act VII: requirements (an option whose requirements fail is not offered) ----
+
+	/** Every one of these story flags must be set */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Requires")
+	TArray<FName> RequiredFlags;
+
+	/** None of these story flags may be set */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Requires")
+	TArray<FName> ForbiddenFlags;
+
+	/** Minimum Severant standing (-1000: no requirement) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Requires")
+	int32 MinStanding = -1000;
+
+	/** Maximum Severant standing (1000: no requirement) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Requires")
+	int32 MaxStanding = 1000;
+
+	/** At least one of these officers must have at least this loyalty (empty: no requirement) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Requires")
+	TMap<E_Speaker, int32> MinLoyaltyAny;
+
+	/** Named state that must hold, e.g. SupplyLine=WeaveLane */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Requires")
+	TMap<FName, FName> RequiredStates;
+
+	// ---- Act VII: effects ----
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	int32 StandingDelta = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	int32 PursuitDelta = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	int32 ExposureDelta = 0;
+
+	/** Flagship hull change as a fraction (0.2 = +20%) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	float HullDelta = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	TArray<FName> SetFlags;
+
+	/** Named campaign states to set, e.g. SupplyLine=ArchConduit, ArchiveState=Preserved */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	TMap<FName, FName> SetStates;
+
+	/** Council (DT_Councils row) to hold right after the outcome lines */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Flow")
+	FName NextCouncil = NAME_None;
+
+	/** Battle (DT_Battles row) to fight right after the outcome lines */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Flow")
+	FName StartBattle = NAME_None;
+};
+
+/** A council held at a star node (DT_Councils): the situation, the counsel and the options table */
+USTRUCT(BlueprintType)
+struct FS_CouncilDef : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	FText Title;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	E_Speaker SituationSpeaker = E_Speaker::VexAI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	FText Situation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	TArray<FS_Counsel> Counsel;
+
+	/** The options (rows of FS_CouncilOption) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	TSoftObjectPtr<UDataTable> Options;
+
+	/** The council is held only if every one of these flags is set */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	TArray<FName> RequiredFlags;
+
+	/** Sequence (DT_Sequences row) played before the council opens */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council")
+	FName Intro = NAME_None;
+};
+
+/** What happens on arrival at a star node in a data-driven act (DT_NodeEvents_<Act>, row name = node) */
+USTRUCT(BlueprintType)
+struct FS_NodeEvent : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	/** Sequence played on the first arrival */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Event")
+	FName ArrivalSequence = NAME_None;
+
+	/** Flags set on the first arrival (e.g. CureSample) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Event")
+	TArray<FName> ArrivalFlags;
+
+	/** Councils (DT_Councils rows) held here in order; each is held once, when its requirements are met */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Node Event")
+	TArray<FName> Councils;
+};
+
+/** One kind of enemy (or allied) ship in a battle */
+USTRUCT(BlueprintType)
+struct FS_BattleGroup
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TSoftClassPtr<AActor> ShipClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	int32 Count = 1;
+
+	/** Fights for the player (Kesh's skiffs) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	bool bAllied = false;
+
+	/** Battle is won when every ship of this group is destroyed (empty objective: all enemies) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	bool bObjective = false;
+};
+
+/** A battle definition (DT_Battles) */
+USTRUCT(BlueprintType)
+struct FS_Battle : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FText Title;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TArray<FS_BattleGroup> Groups;
+
+	/** Defend battles: seconds to hold; 0 = destroy the objective */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	float HoldSeconds = 0.0f;
+
+	/** Enemies withdraw (battle won) when their total hull falls below this fraction; 0 = fight to the end */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	float WithdrawAtHullPct = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TArray<FS_Line> OpeningComms;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TArray<FName> WinFlags;
+
+	/** Sequence played back on the bridge after a victory */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName Debrief = NAME_None;
+};
+
+/** A supply shipment on its way from Outpost One */
+USTRUCT(BlueprintType)
+struct FS_Shipment
+{
+	GENERATED_BODY()
+
+	/** BioGel, Seeds, Refit or Spire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply")
+	FName Kind;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply")
+	int32 ArrivesAfterLeaps = 0;
 };

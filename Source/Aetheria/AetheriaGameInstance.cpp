@@ -17,6 +17,21 @@ UAetheriaGameInstance::UAetheriaGameInstance()
 
 	LeapRoutesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_LeapRoutes.DT_LeapRoutes")));
 	StarNodesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_StarNodes.DT_StarNodes")));
+	ActVIILeapRoutesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_LeapRoutes_ActVII.DT_LeapRoutes_ActVII")));
+	ActVIIStarNodesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_StarNodes_ActVII.DT_StarNodes_ActVII")));
+	ActVIINodeEventsTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_NodeEvents_ActVII.DT_NodeEvents_ActVII")));
+	CouncilsTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_Councils.DT_Councils")));
+	BattlesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_Battles.DT_Battles")));
+}
+
+UDataTable* UAetheriaGameInstance::GetStarNodes() const
+{
+	return (CurrentAct >= 7 ? ActVIIStarNodesTable : StarNodesTable).LoadSynchronous();
+}
+
+UDataTable* UAetheriaGameInstance::GetLeapRoutes() const
+{
+	return (CurrentAct >= 7 ? ActVIILeapRoutesTable : LeapRoutesTable).LoadSynchronous();
 }
 
 FName UAetheriaGameInstance::RouteName(FName To) const
@@ -31,7 +46,7 @@ void UAetheriaGameInstance::GetLeapCost(FName To, float& Cost, float& Projected,
 	WillOverflow = false;
 	Found = false;
 
-	const UDataTable* Routes = LeapRoutesTable.LoadSynchronous();
+	const UDataTable* Routes = GetLeapRoutes();
 	const FName Route = RouteName(To);
 	const FS_LeapRoute* Row = Routes ? Routes->FindRow<FS_LeapRoute>(Route, TEXT("GetLeapCost"), false) : nullptr;
 	if (!Row)
@@ -42,7 +57,18 @@ void UAetheriaGameInstance::GetLeapCost(FName To, float& Cost, float& Projected,
 	Found = true;
 	Cost = Row->BaseCost;
 
-	if (ChartedRoutes.Contains(Route))
+	// Ash storms (Act VII): leaving a hazardous node costs extra unless the route is charted
+	const bool bCharted = ChartedRoutes.Contains(Route);
+	if (!bCharted)
+	{
+		const UDataTable* Nodes = GetStarNodes();
+		if (const FS_StarNode* From = Nodes ? Nodes->FindRow<FS_StarNode>(CurrentNode, TEXT("GetLeapCost"), false) : nullptr)
+		{
+			Cost += From->HazardSurcharge;
+		}
+	}
+
+	if (bCharted)
 	{
 		Cost *= 0.5f;
 	}
@@ -106,8 +132,18 @@ E_Encounter UAetheriaGameInstance::ExecuteLeap(FName To)
 
 	CurrentNode = To;
 
+	if (CurrentAct >= 7)
+	{
+		FString SupplyReport;
+		AdvanceSupplies(SupplyReport);
+		if (!SupplyReport.IsEmpty())
+		{
+			LastReport = FText::FromString(LastReport.ToString() + SupplyReport);
+		}
+	}
+
 	E_Encounter Encounter = E_Encounter::None;
-	const UDataTable* Nodes = StarNodesTable.LoadSynchronous();
+	const UDataTable* Nodes = GetStarNodes();
 	if (const FS_StarNode* Node = Nodes ? Nodes->FindRow<FS_StarNode>(To, TEXT("ExecuteLeap"), false) : nullptr)
 	{
 		Encounter = Node->Encounter;
@@ -157,6 +193,29 @@ void UAetheriaGameInstance::ChartRoute(FName To)
 	ChartedRoutes.Add(Route);
 	PursuitClock += 1;
 	ModifyLoyalty(E_Speaker::Lyra, 2);
+
+	// Weave Lane anchors (Act VII): Lyra's first chart action at the Glass Sea and at the Tether Point
+	const FName Line = GetState(TEXT("SupplyLine"));
+	if (CurrentAct >= 7 && (Line == TEXT("WeaveLane") || Line == TEXT("JointLane"))
+		&& (CurrentNode == TEXT("GlassSea") || CurrentNode == TEXT("TetherPoint")))
+	{
+		const FName Anchor(*(TEXT("Anchor_") + CurrentNode.ToString()));
+		if (!StoryFlags.Contains(Anchor))
+		{
+			StoryFlags.Add(Anchor);
+			PursuitClock += 1;
+			if (IsSupplyLineReady())
+			{
+				ModifyLoyalty(E_Speaker::Lyra, 10);
+				LastReport = FText::FromString(TEXT("Lyra: both anchors hold. The lane is ours, Captain."));
+			}
+			else
+			{
+				LastReport = FText::FromString(TEXT("Lyra: the first anchor holds."));
+			}
+		}
+	}
+	OnCampaignStateChanged.Broadcast();
 }
 
 void UAetheriaGameInstance::VentChrono()
@@ -190,6 +249,11 @@ void UAetheriaGameInstance::SpireRecalibrate()
 
 void UAetheriaGameInstance::TreatInjured()
 {
+	if (StoryFlags.Contains(TEXT("CureSynthesising")))
+	{
+		LastReport = FText::FromString(TEXT("Dr. Thorne: the lab is occupied by the synthesis. The wounded wait one leap."));
+		return;
+	}
 	if (BioGelDoses > 0 && CrewInjured > 0)
 	{
 		BioGelDoses -= 1;
@@ -221,7 +285,210 @@ void UAetheriaGameInstance::ApplyOption(const FS_CouncilOption& Opt)
 		StoryFlags.Add(Opt.SetFlag);
 	}
 
+	// Act VII effects
+	SeverantStanding = FMath::Clamp(SeverantStanding + Opt.StandingDelta, -100, 100);
+	PursuitClock = FMath::Max(0, PursuitClock + Opt.PursuitDelta);
+	ArchitectExposure += Opt.ExposureDelta;
+	FlagshipHullPct = FMath::Clamp(FlagshipHullPct + Opt.HullDelta, 0.05f, 1.0f);
+	for (const FName& Flag : Opt.SetFlags)
+	{
+		StoryFlags.Add(Flag);
+	}
+	for (const TPair<FName, FName>& State : Opt.SetStates)
+	{
+		States.Add(State.Key, State.Value);
+	}
+	if (Opt.SetFlags.Contains(TEXT("OutpostDark")))
+	{
+		OutpostDarkLeaps = 2;
+	}
+	if (Opt.SetFlags.Contains(TEXT("CureDelivered")))
+	{
+		StoryFlags.Remove(TEXT("CureReady"));
+	}
+
 	OnCampaignStateChanged.Broadcast();
+}
+
+bool UAetheriaGameInstance::IsOptionAvailable(const FS_CouncilOption& Opt) const
+{
+	if (Opt.RequiresBackground && Opt.RequiredBackground != Background)
+	{
+		return false;
+	}
+	for (const FName& Flag : Opt.RequiredFlags)
+	{
+		if (!StoryFlags.Contains(Flag))
+		{
+			return false;
+		}
+	}
+	for (const FName& Flag : Opt.ForbiddenFlags)
+	{
+		if (StoryFlags.Contains(Flag))
+		{
+			return false;
+		}
+	}
+	if (SeverantStanding < Opt.MinStanding || SeverantStanding > Opt.MaxStanding)
+	{
+		return false;
+	}
+	if (Opt.MinLoyaltyAny.Num() > 0)
+	{
+		bool bAny = false;
+		for (const TPair<E_Speaker, int32>& Need : Opt.MinLoyaltyAny)
+		{
+			bAny |= CrewLoyalty.FindRef(Need.Key) >= Need.Value;
+		}
+		if (!bAny)
+		{
+			return false;
+		}
+	}
+	for (const TPair<FName, FName>& Need : Opt.RequiredStates)
+	{
+		if (GetState(Need.Key) != Need.Value)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+FName UAetheriaGameInstance::GetState(FName Key) const
+{
+	const FName* Value = States.Find(Key);
+	return Value ? *Value : FName(TEXT("None"));
+}
+
+void UAetheriaGameInstance::StartActVII()
+{
+	CurrentAct = 7;
+	CurrentNode = TEXT("EmberRelay");
+	PursuitClock = 0;
+	ChartedRoutes.Reset();
+	PendingBattle = NAME_None;
+	NextScreen = TEXT("ActStart");
+	LastReport = FText::FromString(TEXT("Act VII: The Cinder Archive."));
+	OnCampaignStateChanged.Broadcast();
+}
+
+bool UAetheriaGameInstance::IsSupplyLineReady() const
+{
+	const FName Line = GetState(TEXT("SupplyLine"));
+	if (Line == TEXT("ArchConduit"))
+	{
+		return true;
+	}
+	if (Line == TEXT("WeaveLane") || Line == TEXT("JointLane"))
+	{
+		return StoryFlags.Contains(TEXT("Anchor_GlassSea")) && StoryFlags.Contains(TEXT("Anchor_TetherPoint"));
+	}
+	return false;
+}
+
+bool UAetheriaGameInstance::CanOrderShipment() const
+{
+	const FName Ordered(*(TEXT("Ordered_") + CurrentNode.ToString()));
+	return CurrentAct >= 7 && IsSupplyLineReady() && OutpostDarkLeaps <= 0 && !StoryFlags.Contains(Ordered);
+}
+
+void UAetheriaGameInstance::OrderShipment(FName Kind)
+{
+	if (!CanOrderShipment())
+	{
+		return;
+	}
+	StoryFlags.Add(FName(*(TEXT("Ordered_") + CurrentNode.ToString())));
+
+	const FName Line = GetState(TEXT("SupplyLine"));
+	if (Line == TEXT("ArchConduit"))
+	{
+		// through the Architect: immediate, and it counts every crate
+		FString Report = TEXT("Arch Conduit delivery.");
+		ApplyShipment(Kind, Report);
+		ArchitectExposure += 1;
+		LastReport = FText::FromString(Report);
+	}
+	else
+	{
+		FS_Shipment Shipment;
+		Shipment.Kind = Kind;
+		Shipment.ArrivesAfterLeaps = Line == TEXT("JointLane") ? 1 : 2;
+		PendingShipments.Add(Shipment);
+		LastReport = FText::FromString(FString::Printf(TEXT("Outpost One acknowledges. %s shipment in %d leap(s)."), *Kind.ToString(), Shipment.ArrivesAfterLeaps));
+	}
+	OnCampaignStateChanged.Broadcast();
+}
+
+void UAetheriaGameInstance::AdvanceSupplies(FString& Report)
+{
+	OutpostDarkLeaps = FMath::Max(0, OutpostDarkLeaps - 1);
+
+	for (int32 i = PendingShipments.Num() - 1; i >= 0; --i)
+	{
+		if (--PendingShipments[i].ArrivesAfterLeaps <= 0)
+		{
+			ApplyShipment(PendingShipments[i].Kind, Report);
+			PendingShipments.RemoveAt(i);
+		}
+	}
+
+	// the cure: one leap of lab time after the seeds reach a sample
+	if (StoryFlags.Contains(TEXT("CureSynthesising")))
+	{
+		StoryFlags.Remove(TEXT("CureSynthesising"));
+		StoryFlags.Add(TEXT("CureReady"));
+		Report += TEXT(" Dr. Thorne: the cure is ready.");
+	}
+}
+
+void UAetheriaGameInstance::ApplyShipment(FName Kind, FString& Report)
+{
+	if (Kind == TEXT("BioGel"))
+	{
+		BioGelDoses += 2;
+		Report += TEXT(" Bio-Gel crate aboard (+2 doses).");
+	}
+	else if (Kind == TEXT("Refit"))
+	{
+		FlagshipHullPct = FMath::Min(1.0f, FlagshipHullPct + 0.2f);
+		Report += TEXT(" Dry Dock refit kit installed (+20% hull).");
+	}
+	else if (Kind == TEXT("Spire"))
+	{
+		SpireRecalibrations += 1;
+		Report += TEXT(" Spire harmonic charge aboard.");
+	}
+	else if (Kind == TEXT("Seeds"))
+	{
+		StoryFlags.Add(TEXT("SeedsAboard"));
+		Report += TEXT(" Agrarian Seed stock aboard.");
+		if (StoryFlags.Contains(TEXT("CureSample")) && !StoryFlags.Contains(TEXT("CureReady")) && !StoryFlags.Contains(TEXT("CureDelivered")))
+		{
+			StoryFlags.Add(TEXT("CureSynthesising"));
+			Report += TEXT(" Dr. Thorne begins synthesis.");
+		}
+	}
+}
+
+FName UAetheriaGameInstance::StandingBand() const
+{
+	if (SeverantStanding <= -40)
+	{
+		return TEXT("Hostile");
+	}
+	return SeverantStanding >= 30 ? FName(TEXT("Trusted")) : FName(TEXT("Wary"));
+}
+
+FString UAetheriaGameInstance::CureStatus() const
+{
+	if (StoryFlags.Contains(TEXT("CureDelivered"))) return TEXT("delivered");
+	if (StoryFlags.Contains(TEXT("CureReady"))) return TEXT("ready");
+	if (StoryFlags.Contains(TEXT("CureSynthesising"))) return TEXT("synthesising");
+	if (StoryFlags.Contains(TEXT("CureSample"))) return TEXT("sample taken");
+	return TEXT("none");
 }
 
 FName UAetheriaGameInstance::LeaningState() const
@@ -275,6 +542,8 @@ FText UAetheriaGameInstance::SpeakerName(E_Speaker S) const
 	case E_Speaker::Cormaker:       return FText::FromString(TEXT("CMDR. CORMAKER — CORSAIR ARMADA"));
 	case E_Speaker::CoreArchitect:  return FText::FromString(TEXT("THE CORE ARCHITECT"));
 	case E_Speaker::CommanderVance: return FText::FromString(TEXT("COMMANDER VANCE"));
+	case E_Speaker::WardenKesh:     return FText::FromString(TEXT("WARDEN KESH — THE QUIET HOLLOW"));
+	case E_Speaker::ExarchIthane:   return FText::FromString(TEXT("EXARCH SOL ITHANE"));
 	}
 	return FText::GetEmpty();
 }
@@ -313,5 +582,11 @@ void UAetheriaGameInstance::ResetCampaign()
 	FirstRuptureAbsorbed = Defaults->FirstRuptureAbsorbed;
 	CrewLoyalty = Defaults->CrewLoyalty;
 	LastReport = Defaults->LastReport;
+	CurrentAct = Defaults->CurrentAct;
+	SeverantStanding = Defaults->SeverantStanding;
+	States = Defaults->States;
+	PendingShipments = Defaults->PendingShipments;
+	OutpostDarkLeaps = Defaults->OutpostDarkLeaps;
+	PendingBattle = NAME_None;
 	NextScreen = TEXT("NewGame");
 }

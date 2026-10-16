@@ -1,0 +1,147 @@
+[
+  {
+    "Name": "Conduit",
+    "Label": "Use the Arch Conduit.",
+    "ApprovalHint": "Jax and Thorne will approve. Tala will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -5,
+    "LoyaltyDeltas": {
+      "JaxMercer": 5,
+      "ArisThorne": 5,
+      "TalaVane": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Then I will carry what you need. I will carry it carefully.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "That's what worries me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "UsedArchConduit"
+    ],
+    "SetStates": {
+      "SupplyLine": "ArchConduit"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Weave",
+    "Label": "Build Lyra's Weave Lane.",
+    "ApprovalHint": "Lyra and Tala will approve. Supplies will be delayed.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Lyra": 10,
+      "TalaVane": 5,
+      "ArisThorne": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "A road that does not pass through me. I understand.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "Then we start at the Glass Sea.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Lyra will anchor the lane when we chart a route out of the Glass Sea and out of the Tether Point.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "SupplyLine": "WeaveLane"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Joint",
+    "Label": "Weave it together with the Architect.",
+    "ApprovalHint": "Jax and Lyra will approve.",
+    "RequiresBackground": true,
+    "RequiredBackground": "GuildEngineer",
+    "LeaningDelta": 10,
+    "LoyaltyDeltas": {
+      "JaxMercer": 10,
+      "Lyra": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "You would build with me. No one has asked that of me since the Arch was raised.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Lyra will anchor the lane when we chart a route out of the Glass Sea and out of the Tether Point.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "SupplyLine": "JointLane"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

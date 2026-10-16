@@ -1,0 +1,354 @@
+[
+  {
+    "Name": "ActVII_Opening",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "ACT VII — THE CINDER ARCHIVE. Fleet Log: the Ember Relay holds station. The Beacon's second layer carried Severant command glyphs.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, I have traced the glyphs to a Precursor archive world of ash and glass: the Cinder Archive. The Severants hold it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "And they are dying. The harmonic the Beacon resumed when we answered it is burning them out from the inside. They call it the Silence.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "The ingredients for a cure are in Vault Alpha. Seeds and Bio-Gel, on the far side of the Arch. Outpost One can ship them, if we choose how.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "We caused this, Captain. Without knowing. That does not make it less ours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "AshfallVerge_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Ashfall Verge. Ash storms around a dead Severant convoy. Leaps out of this storm will cost more unless Lyra charts them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "I have my sample from the convoy. The Silence is exactly what I feared. Get me Agrarian Seed stock and one leap of lab time.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "GlassSea_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Glass Sea: a vitrified ocean world. The storm here is as bad as the Verge.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "This is a weaving place, Captain. If we build a lane, it starts here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "TetherPoint_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Tether Point. A quiet gravity well between superclusters. Outpost One has a message waiting.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "CinderArchive_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Cinder Archive orbit. The planet is ash over glass. Two Severant transmissions, Captain, at once.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Kesh_Intro",
+    "Lines": [
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "Key-Bearer. You answered what should never have been answered. Silence the Beacon, and surrender yourself to our judgment.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "I am Kesh, Warden of the Quiet Hollow. My people are dying of what you woke. Help us, and I will open the way to the Archive.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "QuietHollow_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Quiet Hollow: Warden Kesh's refuge, inside a hollowed moon.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Our doors open to friends, Key-Bearer. I hope you are one.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "PyreGate_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Pyre Gate. Exarch Ithane's fortress over the Archive's poles.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "TitheMarker_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The outer marker of Tithe Anchorage. Commander Vance's forward picket holds here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VaultOfRecords_Arrival",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Vault of Records: the Archive core. It opens only past the Pyre Gate.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Records_Intro",
+    "Lines": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Key-Bearer. There is a part of me here. I would like it back.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Ambush_Intro",
+    "Lines": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Captain, the pursuit clock ran out. Iron Tithe drive signatures on top of us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "You left a wake a child could follow, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Ambush_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Commander Vance's ambush group has withdrawn. Pursuit is clear for now.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "E1_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Choir-skiffs are destroyed or routed.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "I would rather we had talked.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "E2_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Bastion core is down. The Pyre Gate is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "The Vault is through there.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "E3_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The grafted frigate is destroyed.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Ithane's gift. Every ship I own will carry one before we meet again.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "E4_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Vault is quiet. Commander Vance is withdrawing toward Tithe Anchorage.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Revelation_Guardian",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "The record: the Answerers built the Omega Arch and the Architect to carry the reply. The Severants sealed Gate Zero and split its keys among the Synod, the Guild and the Coalition.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "The Answerers' last warships were stasis-locked in the Event Horizon Forge before the Severants could destroy them: the two hundred ships of the Phantom Fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I locked them to protect them, and stayed at the Arch to guard whoever came. I kept them for you, Key-Bearer. I did not know it was you I was keeping them for.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The record ends on the Listener's first message, which no Precursor could translate. It is not a call for help, Captain. Nor a threat. It is a question.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Revelation_Warden",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "The record: the Answerers built the Omega Arch and the Architect to carry the reply. The Severants sealed Gate Zero and split its keys among the Synod, the Guild and the Coalition.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "The Answerers' last warships were stasis-locked in the Event Horizon Forge: the two hundred ships of the Phantom Fleet. The Automated Fleet Key routes through the Architect's own core.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I unlocked them for you. I can unlock them for anyone.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, that means it can take them back.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The record ends on the Listener's first message, which no Precursor could translate. It is not a call for help. Nor a threat. It is a question.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Revelation_Unresolved",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "The record: the Answerers built the Omega Arch and the Architect to carry the reply. The Severants sealed Gate Zero and split its keys among the Synod, the Guild and the Coalition.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Who locked the Phantom Fleet in the Event Horizon Forge, and why, is damaged exactly where it would answer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Ask me again when you know what you want me to be.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The record ends on the Listener's first message, which no Precursor could translate. It is not a call for help, Captain. Nor a threat. It is a question.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  }
+]

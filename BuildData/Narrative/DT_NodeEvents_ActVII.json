@@ -1,0 +1,83 @@
+[
+  {
+    "Name": "EmberRelay",
+    "ArrivalSequence": "None",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Lifeline"
+    ]
+  },
+  {
+    "Name": "AshfallVerge",
+    "ArrivalSequence": "AshfallVerge_Arrival",
+    "ArrivalFlags": [
+      "CureSample"
+    ],
+    "Councils": [
+      "Salvage",
+      "Echo"
+    ]
+  },
+  {
+    "Name": "GlassSea",
+    "ArrivalSequence": "GlassSea_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "GlassSeaHail"
+    ]
+  },
+  {
+    "Name": "TetherPoint",
+    "ArrivalSequence": "TetherPoint_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Canopy",
+      "Echo"
+    ]
+  },
+  {
+    "Name": "CinderArchive",
+    "ArrivalSequence": "CinderArchive_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Kesh",
+      "Echo"
+    ]
+  },
+  {
+    "Name": "QuietHollow",
+    "ArrivalSequence": "QuietHollow_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "KeshCure",
+      "AshChoir",
+      "Echo"
+    ]
+  },
+  {
+    "Name": "PyreGate",
+    "ArrivalSequence": "PyreGate_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "PyreGate",
+      "Echo"
+    ]
+  },
+  {
+    "Name": "TitheMarker",
+    "ArrivalSequence": "TitheMarker_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "TitheMarker",
+      "Echo"
+    ]
+  },
+  {
+    "Name": "VaultOfRecords",
+    "ArrivalSequence": "VaultOfRecords_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Records"
+    ]
+  }
+]
