@@ -156,6 +156,13 @@ Tithe marker buoy come from `Tools/Blender/make_planet_sphere.py`.
 | TitheMarker | the marker buoy, Grieve with its ring and the Anchorage light | Grieve below, the buoy |
 | VaultOfRecords | the Vault of Records over the polar shaft, glass lattice walls lining the shaft | the pole below, the Vault and lattice walls at the edges |
 
+**Close-range detail (`M_Planet`, group *Close Detail*).** At the Pyre Gate and the Vault of Records the Archive's
+pole is a planet 100,000 uu across, about 12,000 uu below the combat camera. M_Planet's own noise is too coarse at
+that range, so a second, ridged noise (`DetailScale` 60 on the unit sphere) shades the surface and roughens the
+cloud edges (`DetailEdge` 1.5). It fades by camera distance, from full at `DetailFadeStart` 20,000 uu to none at
+`DetailFadeEnd` 35,000 uu. Past that a planet renders as before; the Glass Sea in combat (no closer than about
+37,000 uu) is unchanged. Set `DetailStrength` to 0 on an instance to turn the layer off.
+
 ## D. Depth of field and lighting
 
 **Bridge (L_Command, level data).**
