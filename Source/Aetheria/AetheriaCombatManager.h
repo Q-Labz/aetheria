@@ -126,6 +126,10 @@ protected:
 	void OpenBattle();
 	void Victory();
 	void Defeat();
+
+	/** Puts the Instability, hull and Phantom Fleet values cached at BeginPlay back on the game instance */
+	void RestoreCachedCampaign();
+
 	void ShowAfterAction(bool bWon, const FText& Title, const FText& Body);
 
 	/** Spawns a ship at a tagged TargetPoint, wiring its messages before BeginPlay runs */
