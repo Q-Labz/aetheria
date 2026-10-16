@@ -1,0 +1,499 @@
+[
+  {
+    "Name": "Lifeline",
+    "Title": "COUNCIL OF COMMAND — THE LIFELINE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Captain. Dr. Thorne reports the Severant glyphs reference a disease, and that the only plausible treatment lies in Vault Alpha. Outpost One can ship to us. The question is the route. The Architect offers the Arch Conduit. Lyra proposes a lane of her own weaving. I note the Conduit is faster, and that it is not ours.",
+    "Counsel": [
+      {
+        "Officer": "Lyra",
+        "Advice": "Give me two anchors and I will weave a road home that answers to no one but us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Every crate through the Conduit is a crate the Architect can count. Or keep.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "The Conduit works today. Lyra's lane works in a week. Our hull needs parts now.",
+        "BackgroundOverride": {
+          "GuildEngineer": "Captain, you and I could rig a Guild relay into Lyra's anchors and let the Architect carry the load without holding the key. Your call."
+        },
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "People are dying on the far side of this decision. Fast matters.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "The Conduit is open, Key-Bearer. I ask nothing for it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Lifeline.DT_Council_Lifeline",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Kesh",
+    "Title": "COUNCIL OF COMMAND — THE QUIET DAUGHTER",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Two transmissions. Exarch Sol Ithane demands we silence the Beacon and surrender the Key-Bearer to Severant judgment. Warden Kesh asks for help with the Silence, and offers passage to the Archive in return. Dr. Thorne confirms the cure is viable. The Exarch's fleet outnumbers ours in this system, Captain.",
+    "Counsel": [
+      {
+        "Officer": "ArisThorne",
+        "Advice": "We caused this. Whatever else you decide, decide that first.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "A cure is leverage. Ithane will use anything we give Kesh against us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Kesh's people weave as I do. Captain, I think I was taught by one of them, long ago.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "My people know what it is to be left to die by the ones in charge. Help them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "The Severants sealed me in silence for an age. I would still see them live.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ArchitectSandboxed",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "The Severants sealed me in silence for an age. I would still see them live.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SynodRite",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "They sealed the Arch. They would seal you. Consider that, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ArchitectFullAccess",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "You will want to know who built the Silence into them. Not yet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ArchitectRefused",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "You will want to know who built the Silence into them. Not yet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ArchitectSilent",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Kesh.DT_Council_Kesh",
+    "RequiredFlags": [],
+    "Intro": "Kesh_Intro"
+  },
+  {
+    "Name": "KeshCure",
+    "Title": "THE QUIET HOLLOW",
+    "SituationSpeaker": "WardenKesh",
+    "Situation": "Key-Bearer. My healers have been burning lamps for nine days. If the cure is aboard your ship, my children have nine fewer days to wait.",
+    "Counsel": [
+      {
+        "Officer": "ArisThorne",
+        "Advice": "It is ready. Every hour we keep it is an hour someone in that refuge does not have.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "If we bargained for the Gate, this is when we collect.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureTraded",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_KeshCure.DT_Council_KeshCure",
+    "RequiredFlags": [
+      "CureReady"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "AshChoir",
+    "Title": "THE ASH CHOIR",
+    "SituationSpeaker": "WardenKesh",
+    "Situation": "Your weaver, Key-Bearer. She weaves the way we did before the Severance. My shield's harmonic is failing. Will you lend her to us?",
+    "Counsel": [
+      {
+        "Officer": "Lyra",
+        "Advice": "Captain, I know this pattern. I don't know how I know it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Every watch we spend here, Vance spends closing on us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_AshChoir.DT_Council_AshChoir",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Salvage",
+    "Title": "SALVAGE RIGHTS",
+    "SituationSpeaker": "Cormaker",
+    "Situation": "The dead convoy is full of Precursor alloy, Captain. Four hundred and fifty outcasts, and not one of them has ever owned anything outright. Give us a share.",
+    "Counsel": [
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Those hulls are full of the dead. Whoever loved them is in the Quiet Hollow.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "That alloy is a refit kit with no shipment needed.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "The Severants will hear what we do here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Salvage.DT_Council_Salvage",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Echo",
+    "Title": "ECHO IN THE MATRIX",
+    "SituationSpeaker": "NixNull",
+    "Situation": "Captain. There are packets in the Severant comm net that match no protocol I know. They aren't the Architect's either. Something is answering their traffic.",
+    "Counsel": [
+      {
+        "Officer": "NixNull",
+        "Advice": "Captain. Squadron III isn't only listening to the Architect.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SquadronIIIAlienated",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "If it is not ours and not the Architect's, I want it gone.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "Tracing will cost Chrono-Core charge. The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Echo.DT_Council_Echo",
+    "RequiredFlags": [
+      "Visited_GlassSea"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Canopy",
+    "Title": "CANOPY PROBE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Outpost One reports Severant agents probing Aetheria Prime with Exarch Ithane's archive maps. The Harmonic Stealth Canopy holds, but they are close to the waterfall.",
+    "Counsel": [
+      {
+        "Officer": "JaxMercer",
+        "Advice": "The Spire can push everything into the canopy. Nothing ships while it does.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "I can mask the valley. They will see nothing.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Send the Wayward home. Agents in a cell are worth more than agents in the dark.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Canopy.DT_Council_Canopy",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "GlassSeaHail",
+    "Title": "THE GLASS SEA",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Six Severant Choir-skiffs in orbit of the Glass Sea. Two carry Silence emitters. They are hailing, Captain.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "If they are hailing, they are not sure of us. That is a door.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "This is where the lane begins. I would rather not start it in blood.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_GlassSeaHail.DT_Council_GlassSeaHail",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "PyreGate",
+    "Title": "THE PYRE GATE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Severant Bastion holds the Pyre Gate over the Archive's poles. Three shield pylons guard its core.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "A fortress is a fortress. We go through it or we go home.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Kesh could open it, if she trusted us enough.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_PyreGate.DT_Council_PyreGate",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "TitheMarker",
+    "Title": "TITHE ANCHORAGE MARKER",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Commander Vance's forward picket: two Tithe cruisers, six interceptors and a frigate carrying something Severant-built.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "That frigate is the first graft I have seen on a Tithe hull. I want to know what it is.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "We do not have to fight every fight, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_TitheMarker.DT_Council_TitheMarker",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Records",
+    "Title": "COUNCIL OF COMMAND — THE VAULT OF RECORDS",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Vault is open. It holds the full record of the Severance. The Architect requests to absorb the record directly, to recover what it calls 'the part of me that was left here.' The Exarch's fleet is moving on the Vault. Commander Vance's fleet is with it.",
+    "Counsel": [
+      {
+        "Officer": "Lyra",
+        "Advice": "Let it read. It has been missing a piece of itself for an age.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "If it takes the record into itself we lose the only copy we can audit.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Copy it to Vex. Give the Architect nothing it cannot give back.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "It is mine, Key-Bearer. I only ask to remember it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Records.DT_Council_Records",
+    "RequiredFlags": [
+      "GateOpen"
+    ],
+    "Intro": "Records_Intro"
+  },
+  {
+    "Name": "ArchiveFate",
+    "Title": "COUNCIL OF COMMAND — THE ARCHIVE'S FATE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Exarch's fleet and Commander Vance are inbound. Captain, what becomes of the Archive?",
+    "Counsel": [
+      {
+        "Officer": "ArisThorne",
+        "Advice": "There are Severant children in the Quiet Hollow. This is their history.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Ithane will never stop. Take the record and end this.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "The Rite is still open between us and the Exarch.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "RiteParley",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_ArchiveFate.DT_Council_ArchiveFate",
+    "RequiredFlags": [],
+    "Intro": "None"
+  }
+]

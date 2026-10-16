@@ -75,6 +75,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Beam")
 	void HidePreview();
 
+	/** A Silence Pulse: a charging beam is lost (the cooldown is not spent) */
+	UFUNCTION(BlueprintCallable, Category="Beam")
+	void InterruptBeam();
+
 protected:
 
 	virtual void BeginPlay() override;

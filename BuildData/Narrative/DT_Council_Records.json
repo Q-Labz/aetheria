@@ -1,0 +1,128 @@
+[
+  {
+    "Name": "Absorb",
+    "Label": "Let it absorb the record.",
+    "ApprovalHint": "Lyra will approve. Nix and Tala will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -15,
+    "LoyaltyDeltas": {
+      "Lyra": 5,
+      "NixNull": -10,
+      "TalaVane": -10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I remember. I remember all of it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "RecordAbsorbed"
+    ],
+    "SetStates": {},
+    "NextCouncil": "ArchiveFate",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Weave",
+    "Label": "Let it read the record through Lyra's weave.",
+    "ApprovalHint": "Lyra and Nix will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 10,
+    "LoyaltyDeltas": {
+      "Lyra": 10,
+      "NixNull": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "Through me, then. Slowly.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Through you. Yes. That is how it should have been.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {
+      "Lyra": 60,
+      "NixNull": 60
+    },
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "RecordWoven"
+    ],
+    "SetStates": {},
+    "NextCouncil": "ArchiveFate",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Vex",
+    "Label": "Copy the record to Vex; the Architect gets nothing.",
+    "ApprovalHint": "Tala will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -5,
+    "LoyaltyDeltas": {
+      "TalaVane": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Acknowledged. I will hold it for you, Captain, not for it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "RecordToVex"
+    ],
+    "SetStates": {},
+    "NextCouncil": "ArchiveFate",
+    "StartBattle": "None"
+  }
+]

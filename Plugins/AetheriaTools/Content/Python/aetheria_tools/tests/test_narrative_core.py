@@ -22,7 +22,19 @@ class NarrativeCoreTest(unittest.TestCase):
 
     def test_row_counts_match_build_plan(self):
         counts = {t: len(rows) for t, rows in self.data.items()}
-        self.assertEqual(counts, {"DT_Sequences": 8, "DT_Council_Relay": 4, "DT_Council_Directive": 3})
+        # slice (CLAUDE.md phase 2): 8 sequences of its own, Relay 4, Directive 3
+        slice_sequences = [r for r in self.data["DT_Sequences"] if r["Name"] in core.TABLES["DT_Sequences"][1]]
+        self.assertEqual(len(slice_sequences), 8)
+        self.assertEqual(counts["DT_Council_Relay"], 4)
+        self.assertEqual(counts["DT_Council_Directive"], 3)
+        # Act VII: every council has its option table, every node an event row
+        self.assertEqual(counts["DT_Councils"], len(core.ACT_VII_COUNCILS))
+        self.assertEqual(counts["DT_NodeEvents_ActVII"], len(core.ACT_VII_NODES))
+        for name in core.ACT_VII_COUNCILS:
+            self.assertGreater(counts[f"DT_Council_{name}"], 0, name)
+
+    def test_act_vii_source_is_valid(self):
+        self.assertEqual(core.validate(self.data), [])
 
     def test_load_source_raises_when_file_missing(self):
         with tempfile.TemporaryDirectory() as empty:

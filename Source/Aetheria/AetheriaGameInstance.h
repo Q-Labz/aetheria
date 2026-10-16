@@ -88,6 +88,31 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
 	FText LastReport;
 
+	// ---- Act VII (ACT_VII_CINDER_ARCHIVE.md) ----
+
+	/** 6 = the slice (Act VI), 7 = The Cinder Archive */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	int32 CurrentAct = 6;
+
+	/** How the Severants see the fleet, -100 .. 100 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	int32 SeverantStanding = -20;
+
+	/** Named campaign states: SupplyLine, ArchiveState, ExarchStatus, ArchitectRevelation2 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	TMap<FName, FName> States;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	TArray<FS_Shipment> PendingShipments;
+
+	/** Leaps left during which Outpost One sends nothing (Canopy Probe: go dark) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	int32 OutpostDarkLeaps = 0;
+
+	/** Battle (DT_Battles row) the combat level should stage */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	FName PendingBattle = NAME_None;
+
 	// ---- Data ----
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
@@ -95,6 +120,28 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
 	TSoftObjectPtr<UDataTable> StarNodesTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
+	TSoftObjectPtr<UDataTable> ActVIILeapRoutesTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
+	TSoftObjectPtr<UDataTable> ActVIIStarNodesTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
+	TSoftObjectPtr<UDataTable> ActVIINodeEventsTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
+	TSoftObjectPtr<UDataTable> CouncilsTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
+	TSoftObjectPtr<UDataTable> BattlesTable;
+
+	/** The star chart of the current act */
+	UFUNCTION(BlueprintPure, Category="Data")
+	UDataTable* GetStarNodes() const;
+
+	UFUNCTION(BlueprintPure, Category="Data")
+	UDataTable* GetLeapRoutes() const;
 
 	// ---- Events ----
 
@@ -149,6 +196,38 @@ public:
 	UFUNCTION(BlueprintPure, Category="Council")
 	FName LeaningState() const;
 
+	/** Whether a council option's requirements are met (flags, standing, loyalty, states, background) */
+	UFUNCTION(BlueprintPure, Category="Council")
+	bool IsOptionAvailable(const FS_CouncilOption& Opt) const;
+
+	UFUNCTION(BlueprintPure, Category="Council")
+	FName GetState(FName Key) const;
+
+	// ---- Act VII ----
+
+	/** Carries the campaign from the slice's end into Act VII at the Ember Relay */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void StartActVII();
+
+	UFUNCTION(BlueprintPure, Category="Act VII")
+	bool IsSupplyLineReady() const;
+
+	/** Whether a shipment can be ordered at the current node (one per node, line ready, outpost not dark) */
+	UFUNCTION(BlueprintPure, Category="Act VII")
+	bool CanOrderShipment() const;
+
+	/** Orders BioGel, Seeds, Refit or Spire from Outpost One over the chosen supply line */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void OrderShipment(FName Kind);
+
+	/** Standing band: Hostile (<= -40), Wary, or Trusted (>= 30) */
+	UFUNCTION(BlueprintPure, Category="Act VII")
+	FName StandingBand() const;
+
+	/** The cure track for the status line: none, sample, synthesising, ready, delivered */
+	UFUNCTION(BlueprintPure, Category="Act VII")
+	FString CureStatus() const;
+
 	// ---- Dialogue ----
 
 	/** The line's text for this Captain, and whether its required flag is set */
@@ -172,4 +251,9 @@ public:
 private:
 
 	static constexpr float OverflowThreshold = 100.0f;
+
+	/** Shipment timers and arrivals, the cure's lab time and the outpost blackout, once per leap */
+	void AdvanceSupplies(FString& Report);
+
+	void ApplyShipment(FName Kind, FString& Report);
 };

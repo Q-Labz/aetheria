@@ -95,6 +95,16 @@ AAetheriaImpactFlash* AAetheriaImpactFlash::Spawn(UWorld* World, const FVector& 
 	return Flash;
 }
 
+void AAetheriaImpactFlash::SetHaloOnly(float Glow)
+{
+	bHaloOnly = true;
+	Core->SetVisibility(false);
+	if (HaloMaterial)
+	{
+		HaloMaterial->SetScalarParameterValue(TEXT("Glow"), Glow);
+	}
+}
+
 void AAetheriaImpactFlash::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -113,7 +123,7 @@ void AAetheriaImpactFlash::Apply(float Alpha)
 	{
 		HaloMaterial->SetScalarParameterValue(TEXT("Fade"), Brightness);
 	}
-	Core->SetVisibility(Brightness > 0.05f);
+	Core->SetVisibility(!bHaloOnly && Brightness > 0.05f);
 	Light->SetIntensity(BaseLight * Brightness);
 }
 

@@ -243,6 +243,11 @@ protected:
 	UFUNCTION() void HandleHold();
 	UFUNCTION() void HandleRecalibrate();
 	UFUNCTION() void HandleTreat();
+	UFUNCTION() void HandleOrderBioGel();
+	UFUNCTION() void HandleOrderSeeds();
+	UFUNCTION() void HandleOrderRefit();
+	UFUNCTION() void HandleOrderSpire();
+	void Order(FName Kind);
 
 	void ShowToast(const FText& Text, float Seconds);
 	void SetBusy(bool bInBusy);
@@ -291,6 +296,29 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
 	TObjectPtr<UTextBlock> StatusText;
+
+	/** Act VII: Outpost One supply orders */
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UTextBlock> SupplyLabel;
+
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UWidget> SupplyRow;
+
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UButton> OrderBioGelButton;
+
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UButton> OrderSeedsButton;
+
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UButton> OrderRefitButton;
+
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UButton> OrderSpireButton;
+
+	/** Act VII: standing, the cure and the supply line */
+	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
+	TObjectPtr<UTextBlock> ActStatusText;
 
 	UPROPERTY(BlueprintReadOnly, Category="Star Map", meta=(BindWidgetOptional))
 	TObjectPtr<UTextBlock> MatrixNote;
@@ -366,6 +394,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Council")
 	void Setup(UDataTable* InCouncilTable, FName InCouncilKey);
 
+	/** A council from DT_Councils (Act VII): situation, counsel and options all come from the row */
+	UFUNCTION(BlueprintCallable, Category="Council")
+	void SetupDef(FName InCouncilDef);
+
+	/** DT_Councils row, or None for the slice's Relay / Directive councils */
+	UPROPERTY(BlueprintReadOnly, Category="Council")
+	FName CouncilDef = NAME_None;
+
 	UFUNCTION(BlueprintCallable, Category="Council")
 	void ChooseOption(const FS_CouncilOption& Opt);
 
@@ -422,6 +458,12 @@ protected:
 
 	UFUNCTION()
 	void HandleQuit();
+
+	UFUNCTION()
+	void HandleContinue();
+
+	UPROPERTY(BlueprintReadOnly, Category="Slice End", meta=(BindWidgetOptional))
+	TObjectPtr<UButton> ContinueButton;
 
 	UPROPERTY(BlueprintReadOnly, Category="Slice End", meta=(BindWidgetOptional))
 	TObjectPtr<UTextBlock> TitleText;

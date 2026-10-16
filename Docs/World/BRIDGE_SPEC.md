@@ -140,3 +140,80 @@ Fresnel rim) or `M_Star` (granulation, limb darkening); instances in /Game/Aethe
 | ArchWake | Omega Arch and debris, white dwarf Threnody behind the ring | (no battle) |
 | LanternDrift | gas giant Lantern Mother low to starboard, four lantern clusters | Lantern Mother below the battle plane, the existing clusters |
 | EmberRelay | Ember Relay silhouetted against the red giant Cinderwake | Cinderwake below and aft, the relay at the battlefield edge |
+
+### C (Act VII nodes)
+Same system for the Act VII chart. Ring bands (`SM_Ring_Wide/Mid/Thin`, double-sided, additive `MI_Ring_*`) and the
+Tithe marker buoy come from `Tools/Blender/make_planet_sphere.py`.
+
+| Node | Through the bridge viewport | In combat |
+|---|---|---|
+| AshfallVerge | the Verge with its ash ring, two dead convoy wrecks | the Verge below, wrecks at the edges |
+| GlassSea | the Glass Sea with its shard ring and grey moon, the glass shard field | the Glass Sea below, shard field |
+| TetherPoint | the near-black Tether with a thin accretion line and a faint lensing halo | the Tether below, ringed by its halo |
+| CinderArchive | the Cinder Archive, the Hollow as a small moon | the Archive below |
+| QuietHollow | the Hollow up close under its damaged shield dome, the Archive behind | the Hollow below under its dome, the Archive far |
+| PyreGate | the Archive's north pole and the Vault shaft's light, the Bastion and pylons | the pole below (the Bastion is a combat unit) |
+| TitheMarker | the marker buoy, Grieve with its ring and the Anchorage light | Grieve below, the buoy |
+| VaultOfRecords | the Vault of Records over the polar shaft, glass lattice walls lining the shaft | the pole below, the Vault and lattice walls at the edges |
+
+**Close-range detail (`M_Planet`, group *Close Detail*).** At the Pyre Gate and the Vault of Records the Archive's
+pole is a planet 100,000 uu across, about 12,000 uu below the combat camera. M_Planet's own noise is too coarse at
+that range, so a second, ridged noise (`DetailScale` 60 on the unit sphere) shades the surface and roughens the
+cloud edges (`DetailEdge` 1.5). It fades by camera distance, from full at `DetailFadeStart` 20,000 uu to none at
+`DetailFadeEnd` 35,000 uu. Past that a planet renders as before; the Glass Sea in combat (no closer than about
+37,000 uu) is unchanged. Set `DetailStrength` to 0 on an instance to turn the layer off.
+
+## D. Depth of field and lighting
+
+**Bridge (L_Command, level data).**
+- *Focus.* The officer close-ups (`Shot_TalaVane`, `Shot_NixNull`, `Shot_JaxMercer`, `Shot_ArisThorne`,
+  `Shot_Lyra`, `Shot_Cormaker`) track-focus their officer's head (`Crew_<Name>`, +162 uu) at f/2. The other
+  shots use manual focus:
+
+  | Shot | Focused on | Aperture |
+  |---|---|---|
+  | Captain | the captain's chair | f/2 |
+  | VexAI | Vex's column | f/2 |
+  | CoreArchitect | the holotable | f/2.8 |
+  | Council, Chart | the holotable | f/4 |
+  | Wide | the holotable | f/5.6 |
+
+  All shots use smooth focus changes.
+- *Lights.* The mood is cool overheads and teal accents, with coloured practicals:
+
+  | Light | Setting |
+  |---|---|
+  | Ceiling | 9 at 7,200 K |
+  | Coves | teal `(0.45, 0.80, 1.0)`, 7 |
+  | Holotable glow | cyan, 22 |
+  | Lyra's loom | amber `(1.0, 0.60, 0.30)`, 10 |
+  | Vex glow | cyan, 9 |
+
+  The lights carry volumetric scattering.
+- *Haze and grading.* `Bridge_Haze` is volumetric fog limited to the bridge (fog cut off at 3,000 uu), so the view
+  outside stays clear. The post-process volume adds contrast 1.08, saturation 1.06, film grain 0.06 and exposure
+  bias −0.7 against the fixed exposure. The ceramic `#E4E8EA` and the dark crystal floor now read as specified
+  instead of blown out.
+
+**Combat (`AAetheriaCommandPawn`).** The camera's focus follows the battle plane at every zoom. It uses f/4 with a
+1,200 mm virtual sensor: a long-lens, miniature look. The ships stay sharp while the planets and starfield below
+soften. Tune or disable it with `FocusFstop`, `FocusSensorWidth` and `bFocusBattlePlane`.
+
+**Node light (`AAetheriaNodeScenery`, both maps).** Lights tagged `NodeKeyLight` take the colour of the current
+node's star (`NodeLightColors`). That covers the sun through the bridge viewport and the combat key light.
+
+| Node | Light |
+|---|---|
+| ArchWake | Threnody's blue-white |
+| LanternDrift | Lantern Mother's teal |
+| EmberRelay | Cinderwake's ember |
+| AshfallVerge | ash amber |
+| GlassSea | glass glare, cool white |
+| TetherPoint | lensed violet |
+| CinderArchive | pale ash-gold |
+| QuietHollow | warm lamplight |
+| PyreGate | the shaft's white |
+| TitheMarker | the Anchorage's red |
+| VaultOfRecords | pale blue |
+
+The colour switches when a leap lands; nodes without an entry keep the light as placed.

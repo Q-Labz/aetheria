@@ -7,12 +7,33 @@ import os
 
 SPEAKERS = frozenset({
     "Narrator", "Captain", "TalaVane", "JaxMercer", "ArisThorne", "NixNull", "VexAI",
-    "Lyra", "Cormaker", "CoreArchitect", "CommanderVance",
+    "Lyra", "Cormaker", "CoreArchitect", "CommanderVance", "WardenKesh", "ExarchIthane",
 })
 BACKGROUNDS = ("SynodEnvoy", "GuildEngineer", "CoalitionVanguard", "OutcastCorsair")
 
 # Flags set by gameplay Blueprints (SLICE_SPEC §4, §9, §10) rather than by council options.
-GAMEPLAY_FLAGS = frozenset({"AnomalousDamping", "BeamAnomaly", "UsedArchConduit", "LanternCleared"})
+GAMEPLAY_FLAGS = frozenset({"AnomalousDamping", "BeamAnomaly", "UsedArchConduit", "LanternCleared",
+                            # slice consequences and Act VII rules in UAetheriaGameInstance / PC_Command
+                            "SquadronIIIAlienated", "ArchitectSilent", "CureSynthesising", "CureReady", "SeedsAboard",
+                            "AmbushSprung", "ActVIIComplete"})
+
+# Flags the game sets by pattern: per node, per council, per battle, per Weave anchor, per shipment order
+GAMEPLAY_FLAG_PREFIXES = ("Visited_", "Council_", "Won_", "Anchor_", "Ordered_")
+
+# Act VII option tables (DT_Council_<Name>), one per council in DT_Councils
+ACT_VII_COUNCILS = ("Lifeline", "Kesh", "KeshCure", "AshChoir", "Salvage", "Echo", "Canopy",
+                    "GlassSeaHail", "PyreGate", "TitheMarker", "Records", "ArchiveFate")
+ACT_VII_NODES = ("EmberRelay", "AshfallVerge", "GlassSea", "TetherPoint", "CinderArchive", "QuietHollow",
+                 "PyreGate", "TitheMarker", "VaultOfRecords")
+
+# Extra source files merged into a table on load
+TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII",)}
+
+# Tables imported from CSV (BuildData/<path>) instead of JSON
+CSV_TABLES = {
+    "DT_StarNodes_ActVII": ("S_StarNode", "ActVII/DT_StarNodes_ActVII.csv"),
+    "DT_LeapRoutes_ActVII": ("S_LeapRoute", "ActVII/DT_LeapRoutes_ActVII.csv"),
+}
 
 # Table name -> (row struct asset name, rows the slice requires).
 TABLES = {
@@ -21,7 +42,17 @@ TABLES = {
         "Consequence_Custodian", "Consequence_Dominion", "Consequence_Undetermined")),
     "DT_Council_Relay": ("S_CouncilOption", ("Grant", "Sandbox", "Refuse", "Rite")),
     "DT_Council_Directive": ("S_CouncilOption", ("Passage", "Arch", "Command")),
+    # Act VII (ACT_VII_CINDER_ARCHIVE.md)
+    "DT_Councils": ("S_CouncilDef", ACT_VII_COUNCILS),
+    **{f"DT_Council_{name}": ("S_CouncilOption", ()) for name in ACT_VII_COUNCILS},
+    "DT_NodeEvents_ActVII": ("S_NodeEvent", ACT_VII_NODES),
+    "DT_Battles": ("S_Battle", ("E1", "E2", "E3", "E4_Defend", "E4_DefendAllied", "E4_Assault", "E4_Vance", "Ambush")),
 }
+
+# What each table holds, for validation
+TABLE_KIND = {table: ("sequence" if struct == "S_Sequence" else "option" if struct == "S_CouncilOption"
+                      else "council" if struct == "S_CouncilDef" else "node" if struct == "S_NodeEvent" else "battle")
+              for table, (struct, _) in TABLES.items()}
 
 CUSTODIAN_THRESHOLD = 20
 DOMINION_THRESHOLD = -20
@@ -45,6 +76,11 @@ def load_source(source_dir):
             rows = json.load(f)
         if not isinstance(rows, list):
             raise ValueError(f"{path} must contain a JSON array of rows.")
+        for extra in TABLE_EXTRA_SOURCES.get(table, ()):
+            extra_path = os.path.join(source_dir, f"{extra}.json")
+            if os.path.isfile(extra_path):
+                with open(extra_path, encoding="utf-8") as f:
+                    rows = rows + json.load(f)
         data[table] = rows
     return data
 
@@ -53,9 +89,19 @@ def validate(data):
     """Returns human-readable problems in the source data. Empty means valid."""
     problems = []
     set_flags = set(GAMEPLAY_FLAGS)
-    for table in ("DT_Council_Relay", "DT_Council_Directive"):
-        set_flags.update(r.get("SetFlag", "None") for r in data.get(table, []))
+    for table, kind in TABLE_KIND.items():
+        for r in data.get(table, []):
+            if kind == "option":
+                set_flags.add(r.get("SetFlag", "None"))
+                set_flags.update(r.get("SetFlags", []))
+            elif kind == "node":
+                set_flags.update(r.get("ArrivalFlags", []))
+            elif kind == "battle":
+                set_flags.update(r.get("WinFlags", []))
     set_flags.discard("None")
+    councils = {r.get("Name") for r in data.get("DT_Councils", [])}
+    battles = {r.get("Name") for r in data.get("DT_Battles", [])}
+    sequences = {r.get("Name") for r in data.get("DT_Sequences", [])}
 
     for table, (_, required) in TABLES.items():
         rows = data.get(table, [])
@@ -65,16 +111,53 @@ def validate(data):
         for name in required:
             if name not in names:
                 problems.append(f"{table}: missing required row '{name}'.")
+        kind = TABLE_KIND[table]
         for row in rows:
             where = f"{table}.{row.get('Name')}"
-            lines = row.get("Lines") if table == "DT_Sequences" else row.get("Outcome")
-            if not lines:
-                problems.append(f"{where}: has no lines.")
-            for i, line in enumerate(lines or []):
-                problems.extend(_validate_line(line, f"{where}[{i}]", set_flags))
-            if table != "DT_Sequences":
+            if kind in ("sequence", "option"):
+                lines = row.get("Lines") if kind == "sequence" else row.get("Outcome")
+                if not lines:
+                    problems.append(f"{where}: has no lines.")
+                for i, line in enumerate(lines or []):
+                    problems.extend(_validate_line(line, f"{where}[{i}]", set_flags))
+            if kind == "option":
                 problems.extend(_validate_option(row, where))
+                for flag in row.get("RequiredFlags", []) + row.get("ForbiddenFlags", []):
+                    if not _is_set_somewhere(flag, set_flags):
+                        problems.append(f"{where}: requires flag '{flag}', which nothing sets.")
+                if row.get("NextCouncil", "None") not in ("None", *councils):
+                    problems.append(f"{where}: NextCouncil '{row.get('NextCouncil')}' is not in DT_Councils.")
+                if row.get("StartBattle", "None") not in ("None", *battles):
+                    problems.append(f"{where}: StartBattle '{row.get('StartBattle')}' is not in DT_Battles.")
+            elif kind == "council":
+                if f"DT_Council_{row.get('Name')}" not in data:
+                    problems.append(f"{where}: no option table DT_Council_{row.get('Name')}.")
+                if row.get("SituationSpeaker") not in SPEAKERS:
+                    problems.append(f"{where}: unknown situation speaker '{row.get('SituationSpeaker')}'.")
+                for i, entry in enumerate(row.get("Counsel", [])):
+                    if entry.get("Officer") not in SPEAKERS:
+                        problems.append(f"{where}.Counsel[{i}]: unknown officer '{entry.get('Officer')}'.")
+                    for key in ("RequiredFlag", "ForbiddenFlag"):
+                        if entry.get(key, "None") != "None" and not _is_set_somewhere(entry[key], set_flags):
+                            problems.append(f"{where}.Counsel[{i}]: {key} '{entry[key]}' is never set.")
+                if row.get("Intro", "None") not in ("None", *sequences):
+                    problems.append(f"{where}: intro sequence '{row.get('Intro')}' is not in DT_Sequences.")
+            elif kind == "node":
+                for council in row.get("Councils", []):
+                    if council not in councils:
+                        problems.append(f"{where}: council '{council}' is not in DT_Councils.")
+                if row.get("ArrivalSequence", "None") not in ("None", *sequences):
+                    problems.append(f"{where}: arrival sequence '{row.get('ArrivalSequence')}' is not in DT_Sequences.")
+            elif kind == "battle":
+                if not row.get("Groups"):
+                    problems.append(f"{where}: has no ship groups.")
+                if row.get("Debrief", "None") not in ("None", *sequences):
+                    problems.append(f"{where}: debrief '{row.get('Debrief')}' is not in DT_Sequences.")
     return problems
+
+
+def _is_set_somewhere(flag, set_flags):
+    return flag in set_flags or flag.startswith(GAMEPLAY_FLAG_PREFIXES)
 
 
 def architect_outcomes(data):
@@ -152,8 +235,18 @@ def council_path(data, state, relay, directive):
     return state
 
 
-def to_import_json(rows):
-    """Serializes rows in the JSON layout DataTable import expects."""
+# Defaults for the council-option fields added in Act VII, so older rows import without missing-field prompts
+OPTION_DEFAULTS = {
+    "RequiredFlags": [], "ForbiddenFlags": [], "MinStanding": -1000, "MaxStanding": 1000, "MinLoyaltyAny": {},
+    "RequiredStates": {}, "StandingDelta": 0, "PursuitDelta": 0, "ExposureDelta": 0, "HullDelta": 0.0,
+    "SetFlags": [], "SetStates": {}, "NextCouncil": "None", "StartBattle": "None",
+}
+
+
+def to_import_json(rows, table=None):
+    """Serializes rows in the JSON layout DataTable import expects, filling option fields older rows lack."""
+    if table is not None and TABLE_KIND.get(table) == "option":
+        rows = [{**OPTION_DEFAULTS, **row} for row in rows]
     return json.dumps(rows, ensure_ascii=False)
 
 
@@ -206,7 +299,7 @@ def _validate_line(line, where, set_flags):
         if bg not in BACKGROUNDS:
             problems.append(f"{where}: override for unknown background '{bg}'.")
     flag = line.get("RequiredFlag", "None")
-    if flag != "None" and flag not in set_flags:
+    if flag != "None" and not _is_set_somewhere(flag, set_flags):
         problems.append(f"{where}: requires flag '{flag}', which nothing sets.")
     return problems
 

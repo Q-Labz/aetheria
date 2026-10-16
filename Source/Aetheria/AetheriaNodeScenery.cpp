@@ -3,7 +3,9 @@
 #include "AetheriaNodeScenery.h"
 #include "Aetheria.h"
 #include "AetheriaGameInstance.h"
+#include "Components/LightComponent.h"
 #include "EngineUtils.h"
+#include "GameFramework/Actor.h"
 
 namespace
 {
@@ -13,6 +15,19 @@ namespace
 AAetheriaNodeScenery::AAetheriaNodeScenery()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	// the light of each node's star (WORLD_BIBLE.md 3.2), kept pale so ship hulls keep their own colours
+	NodeLightColors.Add(TEXT("ArchWake"), FLinearColor(0.78f, 0.86f, 1.0f));       // Threnody, blue-white
+	NodeLightColors.Add(TEXT("LanternDrift"), FLinearColor(0.72f, 1.0f, 0.90f));   // Lantern Mother's teal
+	NodeLightColors.Add(TEXT("EmberRelay"), FLinearColor(1.0f, 0.70f, 0.48f));     // Cinderwake, ember
+	NodeLightColors.Add(TEXT("AshfallVerge"), FLinearColor(1.0f, 0.82f, 0.62f));   // light through ash
+	NodeLightColors.Add(TEXT("GlassSea"), FLinearColor(0.82f, 0.95f, 1.0f));       // glare off the glass
+	NodeLightColors.Add(TEXT("TetherPoint"), FLinearColor(0.80f, 0.74f, 1.0f));    // lensed starlight
+	NodeLightColors.Add(TEXT("CinderArchive"), FLinearColor(1.0f, 0.92f, 0.80f));  // pale ash-gold
+	NodeLightColors.Add(TEXT("QuietHollow"), FLinearColor(1.0f, 0.86f, 0.72f));    // the refuge's warm lamps
+	NodeLightColors.Add(TEXT("PyreGate"), FLinearColor(0.86f, 0.92f, 1.0f));       // the Vault shaft's white
+	NodeLightColors.Add(TEXT("TitheMarker"), FLinearColor(1.0f, 0.66f, 0.60f));    // the Anchorage's red light
+	NodeLightColors.Add(TEXT("VaultOfRecords"), FLinearColor(0.80f, 0.90f, 1.0f)); // the polar shaft
 }
 
 void AAetheriaNodeScenery::BeginPlay()
@@ -69,5 +84,25 @@ void AAetheriaNodeScenery::ShowNode(FName Node)
 			bThisNode ? ++Shown : ++Hidden;
 		}
 	}
+	ApplyNodeLight(Node);
 	UE_LOG(LogAetheria, Log, TEXT("Node scenery: %s (%d shown, %d hidden)"), *Node.ToString(), Shown, Hidden);
+}
+
+void AAetheriaNodeScenery::ApplyNodeLight(FName Node)
+{
+	const FLinearColor* Color = NodeLightColors.Find(Node);
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		if (!It->ActorHasTag(KeyLightTag))
+		{
+			continue;
+		}
+		TArray<ULightComponent*> Lights;
+		It->GetComponents(Lights);
+		for (ULightComponent* Light : Lights)
+		{
+			const FLinearColor& Base = BaseLightColors.FindOrAdd(Light, Light->GetLightColor());
+			Light->SetLightColor(Color ? *Color : Base);
+		}
+	}
 }

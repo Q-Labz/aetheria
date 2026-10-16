@@ -8,6 +8,7 @@
 #include "AetheriaShipBase.h"
 #include "AetheriaTacticalController.h"
 #include "Aetheria.h"
+#include "Engine/DataTable.h"
 #include "Engine/TargetPoint.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -25,6 +26,7 @@ namespace AetheriaCombat
 	constexpr float SurgeCost = 30.0f;
 	constexpr float SurgeDuration = 6.0f;
 	constexpr float SurgeDilation = 2.0f;
+	constexpr float AllyEscortRange = 4500.0f;
 }
 
 AAetheriaCombatManager::AAetheriaCombatManager()
@@ -102,9 +104,12 @@ void AAetheriaCombatManager::BeginPlay()
 		PC->Squadron2 = Squadrons.IsValidIndex(1) ? Squadrons[1].Get() : nullptr;
 	}
 
-	// ---- Vance's picket ----
+	// ---- Enemies: a DT_Battles row (Act VII), or Vance's picket ----
 
 	TArray<AAetheriaShipBase*> Enemies;
+	const bool bTableBattle = SpawnBattle(GI, Enemies);
+	if (!bTableBattle)
+	{
 	if (UClass* Class = CruiserClass.LoadSynchronous())
 	{
 		Enemies.Add(SpawnShip(Class, FirstPoint(EnemySpawnCruiser), FText::GetEmpty()));
@@ -119,12 +124,14 @@ void AAetheriaCombatManager::BeginPlay()
 			Enemies.Add(SpawnShip(Class, Points[Index]->GetActorTransform(), FText::GetEmpty()));
 		}
 	}
+	}
 
 	for (AAetheriaShipBase* Enemy : Enemies)
 	{
 		if (Enemy)
 		{
 			Enemy->OnShipDestroyed.AddDynamic(this, &AAetheriaCombatManager::OnEnemyLost);
+			EnemyShips.Add(Enemy);
 			++AliveEnemies;
 		}
 	}
@@ -138,8 +145,24 @@ void AAetheriaCombatManager::BeginPlay()
 		CachedPhantomShipsActive = GI->PhantomShipsActive;
 	}
 
-	Log(E_Speaker::VexAI, TEXT("Contact. Sector 7 transponder codes. Commander Vance's picket, Captain."));
-	Log(E_Speaker::CommanderVance, TEXT("Key-Bearer. You opened a door that should have stayed shut. I followed you through it."));
+	if (bTableBattle)
+	{
+		for (const FS_Line& Line : Battle.OpeningComms)
+		{
+			Log(Line.Speaker, Line.Text.ToString());
+		}
+		if (Battle.HoldSeconds > 0.0f)
+		{
+			HoldRemaining = Battle.HoldSeconds;
+			Log(E_Speaker::VexAI, FString::Printf(TEXT("Hold position for %d seconds, Captain."), FMath::RoundToInt(HoldRemaining)));
+		}
+		GetWorldTimerManager().SetTimer(BattleTimer, this, &AAetheriaCombatManager::BattleTick, 1.0f, true);
+	}
+	else
+	{
+		Log(E_Speaker::VexAI, TEXT("Contact. Sector 7 transponder codes. Commander Vance's picket, Captain."));
+		Log(E_Speaker::CommanderVance, TEXT("Key-Bearer. You opened a door that should have stayed shut. I followed you through it."));
+	}
 	Log(E_Speaker::VexAI, TEXT("Tactical pause engaged. The fleet awaits your orders."));
 
 	// the battle opens paused: orders first
@@ -234,9 +257,142 @@ void AAetheriaCombatManager::FlushPendingLog()
 void AAetheriaCombatManager::OnEnemyLost(AAetheriaShipBase* Ship)
 {
 	AliveEnemies = FMath::Max(0, AliveEnemies - 1);
-	if (AliveEnemies == 0)
+	if (Ship && Ship->Tags.Contains(TEXT("BattleObjective")))
+	{
+		AliveObjectives = FMath::Max(0, AliveObjectives - 1);
+		if (AliveObjectives == 0 && Battle.HoldSeconds <= 0.0f)
+		{
+			Victory();
+			return;
+		}
+	}
+	// defend battles end on the clock, not on kills
+	if (AliveEnemies == 0 && Battle.HoldSeconds <= 0.0f)
 	{
 		Victory();
+	}
+}
+
+bool AAetheriaCombatManager::SpawnBattle(UAetheriaGameInstance* GI, TArray<AAetheriaShipBase*>& OutEnemies)
+{
+	if (!GI || GI->PendingBattle.IsNone())
+	{
+		return false;
+	}
+	const UDataTable* Table = GI->BattlesTable.LoadSynchronous();
+	const FS_Battle* Row = Table ? Table->FindRow<FS_Battle>(GI->PendingBattle, TEXT("SpawnBattle"), false) : nullptr;
+	if (!Row || Row->Groups.Num() == 0)
+	{
+		UE_LOG(LogAetheria, Warning, TEXT("Battle %s is not in DT_Battles; staging the default engagement"), *GI->PendingBattle.ToString());
+		return false;
+	}
+	BattleId = GI->PendingBattle;
+	Battle = *Row;
+
+	using namespace AetheriaCombat;
+	TArray<AActor*> EnemyPoints = FindSpawnPoints(EnemySpawn);
+	EnemyPoints.Append(FindSpawnPoints(EnemySpawnCruiser));
+	const TArray<AActor*> AllyPoints = FindSpawnPoints(PlayerSpawnSq1);
+	const FTransform AllyBase = AllyPoints.Num() > 0 ? AllyPoints[0]->GetActorTransform() : GetActorTransform();
+
+	int32 EnemyIndex = 0;
+	int32 AllyIndex = 0;
+	for (const FS_BattleGroup& Group : Battle.Groups)
+	{
+		UClass* Class = Group.ShipClass.LoadSynchronous();
+		if (!Class)
+		{
+			UE_LOG(LogAetheria, Warning, TEXT("Battle %s: a group has no ship class"), *BattleId.ToString());
+			continue;
+		}
+		for (int32 i = 0; i < Group.Count; ++i)
+		{
+			FTransform Where;
+			if (Group.bAllied)
+			{
+				Where = AllyBase;
+				Where.AddToTranslation(FVector(-600.0f * (AllyIndex / 3), (AllyIndex % 3 - 1) * 900.0f, 0.0f));
+				++AllyIndex;
+			}
+			else if (EnemyPoints.Num() > 0)
+			{
+				// cycle the enemy points, pushing later rounds further out
+				Where = EnemyPoints[EnemyIndex % EnemyPoints.Num()]->GetActorTransform();
+				Where.AddToTranslation(FVector(700.0f * (EnemyIndex / EnemyPoints.Num()), 0.0f, 0.0f));
+				++EnemyIndex;
+			}
+			else
+			{
+				Where = GetActorTransform();
+			}
+
+			AAetheriaShipBase* Ship = SpawnShip(Class, Where, FText::GetEmpty());
+			if (!Ship)
+			{
+				continue;
+			}
+			if (Group.bAllied)
+			{
+				Ship->Faction = E_Faction::Player;
+				Ship->bTargetsFlagship = false;
+				// escort the flagship: engage what comes at the fleet instead of charging the enemy line
+				Ship->AggroRange = FMath::Min(Ship->AggroRange, AllyEscortRange);
+				PlayerShips.AddUnique(Ship);
+				Ship->OnShipDestroyed.AddDynamic(this, &AAetheriaCombatManager::OnPlayerLost);
+				continue;
+			}
+			if (Group.bObjective)
+			{
+				Ship->Tags.Add(TEXT("BattleObjective"));
+				++AliveObjectives;
+			}
+			OutEnemies.Add(Ship);
+		}
+	}
+	return OutEnemies.Num() > 0;
+}
+
+void AAetheriaCombatManager::BattleTick()
+{
+	if (bBattleOver)
+	{
+		GetWorldTimerManager().ClearTimer(BattleTimer);
+		return;
+	}
+
+	if (Battle.HoldSeconds > 0.0f)
+	{
+		HoldRemaining -= 1.0f;
+		const int32 Left = FMath::RoundToInt(HoldRemaining);
+		if (Left == 60 || Left == 30 || Left == 10)
+		{
+			Log(E_Speaker::VexAI, FString::Printf(TEXT("%d seconds, Captain."), Left));
+		}
+		if (HoldRemaining <= 0.0f)
+		{
+			Log(E_Speaker::VexAI, TEXT("The line held."));
+			Victory();
+			return;
+		}
+	}
+
+	if (Battle.WithdrawAtHullPct > 0.0f)
+	{
+		float Hull = 0.0f;
+		float MaxHull = 0.0f;
+		for (const AAetheriaShipBase* Enemy : EnemyShips)
+		{
+			if (Enemy)
+			{
+				Hull += Enemy->IsAlive() ? Enemy->Hull : 0.0f;
+				MaxHull += Enemy->MaxHull;
+			}
+		}
+		if (MaxHull > 0.0f && Hull / MaxHull <= Battle.WithdrawAtHullPct)
+		{
+			Log(E_Speaker::VexAI, TEXT("The enemy is withdrawing."));
+			Victory();
+		}
 	}
 }
 
@@ -335,17 +491,36 @@ void AAetheriaCombatManager::Victory()
 	{
 		GI->FlagshipHullPct = HullPct;
 		GI->PhantomShipsActive -= Losses;
-		GI->StoryFlags.Add(TEXT("LanternCleared"));
+		if (BattleId.IsNone())
+		{
+			GI->StoryFlags.Add(TEXT("LanternCleared"));
+		}
+		else
+		{
+			GI->StoryFlags.Add(FName(*(TEXT("Won_") + BattleId.ToString())));
+			for (const FName& Flag : Battle.WinFlags)
+			{
+				GI->StoryFlags.Add(Flag);
+			}
+		}
 		GI->NextScreen = TEXT("PostCombat");
 	}
 
 	const int32 FleetStrength = GetAetheriaGameInstance() ? GetAetheriaGameInstance()->PhantomShipsActive : 0;
+	const FString Result = Battle.HoldSeconds > 0.0f
+		? FString::Printf(TEXT("Position held for %d seconds."), FMath::RoundToInt(Battle.HoldSeconds))
+		: AliveObjectives == 0 && Battle.Groups.ContainsByPredicate([](const FS_BattleGroup& Group) { return Group.bObjective; })
+			? FString(TEXT("Objective destroyed."))
+			: FString(TEXT("Hostile picket destroyed."));
 	const FString Body = FString::Printf(
-		TEXT("Result: Hostile picket destroyed.\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
-		FMath::RoundToInt(HullPct * 100.0f), Losses, FleetStrength,
+		TEXT("Result: %s\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
+		*Result, FMath::RoundToInt(HullPct * 100.0f), Losses, FleetStrength,
 		Flagship ? Flagship->BeamShots : 0, Flagship ? Flagship->BeamKills : 0);
 
-	ShowAfterAction(true, FText::FromString(TEXT("MISSION REPORT — ENGAGEMENT AT THE LANTERN DRIFT")), FText::FromString(Body));
+	const FText Title = BattleId.IsNone() || Battle.Title.IsEmpty()
+		? FText::FromString(TEXT("MISSION REPORT — ENGAGEMENT AT THE LANTERN DRIFT"))
+		: FText::FromString(TEXT("MISSION REPORT — ") + Battle.Title.ToString().ToUpper());
+	ShowAfterAction(true, Title, FText::FromString(Body));
 
 	if (AAetheriaTacticalController* PC = GetTacticalController())
 	{

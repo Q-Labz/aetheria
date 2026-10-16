@@ -1,0 +1,139 @@
+"""Playtest helpers for a running PIE session: jump to an act and read the campaign state.
+
+Editor-only test tooling. Nothing here ships or runs in the game itself.
+"""
+import unreal
+import toolset_registry
+
+
+def _game_world():
+    world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_game_world()
+    if not world:
+        raise RuntimeError("No PIE session is running.")
+    return world
+
+
+def _game_instance():
+    gi = unreal.GameplayStatics.get_game_instance(_game_world())
+    if not gi:
+        raise RuntimeError("The PIE world has no game instance.")
+    return gi
+
+
+@unreal.uclass()
+class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
+    """Playtest shortcuts for a running PIE session of Aetheria: jump into Act VII and read the
+    campaign state (node, act, flags, standing, supply line, battle) without replaying earlier content."""
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def start_act_vii(captain_name: str = "Rook", background: str = "SynodEnvoy") -> str:
+        """Carries the running PIE campaign into Act VII at the Ember Relay, as the slice end's Continue does.
+
+        Args:
+            captain_name: Captain name to use if none was entered yet
+            background: SynodEnvoy, GuildEngineer, CoalitionVanguard or OutcastCorsair, if none was chosen yet
+
+        Returns:
+            Confirmation.
+        """
+        gi = _game_instance()
+        if not gi.get_editor_property("captain_name"):
+            gi.set_editor_property("captain_name", captain_name)
+            # E_SynodEnvoy -> SYNOD_ENVOY in Python
+            member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(background)).upper()
+            if hasattr(unreal.E_Background, member):
+                gi.set_editor_property("background", getattr(unreal.E_Background, member))
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "start_act_vii"):
+            raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
+        pc.start_act_vii()
+        return "Act VII started; the command level reloads at the Ember Relay."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def get_campaign_state() -> str:
+        """Summarises the running campaign: act, node, standing, supply line, cure, pending battle and story flags.
+
+        Returns:
+            A one-line summary followed by the story flags.
+        """
+        gi = _game_instance()
+        flags = sorted(str(f) for f in gi.get_editor_property("story_flags"))
+        states = {str(k): str(v) for k, v in gi.get_editor_property("states").items()}
+        return (f"act={gi.get_editor_property('current_act')} node={gi.get_editor_property('current_node')} "
+                f"next={gi.get_editor_property('next_screen')} battle={gi.get_editor_property('pending_battle')} "
+                f"standing={gi.get_editor_property('severant_standing')} leaning={gi.get_editor_property('architect_leaning')} "
+                f"instability={gi.get_editor_property('instability'):.0f} pursuit={gi.get_editor_property('pursuit_clock')} "
+                f"hull={gi.get_editor_property('flagship_hull_pct'):.2f} states={states} flags={flags}")
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_campaign_values(standing: int = -1000, add_flags: list[str] = [], instability: float = -1.0) -> str:
+        """Adjusts the running campaign for a test (only the arguments given are changed).
+
+        Args:
+            standing: Severant standing to set (-1000 leaves it)
+            add_flags: Story flags to add
+            instability: Star-Drive instability to set (-1 leaves it)
+
+        Returns:
+            The new state summary.
+        """
+        gi = _game_instance()
+        if standing > -1000:
+            gi.set_editor_property("severant_standing", standing)
+        if add_flags:
+            flags = gi.get_editor_property("story_flags")
+            for flag in add_flags:
+                flags.add(flag)
+            gi.set_editor_property("story_flags", flags)
+        if instability >= 0.0:
+            gi.set_editor_property("instability", instability)
+        return AetheriaPlaytestToolset.get_campaign_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def stage_battle(battle: str, node: str = "") -> str:
+        """Opens a DT_Battles battle in the running PIE session (Act VII state), as a council's StartBattle does.
+
+        Args:
+            battle: DT_Battles row, e.g. E1, E2, E4_Assault
+            node: Star node to fight at, which picks the combat scenery (empty keeps the current node)
+
+        Returns:
+            Confirmation.
+        """
+        gi = _game_instance()
+        if node:
+            gi.set_editor_property("current_node", node)
+        gi.set_editor_property("current_act", max(7, gi.get_editor_property("current_act")))
+        gi.set_editor_property("pending_battle", battle)
+        gi.set_editor_property("next_screen", "PostCombat")
+        unreal.GameplayStatics.open_level(_game_world(), "L_Combat_LanternDrift")
+        return f"Staging {battle} in L_Combat_LanternDrift."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def go_to_node(node: str, add_flags: list[str] = []) -> str:
+        """Puts the running Act VII campaign at a star node and runs its arrival, as a leap landing there does.
+
+        Args:
+            node: Act VII node, e.g. VaultOfRecords
+            add_flags: Story flags to add first (e.g. GateOpen)
+
+        Returns:
+            Confirmation.
+        """
+        gi = _game_instance()
+        if add_flags:
+            flags = gi.get_editor_property("story_flags")
+            for flag in add_flags:
+                flags.add(flag)
+            gi.set_editor_property("story_flags", flags)
+        gi.set_editor_property("current_node", node)
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "run_node"):
+            raise RuntimeError("The PIE player controller is not PC_Command.")
+        pc.run_node(node)
+        return f"At {node}."

@@ -109,6 +109,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Flow")
 	void NewCommand();
 
+	// ---- Data-driven acts (Act VII) ----
+
+	/** From the slice's end screen: carry the campaign into Act VII and reload the command level */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void StartActVII();
+
+	/** Arrival at a node of a data-driven act: its arrival sequence, then its councils in order */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void RunNode(FName Node);
+
+	/** Holds the next council of the current node whose requirements are met, or shows the star map */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void ContinueNode();
+
+	/** Opens a DT_Councils council */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void ShowDataCouncil(FName Council);
+
+	/** Called by a data council when the Captain decides */
+	void OnCouncilChosen(FName Council, const FS_CouncilOption& Opt);
+
 	/** Focuses Widget for keyboard input, or the viewport when null */
 	void FocusWidget(UUserWidget* Widget);
 
@@ -127,6 +148,22 @@ protected:
 
 	/** Cuts the bridge camera to a named shot, if there is a director */
 	void ShowShot(FName Shot);
+
+	/** After a council: the next council or battle its option named */
+	FName PendingNextCouncil;
+	FName PendingStartBattle;
+
+	/** Whether a council can be held now (requirements, not already held, at least one option available) */
+	bool CanHoldCouncil(FName Council) const;
+
+	/** Stages a DT_Battles battle in the combat level */
+	void StartBattle(FName Battle);
+
+	/** Back on the bridge after a data-act battle */
+	void AfterDataBattle();
+
+	/** The act's ending: the second revelation by leaning, then the report and the end screen */
+	void PlayActEnd();
 
 	/** Points the view at the level's camera tagged CommandCamera */
 	void UseCommandCamera();

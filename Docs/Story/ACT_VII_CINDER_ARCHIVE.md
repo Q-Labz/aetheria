@@ -339,3 +339,32 @@ Commander Vance's fleet withdrew toward Tithe Anchorage. Report ends."
 - **Meshes (generated):** ships in `Source_Art/Meshes/`: SM_SeverantChoirSkiff, SM_SilenceEmitterFrigate,
   SM_TheLastSilence, SM_KeshRefugeTender. Set pieces in `Source_Art/Environments/`: SM_SeverantBastion and
   SM_BastionPylon (E2), SM_VaultOfRecords (C3/E4), SM_GlassShardField (GlassSea, E1).
+
+## 14. As built (implementation notes)
+
+- **Data-driven act flow.** `DT_NodeEvents_ActVII` (row = node): arrival sequence and flags, then councils in
+  order. `DT_Councils` holds each council's title, situation, counsel (with `RequiredFlag` / `ForbiddenFlag`
+  per line) and its options table `DT_Council_<Name>`. Options gained requirements (`RequiredFlags`,
+  `ForbiddenFlags`, `MinStanding`, `MaxStanding`, `MinLoyaltyAny`, `RequiredStates`) and effects
+  (`StandingDelta`, `PursuitDelta`, `ExposureDelta`, `HullDelta`, `SetFlags`, `SetStates`, `NextCouncil`,
+  `StartBattle`). Each council is held once (`Council_<Name>`), each node's arrival plays once (`Visited_<Node>`).
+- **States, not enums.** `SupplyLine`, `ArchiveState`, `ExarchStatus` and `ArchitectRevelation2` live in the Game
+  Instance's `States` map (name → value) instead of four C++ enums; values are the names in §4 and §9.
+- **Battles.** `DT_Battles` rows: ship groups (enemy, allied, objective), hold time (defend), withdrawal threshold,
+  opening comms, win flags and a debrief sequence. The E-series field the Severant ships (`BP_ChoirSkiff`,
+  `BP_ChoirSkiffEmitter`, `BP_EmitterFrigate`, `BP_SeverantBastion` + `BP_BastionPylon`, `BP_LastSilence`) beside
+  Iron Tithe hulls. Allied groups (Kesh's ochre-collared `BP_KeshSkiff` in `E4_DefendAllied`) fight as escorts: their
+  aggro range drops to 4,500 uu, so they engage what comes at the fleet instead of charging the enemy line.
+- **Silence Pulse.** Emitters telegraph a soft blue zone (halo only, no core) for 1.5 s, then pulse: inside the
+  radius the Prismatic beam charge is cancelled and an active Chrono Surge ends ("Silence pulse! The Chrono-Core
+  surge just died on us."). Radii: skiff emitter 1,300, frigate 1,300, The Last Silence 2,200 uu.
+- **After-action result line.** Hold battles report "Position held for N seconds.", objective battles
+  "Objective destroyed.", the rest "Hostile picket destroyed."
+- **Supply line.** Orders from the star map's Outpost One row; Arch Conduit delivers at once (+1 exposure), Weave /
+  Joint lanes after both anchors (first chart action at the Glass Sea and at the Tether Point) and 2 / 1 leaps.
+  Seeds + the AshfallVerge sample start synthesis; the cure is ready one leap later.
+- **Flow.** The slice end's *Continue* starts the act (`StartActVII`); the act ends after an E4 win with the
+  second revelation (by leaning) and the mission report, then the end screen.
+- **Playtest.** `aetheria_tools.playtest_toolset` jumps a PIE session into Act VII (`start_act_vii`), reads and
+  adjusts the campaign (`get_campaign_state`, `set_campaign_values`), lands at a node (`go_to_node`) and stages a
+  battle at any node's scenery (`stage_battle`).

@@ -1,0 +1,346 @@
+[
+  {
+    "Name": "E1",
+    "Title": "The Glass Sea",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiffEmitter.BP_ChoirSkiffEmitter_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Six Choir-skiffs. Two carry Silence emitters: watch for the blue rings.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "GlassSeaPassed"
+    ],
+    "Debrief": "E1_Debrief"
+  },
+  {
+    "Name": "E2",
+    "Title": "The Pyre Gate",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_SeverantBastion.BP_SeverantBastion_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": true
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_BastionPylon.BP_BastionPylon_C",
+        "Count": 3,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Bastion core is shielded while its three pylons stand. Bring them down first.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "Turn back, Key-Bearer. The Gate does not open for thieves.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "GateOpen"
+    ],
+    "Debrief": "E2_Debrief"
+  },
+  {
+    "Name": "E3",
+    "Title": "Tithe Anchorage Marker",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": true
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Key-Bearer. Come and see what Ithane gave me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The frigate carries a Silence emitter grafted onto a Tithe frame. It is the objective.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "VanceGraftsKnown"
+    ],
+    "Debrief": "E3_Debrief"
+  },
+  {
+    "Name": "E4_Defend",
+    "Title": "The Vault of Records",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 120.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "You will not keep what was never yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "All ships, take the Vault.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "ActVIIFinaleWon"
+    ],
+    "Debrief": "E4_Debrief"
+  },
+  {
+    "Name": "E4_DefendAllied",
+    "Title": "The Vault of Records",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 4,
+        "bAllied": true,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 120.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Choir-skiffs, with the Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "All ships, take the Vault.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "ActVIIFinaleWon"
+    ],
+    "Debrief": "E4_Debrief"
+  },
+  {
+    "Name": "E4_Assault",
+    "Title": "The Last Silence",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_LastSilence.BP_LastSilence_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": true
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "Then break it, and break with it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Last Silence carries the strongest emitter we have seen. Keep the Dreadnought outside its ring.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "ActVIIFinaleWon"
+    ],
+    "Debrief": "E4_Debrief"
+  },
+  {
+    "Name": "E4_Vance",
+    "Title": "The Vault of Records",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 60.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Then I will do this myself.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "ActVIIFinaleWon"
+    ],
+    "Debrief": "E4_Debrief"
+  },
+  {
+    "Name": "Ambush",
+    "Title": "Iron Tithe Ambush",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.5,
+    "OpeningComms": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "You left a wake a child could follow, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [],
+    "Debrief": "Ambush_Debrief"
+  }
+]
