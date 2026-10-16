@@ -91,3 +91,21 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
         if instability >= 0.0:
             gi.set_editor_property("instability", instability)
         return AetheriaPlaytestToolset.get_campaign_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def stage_battle(battle: str) -> str:
+        """Opens a DT_Battles battle in the running PIE session (Act VII state), as a council's StartBattle does.
+
+        Args:
+            battle: DT_Battles row, e.g. E1, E2, E4_Assault
+
+        Returns:
+            Confirmation.
+        """
+        gi = _game_instance()
+        gi.set_editor_property("current_act", max(7, gi.get_editor_property("current_act")))
+        gi.set_editor_property("pending_battle", battle)
+        gi.set_editor_property("next_screen", "PostCombat")
+        unreal.GameplayStatics.open_level(_game_world(), "L_Combat_LanternDrift")
+        return f"Staging {battle} in L_Combat_LanternDrift."

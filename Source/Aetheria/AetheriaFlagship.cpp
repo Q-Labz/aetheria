@@ -166,6 +166,18 @@ void AAetheriaFlagship::DischargeBeam()
 	}
 }
 
+void AAetheriaFlagship::InterruptBeam()
+{
+	if (!bBeamCharging)
+	{
+		return;
+	}
+	GetWorldTimerManager().ClearTimer(BeamChargeTimer);
+	bBeamCharging = false;
+	HidePreview();
+	PostComms(E_Speaker::VexAI, TEXT("Silence pulse. Prismatic charge lost. The array is still ready, Captain."));
+}
+
 void AAetheriaFlagship::ShowPreview(FVector Target)
 {
 	if (!Preview)

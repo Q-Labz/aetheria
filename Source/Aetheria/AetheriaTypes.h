@@ -47,7 +47,8 @@ UENUM(BlueprintType)
 enum class E_Faction : uint8
 {
 	Player,
-	VanceRemnant
+	VanceRemnant,
+	Severant
 };
 
 /** What happens on arrival at a star node */

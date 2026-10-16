@@ -215,7 +215,8 @@ void AAetheriaShipBase::SetSelected(bool bSelected)
 
 bool AAetheriaShipBase::IsHostileTo(const AAetheriaShipBase* Other) const
 {
-	return Other && Other->Faction != Faction;
+	// the Iron Tithe and the Severant hardliners fight on the same side against the fleet
+	return Other && (Other->Faction == E_Faction::Player) != (Faction == E_Faction::Player);
 }
 
 AAetheriaShipBase* AAetheriaShipBase::FindNearestHostile(float Range) const

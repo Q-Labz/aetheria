@@ -4,8 +4,14 @@
     "Title": "The Glass Sea",
     "Groups": [
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
-        "Count": 6,
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiffEmitter.BP_ChoirSkiffEmitter_C",
+        "Count": 2,
         "bAllied": false,
         "bObjective": false
       }
@@ -15,7 +21,7 @@
     "OpeningComms": [
       {
         "Speaker": "VexAI",
-        "Text": "Six Choir-skiffs. Two carry Silence emitters.",
+        "Text": "Six Choir-skiffs. Two carry Silence emitters: watch for the blue rings.",
         "BackgroundOverride": {},
         "RequiredFlag": "None"
       }
@@ -30,14 +36,26 @@
     "Title": "The Pyre Gate",
     "Groups": [
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_SeverantBastion.BP_SeverantBastion_C",
         "Count": 1,
         "bAllied": false,
         "bObjective": true
       },
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_BastionPylon.BP_BastionPylon_C",
+        "Count": 3,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
         "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
         "bAllied": false,
         "bObjective": false
       }
@@ -47,7 +65,7 @@
     "OpeningComms": [
       {
         "Speaker": "VexAI",
-        "Text": "The Bastion core is shielded. Bring it down.",
+        "Text": "The Bastion core is shielded while its three pylons stand. Bring them down first.",
         "BackgroundOverride": {},
         "RequiredFlag": "None"
       },
@@ -68,14 +86,14 @@
     "Title": "Tithe Anchorage Marker",
     "Groups": [
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
         "Count": 1,
         "bAllied": false,
         "bObjective": true
       },
       {
         "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
-        "Count": 1,
+        "Count": 2,
         "bAllied": false,
         "bObjective": false
       },
@@ -94,6 +112,12 @@
         "Text": "Key-Bearer. Come and see what Ithane gave me.",
         "BackgroundOverride": {},
         "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The frigate carries a Silence emitter grafted onto a Tithe frame. It is the objective.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
       }
     ],
     "WinFlags": [
@@ -107,13 +131,25 @@
     "Groups": [
       {
         "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
-        "Count": 2,
+        "Count": 1,
         "bAllied": false,
         "bObjective": false
       },
       {
         "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
-        "Count": 6,
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
         "bAllied": false,
         "bObjective": false
       }
@@ -145,18 +181,30 @@
     "Groups": [
       {
         "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
-        "Count": 2,
+        "Count": 1,
         "bAllied": false,
         "bObjective": false
       },
       {
         "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
-        "Count": 6,
+        "Count": 4,
         "bAllied": false,
         "bObjective": false
       },
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_CorsairGunship.BP_CorsairGunship_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
         "Count": 4,
         "bAllied": true,
         "bObjective": false
@@ -188,20 +236,26 @@
     "Title": "The Last Silence",
     "Groups": [
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_LastSilence.BP_LastSilence_C",
         "Count": 1,
         "bAllied": false,
         "bObjective": true
       },
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
         "Count": 1,
         "bAllied": false,
         "bObjective": false
       },
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
-        "Count": 4,
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 1,
         "bAllied": false,
         "bObjective": false
       }
@@ -212,6 +266,12 @@
       {
         "Speaker": "ExarchIthane",
         "Text": "Then break it, and break with it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Last Silence carries the strongest emitter we have seen. Keep the Dreadnought outside its ring.",
         "BackgroundOverride": {},
         "RequiredFlag": "None"
       }
