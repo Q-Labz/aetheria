@@ -210,6 +210,20 @@ def _colour_crew(name: str, hair_melanin: float, outfit_color: unreal.LinearColo
     unreal.EditorAssetLibrary.save_loaded_asset(character, only_if_is_dirty=False)
     return f"{set_count} parameters set; seen {seen}"
 
+def _apply_hologram(actor_path: str, material_path: str):
+    actor = unreal.load_object(None, actor_path)
+    material = unreal.load_asset(material_path)
+    if not actor or not material:
+        raise ValueError(f"Missing actor {actor_path} or material {material_path}")
+    done = []
+    for component in actor.get_components_by_class(unreal.MeshComponent):
+        count = component.get_num_materials()
+        for i in range(count):
+            component.set_material(i, material)
+        done.append(f"{component.get_name()}={count}")
+    actor.modify()
+    return ", ".join(done)
+
 
 @unreal.uclass()
 class AetheriaCrewToolset(unreal.ToolsetDefinition):
@@ -287,3 +301,17 @@ class AetheriaCrewToolset(unreal.ToolsetDefinition):
             How many parameters were set.
         """
         return _colour_crew(name, hair_melanin, outfit_color)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def apply_hologram(actor_path: str, material_path: str) -> str:
+        """Gives every mesh and groom component of a placed actor one material in every slot (a hologram look).
+
+        Args:
+            actor_path: The placed actor, e.g. /Game/Aetheria/Maps/L_Command.L_Command:PersistentLevel.BP_MH_Cormaker_C_0
+            material_path: The material to apply, e.g. /Game/Aetheria/Bridge/Materials/MI_HoloAmber.MI_HoloAmber
+
+        Returns:
+            How many slots were set, per component.
+        """
+        return _apply_hologram(actor_path, material_path)
