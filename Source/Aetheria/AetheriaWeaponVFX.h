@@ -46,6 +46,9 @@ public:
 	static AAetheriaImpactFlash* Spawn(UWorld* World, const FVector& Location, const FLinearColor& Color,
 		float Size, float Life, float LightIntensity, bool bGrow = false);
 
+	/** Drops the hot core and dims the halo to Glow: a translucent zone marker (the Silence Pulse telegraph) */
+	void SetHaloOnly(float Glow);
+
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
@@ -57,6 +60,7 @@ private:
 	float FullSize = 100.0f;
 	float BaseLight = 0.0f;
 	bool bGrow = false;
+	bool bHaloOnly = false;
 };
 
 /**

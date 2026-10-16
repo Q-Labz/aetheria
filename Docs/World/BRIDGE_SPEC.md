@@ -149,9 +149,9 @@ Tithe marker buoy come from `Tools/Blender/make_planet_sphere.py`.
 |---|---|---|
 | AshfallVerge | the Verge with its ash ring, two dead convoy wrecks | the Verge below, wrecks at the edges |
 | GlassSea | the Glass Sea with its shard ring and grey moon, the glass shard field | the Glass Sea below, shard field |
-| TetherPoint | the near-black Tether with a thin accretion line | the Tether below |
+| TetherPoint | the near-black Tether with a thin accretion line and a faint lensing halo | the Tether below, ringed by its halo |
 | CinderArchive | the Cinder Archive, the Hollow as a small moon | the Archive below |
-| QuietHollow | the Hollow up close, the Archive behind | the Hollow below, the Archive far |
+| QuietHollow | the Hollow up close under its damaged shield dome, the Archive behind | the Hollow below under its dome, the Archive far |
 | PyreGate | the Archive's north pole and the Vault shaft's light, the Bastion and pylons | the pole below (the Bastion is a combat unit) |
 | TitheMarker | the marker buoy, Grieve with its ring and the Anchorage light | Grieve below, the buoy |
-| VaultOfRecords | the Vault of Records over the polar shaft | the pole below, the Vault at the edge |
+| VaultOfRecords | the Vault of Records over the polar shaft, glass lattice walls lining the shaft | the pole below, the Vault and lattice walls at the edges |

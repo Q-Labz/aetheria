@@ -55,6 +55,7 @@ void AAetheriaSeverantShip::BeginPulse()
 	Telegraph = AAetheriaImpactFlash::Spawn(GetWorld(), GetActorLocation(), PulseColor, PulseRadius * 2.0f, TelegraphTime, 200.0f, true);
 	if (Telegraph)
 	{
+		Telegraph->SetHaloOnly(0.6f);
 		Telegraph->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	}
 	GetWorldTimerManager().SetTimer(ReleaseTimer, FTimerDelegate::CreateUObject(this, &AAetheriaSeverantShip::ReleasePulse), TelegraphTime, false);

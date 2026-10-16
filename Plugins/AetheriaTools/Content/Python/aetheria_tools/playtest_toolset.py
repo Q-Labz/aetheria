@@ -94,18 +94,46 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def stage_battle(battle: str) -> str:
+    def stage_battle(battle: str, node: str = "") -> str:
         """Opens a DT_Battles battle in the running PIE session (Act VII state), as a council's StartBattle does.
 
         Args:
             battle: DT_Battles row, e.g. E1, E2, E4_Assault
+            node: Star node to fight at, which picks the combat scenery (empty keeps the current node)
 
         Returns:
             Confirmation.
         """
         gi = _game_instance()
+        if node:
+            gi.set_editor_property("current_node", node)
         gi.set_editor_property("current_act", max(7, gi.get_editor_property("current_act")))
         gi.set_editor_property("pending_battle", battle)
         gi.set_editor_property("next_screen", "PostCombat")
         unreal.GameplayStatics.open_level(_game_world(), "L_Combat_LanternDrift")
         return f"Staging {battle} in L_Combat_LanternDrift."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def go_to_node(node: str, add_flags: list[str] = []) -> str:
+        """Puts the running Act VII campaign at a star node and runs its arrival, as a leap landing there does.
+
+        Args:
+            node: Act VII node, e.g. VaultOfRecords
+            add_flags: Story flags to add first (e.g. GateOpen)
+
+        Returns:
+            Confirmation.
+        """
+        gi = _game_instance()
+        if add_flags:
+            flags = gi.get_editor_property("story_flags")
+            for flag in add_flags:
+                flags.add(flag)
+            gi.set_editor_property("story_flags", flags)
+        gi.set_editor_property("current_node", node)
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "run_node"):
+            raise RuntimeError("The PIE player controller is not PC_Command.")
+        pc.run_node(node)
+        return f"At {node}."

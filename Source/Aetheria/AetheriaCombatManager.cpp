@@ -26,6 +26,7 @@ namespace AetheriaCombat
 	constexpr float SurgeCost = 30.0f;
 	constexpr float SurgeDuration = 6.0f;
 	constexpr float SurgeDilation = 2.0f;
+	constexpr float AllyEscortRange = 4500.0f;
 }
 
 AAetheriaCombatManager::AAetheriaCombatManager()
@@ -334,6 +335,8 @@ bool AAetheriaCombatManager::SpawnBattle(UAetheriaGameInstance* GI, TArray<AAeth
 			{
 				Ship->Faction = E_Faction::Player;
 				Ship->bTargetsFlagship = false;
+				// escort the flagship: engage what comes at the fleet instead of charging the enemy line
+				Ship->AggroRange = FMath::Min(Ship->AggroRange, AllyEscortRange);
 				PlayerShips.AddUnique(Ship);
 				Ship->OnShipDestroyed.AddDynamic(this, &AAetheriaCombatManager::OnPlayerLost);
 				continue;
@@ -504,9 +507,14 @@ void AAetheriaCombatManager::Victory()
 	}
 
 	const int32 FleetStrength = GetAetheriaGameInstance() ? GetAetheriaGameInstance()->PhantomShipsActive : 0;
+	const FString Result = Battle.HoldSeconds > 0.0f
+		? FString::Printf(TEXT("Position held for %d seconds."), FMath::RoundToInt(Battle.HoldSeconds))
+		: AliveObjectives == 0 && Battle.Groups.ContainsByPredicate([](const FS_BattleGroup& Group) { return Group.bObjective; })
+			? FString(TEXT("Objective destroyed."))
+			: FString(TEXT("Hostile picket destroyed."));
 	const FString Body = FString::Printf(
-		TEXT("Result: Hostile picket destroyed.\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
-		FMath::RoundToInt(HullPct * 100.0f), Losses, FleetStrength,
+		TEXT("Result: %s\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
+		*Result, FMath::RoundToInt(HullPct * 100.0f), Losses, FleetStrength,
 		Flagship ? Flagship->BeamShots : 0, Flagship ? Flagship->BeamKills : 0);
 
 	const FText Title = BattleId.IsNone() || Battle.Title.IsEmpty()

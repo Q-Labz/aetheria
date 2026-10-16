@@ -204,7 +204,7 @@
         "bObjective": false
       },
       {
-        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
         "Count": 4,
         "bAllied": true,
         "bObjective": false
