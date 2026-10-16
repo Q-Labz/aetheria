@@ -30,6 +30,13 @@ void AAetheriaCommandPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	LastRealTime = GetWorld()->GetRealTimeSeconds();
+
+	FPostProcessSettings& Settings = Camera->PostProcessSettings;
+	Settings.bOverride_DepthOfFieldFstop = bFocusBattlePlane;
+	Settings.bOverride_DepthOfFieldSensorWidth = bFocusBattlePlane;
+	Settings.bOverride_DepthOfFieldFocalDistance = bFocusBattlePlane;
+	Settings.DepthOfFieldFstop = FocusFstop;
+	Settings.DepthOfFieldSensorWidth = FocusSensorWidth;
 }
 
 void AAetheriaCommandPawn::Tick(float DeltaSeconds)
@@ -39,6 +46,12 @@ void AAetheriaCommandPawn::Tick(float DeltaSeconds)
 	const float Now = GetWorld()->GetRealTimeSeconds();
 	RealDelta = Now - LastRealTime;
 	LastRealTime = Now;
+
+	if (bFocusBattlePlane)
+	{
+		// the pawn sits on the battle plane, so the camera's distance to it is the focus distance
+		Camera->PostProcessSettings.DepthOfFieldFocalDistance = FVector::Dist(Camera->GetComponentLocation(), GetActorLocation());
+	}
 }
 
 void AAetheriaCommandPawn::Pan(FVector2D Value)

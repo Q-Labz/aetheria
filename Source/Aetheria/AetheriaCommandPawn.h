@@ -45,6 +45,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
 	float MaxArmLength = 14000.0f;
 
+	/** Depth of field: the focus follows the battle plane at any zoom; far scenery (planets below) softens */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Depth of Field")
+	bool bFocusBattlePlane = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Depth of Field")
+	float FocusFstop = 4.0f;
+
+	/** A large virtual sensor (mm) gives a long lens at the same field of view, so the background blurs at this range */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Depth of Field")
+	float FocusSensorWidth = 1200.0f;
+
 	/** Pans the camera; Value.Y is forward (W/S), Value.X is right (A/D) */
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	void Pan(FVector2D Value);
