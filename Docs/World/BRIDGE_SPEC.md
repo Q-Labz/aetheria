@@ -140,3 +140,18 @@ Fresnel rim) or `M_Star` (granulation, limb darkening); instances in /Game/Aethe
 | ArchWake | Omega Arch and debris, white dwarf Threnody behind the ring | (no battle) |
 | LanternDrift | gas giant Lantern Mother low to starboard, four lantern clusters | Lantern Mother below the battle plane, the existing clusters |
 | EmberRelay | Ember Relay silhouetted against the red giant Cinderwake | Cinderwake below and aft, the relay at the battlefield edge |
+
+### C (Act VII nodes)
+Same system for the Act VII chart. Ring bands (`SM_Ring_Wide/Mid/Thin`, double-sided, additive `MI_Ring_*`) and the
+Tithe marker buoy come from `Tools/Blender/make_planet_sphere.py`.
+
+| Node | Through the bridge viewport | In combat |
+|---|---|---|
+| AshfallVerge | the Verge with its ash ring, two dead convoy wrecks | the Verge below, wrecks at the edges |
+| GlassSea | the Glass Sea with its shard ring and grey moon, the glass shard field | the Glass Sea below, shard field |
+| TetherPoint | the near-black Tether with a thin accretion line | the Tether below |
+| CinderArchive | the Cinder Archive, the Hollow as a small moon | the Archive below |
+| QuietHollow | the Hollow up close, the Archive behind | the Hollow below, the Archive far |
+| PyreGate | the Archive's north pole and the Vault shaft's light, the Bastion and pylons | the pole below (the Bastion is a combat unit) |
+| TitheMarker | the marker buoy, Grieve with its ring and the Anchorage light | Grieve below, the buoy |
+| VaultOfRecords | the Vault of Records over the polar shaft | the pole below, the Vault at the edge |
