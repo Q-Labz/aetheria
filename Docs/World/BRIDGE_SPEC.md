@@ -128,3 +128,15 @@ officer shots are 35 mm head-and-shoulders. Open items: the engine ships only th
 shirt and shorts; its colour is internal to the material), so uniforms need outfit assets; hair melanin is
 the default; the bodies play MM_Idle in single-node mode (verify it animates; otherwise retarget an idle);
 Cormaker is no longer an amber hologram.
+
+## C. Node scenery (slice nodes)
+Each star node has its set pieces tagged `Node_<NodeId>`; an `AAetheriaNodeScenery` actor in L_Command and in
+L_Combat_LanternDrift shows only the current node's (and switches when a leap lands, via OnCampaignStateChanged).
+Bodies use `SM_PlanetSphere` (Tools/Blender/make_planet_sphere.py) with `M_Planet` (bands, night-side glow,
+Fresnel rim) or `M_Star` (granulation, limb darkening); instances in /Game/Aetheria/Environments/Materials.
+
+| Node | Through the bridge viewport | In combat |
+|---|---|---|
+| ArchWake | Omega Arch and debris, white dwarf Threnody behind the ring | (no battle) |
+| LanternDrift | gas giant Lantern Mother low to starboard, four lantern clusters | Lantern Mother below the battle plane, the existing clusters |
+| EmberRelay | Ember Relay silhouetted against the red giant Cinderwake | Cinderwake below and aft, the relay at the battlefield edge |
