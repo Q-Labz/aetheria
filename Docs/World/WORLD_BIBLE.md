@@ -148,6 +148,10 @@ Summary of ship language. The hex values are art targets; materials already in t
 | Answerer / Precursor | Pale ceramic `#E6E2D8` | Trapped-light crystal `#BFF3FF` | — (structures) | Rings, octahedra, nested cubes |
 | The Listener [NEW] | No hull. Seen only as signal | Deep-red-to-violet interference `#5A1030` → `#3A2A80` | — | Moiré, standing waves, never a solid object |
 
+Blaster bolts use the classic space-opera scheme: the fleet fires red (`AetheriaShip::PlayerTracer`), the Iron Tithe
+fires green (`EnemyTracer`). Corsair flak stays amber and the Severants stay pale blue. The space backdrop is
+near-black with sparse, sharp stars and only a faint dusty nebula (MI_SpaceSky), lit by one hard, warm key light.
+
 ### 2.1 The Phantom Fleet and the Key-Bearer's command
 
 - **Goal:** survive beyond the Arch, reach the truth of the Beacon, decide what to answer. The Captain sets
