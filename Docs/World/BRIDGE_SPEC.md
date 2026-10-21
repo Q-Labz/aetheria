@@ -179,15 +179,20 @@ cloud edges (`DetailEdge` 1.5). It fades by camera distance, from full at `Detai
   | Wide | the holotable | f/5.6 |
 
   All shots use smooth focus changes.
-- *Lights.* The mood is cool overheads and teal accents, with coloured practicals:
+- *Lights.* The mood is a working warship: grey panels under neutral white practicals, with colour only from
+  the holograms and Lyra's loom:
 
   | Light | Setting |
   |---|---|
-  | Ceiling | 9 at 7,200 K |
-  | Coves | teal `(0.45, 0.80, 1.0)`, 7 |
-  | Holotable glow | cyan, 22 |
+  | Ceiling | 13 at 5,600 K |
+  | Coves | neutral white, 10 at 5,200 K |
+  | Holotable glow | pale blue `(150, 195, 255)`, 14 |
   | Lyra's loom | amber `(1.0, 0.60, 0.30)`, 10 |
-  | Vex glow | cyan, 9 |
+  | Vex glow | pale blue `(165, 205, 255)`, 7 |
+
+  Bridge materials: MI_BridgeCeramic is grey `(0.56, 0.57, 0.58)`, satin and lightly worn; MI_BridgeDarkTrim is
+  neutral charcoal; MI_BridgeInlay floor lines are dim cool white (Glow 1.2), no longer cyan; the light strips and
+  viewport glass are neutral. The holotable rim and M_Crystal trim keep their cyan.
 
   The lights carry volumetric scattering.
 - *Haze and grading.* `Bridge_Haze` is volumetric fog limited to the bridge (fog cut off at 3,000 uu), so the view
