@@ -23,8 +23,8 @@
 namespace AetheriaShip
 {
 	const FName FlagshipTag(TEXT("Flagship"));
-	const FLinearColor PlayerTracer(0.3f, 0.8f, 1.0f);
-	const FLinearColor EnemyTracer(1.0f, 0.2f, 0.05f);
+	const FLinearColor PlayerTracer(1.0f, 0.08f, 0.04f);  // classic red
+	const FLinearColor EnemyTracer(0.15f, 1.0f, 0.12f);   // classic green (Tithe)
 	const FLinearColor SelectionColor(0.0f, 1.0f, 1.0f);
 }
 

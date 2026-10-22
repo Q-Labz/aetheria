@@ -139,7 +139,7 @@ public:
 	TSoftClassPtr<UAetheriaShipBar> ShipBarClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visuals")
-	FLinearColor TracerColor = FLinearColor(0.3f, 0.8f, 1.0f);
+	FLinearColor TracerColor = FLinearColor(1.0f, 0.08f, 0.04f);
 
 	/** Blaster bolt width and speed (uu, uu/s); bolts are visual, damage lands when fired */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visuals")
