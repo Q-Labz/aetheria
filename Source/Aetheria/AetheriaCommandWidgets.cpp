@@ -1212,14 +1212,15 @@ void UAetheriaSliceEnd::NativeConstruct()
 	if (ContinueButton) { ContinueButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleContinue); }
 
 	const UAetheriaGameInstance* GI = GetAetheriaGameInstance();
-	SetShown(ContinueButton, GI && GI->CurrentAct < 7);
+	SetShown(ContinueButton, GI && GI->HasActData(GI->CurrentAct < 7 ? 7 : GI->CurrentAct + 1));
 	if (!GI || !SummaryText)
 	{
 		return;
 	}
 	if (GI->CurrentAct >= 7 && TitleText)
 	{
-		TitleText->SetText(FText::FromString(TEXT("END OF ACT VII — THE CINDER ARCHIVE")));
+		TitleText->SetText(FText::FromString(FString::Printf(TEXT("END OF ACT %s — %s"),
+			*UAetheriaGameInstance::ActNumeral(GI->CurrentAct), *UAetheriaGameInstance::ActTitle(GI->CurrentAct).ToUpper())));
 	}
 
 	TArray<FString> Lines;
@@ -1244,6 +1245,13 @@ void UAetheriaSliceEnd::NativeConstruct()
 			*GI->GetState(TEXT("SupplyLine")).ToString(), *GI->GetState(TEXT("ArchiveState")).ToString(),
 			*GI->GetState(TEXT("ExarchStatus")).ToString(), *GI->GetState(TEXT("ArchitectRevelation2")).ToString()));
 	}
+	if (GI->CurrentAct >= 8)
+	{
+		Lines.Add(FString::Printf(TEXT("COMMANDER VANCE: %s · THE GRAFT FORGE: %s · SEVERANT ALLIES: %s · CORSAIRS: %s"),
+			*GI->GetState(TEXT("VanceFate")).ToString(), *GI->GetState(TEXT("GraftForgeState")).ToString(),
+			*GI->GetState(TEXT("SeverantAllies")).ToString(),
+			GI->StoryFlags.Contains(TEXT("CorsairsDeparted")) ? TEXT("departed") : TEXT("with the fleet")));
+	}
 
 	SummaryText->SetText(FText::FromString(FString::Join(Lines, TEXT("\n"))));
 }
@@ -1260,7 +1268,7 @@ void UAetheriaSliceEnd::HandleContinue()
 {
 	if (AAetheriaCommandController* PC = GetCommandController())
 	{
-		PC->StartActVII();
+		PC->StartNextAct();
 	}
 }
 

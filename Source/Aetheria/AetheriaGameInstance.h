@@ -90,7 +90,7 @@ public:
 
 	// ---- Act VII (ACT_VII_CINDER_ARCHIVE.md) ----
 
-	/** 6 = the slice (Act VI), 7 = The Cinder Archive */
+	/** 6 = the slice (Act VI), 7 = The Cinder Archive, 8 = The Iron Tithe */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
 	int32 CurrentAct = 6;
 
@@ -122,15 +122,6 @@ public:
 	TSoftObjectPtr<UDataTable> StarNodesTable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
-	TSoftObjectPtr<UDataTable> ActVIILeapRoutesTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
-	TSoftObjectPtr<UDataTable> ActVIIStarNodesTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
-	TSoftObjectPtr<UDataTable> ActVIINodeEventsTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
 	TSoftObjectPtr<UDataTable> CouncilsTable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
@@ -142,6 +133,29 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Data")
 	UDataTable* GetLeapRoutes() const;
+
+	/** Arrival events of the current data-driven act (DT_NodeEvents_Act<N>); null in the slice */
+	UFUNCTION(BlueprintPure, Category="Data")
+	UDataTable* GetNodeEvents() const;
+
+	/** A per-act table, /Game/Aetheria/Data/DT_<Kind>_Act<Numeral> (Kind: StarNodes, LeapRoutes, NodeEvents) */
+	UDataTable* GetActTable(int32 Act, const TCHAR* Kind) const;
+
+	/** Roman numeral used in act asset and flag names (7 -> "VII") */
+	static FString ActNumeral(int32 Act);
+
+	/** "The Cinder Archive", "The Iron Tithe" */
+	static FString ActTitle(int32 Act);
+
+	/** Node a data-driven act starts at */
+	static FName ActStartNode(int32 Act);
+
+	/** Whether an act's chart has been built (its star-node table exists) */
+	UFUNCTION(BlueprintPure, Category="Data")
+	bool HasActData(int32 Act) const;
+
+	/** Act-scoped flag name: "Act<Numeral><Suffix>" for the current act (ActVIIIFinaleWon) */
+	FName ActFlag(const TCHAR* Suffix) const;
 
 	// ---- Events ----
 
@@ -204,6 +218,10 @@ public:
 	FName GetState(FName Key) const;
 
 	// ---- Act VII ----
+
+	/** Carries the campaign into a data-driven act at its start node (7 from the slice's end, then 8, ...) */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void StartAct(int32 Act);
 
 	/** Carries the campaign from the slice's end into Act VII at the Ember Relay */
 	UFUNCTION(BlueprintCallable, Category="Act VII")

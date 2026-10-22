@@ -33,6 +33,8 @@ TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII",)}
 CSV_TABLES = {
     "DT_StarNodes_ActVII": ("S_StarNode", "ActVII/DT_StarNodes_ActVII.csv"),
     "DT_LeapRoutes_ActVII": ("S_LeapRoute", "ActVII/DT_LeapRoutes_ActVII.csv"),
+    "DT_StarNodes_ActVIII": ("S_StarNode", "ActVIII/DT_StarNodes_ActVIII.csv"),
+    "DT_LeapRoutes_ActVIII": ("S_LeapRoute", "ActVIII/DT_LeapRoutes_ActVIII.csv"),
 }
 
 # Table name -> (row struct asset name, rows the slice requires).

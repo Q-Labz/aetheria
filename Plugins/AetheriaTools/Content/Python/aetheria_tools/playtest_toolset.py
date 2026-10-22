@@ -22,7 +22,7 @@ def _game_instance():
 
 @unreal.uclass()
 class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
-    """Playtest shortcuts for a running PIE session of Aetheria: jump into Act VII and read the
+    """Playtest shortcuts for a running PIE session of Aetheria: jump into Act VII or a later act and read the
     campaign state (node, act, flags, standing, supply line, battle) without replaying earlier content."""
 
     @toolset_registry.tool_call
@@ -49,6 +49,36 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
         pc.start_act_vii()
         return "Act VII started; the command level reloads at the Ember Relay."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def start_act(act: int, captain_name: str = "Rook", background: str = "SynodEnvoy") -> str:
+        """Carries the running PIE campaign into a data-driven act (7 = The Cinder Archive, 8 = The Iron Tithe)
+        at its start node. Earlier acts' choices are not replayed: set any carried flags or states with
+        set_campaign_values afterwards.
+
+        Args:
+            act: Act number, 7 or later; the act's chart (DT_StarNodes_Act<N>) must exist
+            captain_name: Captain name to use if none was entered yet
+            background: SynodEnvoy, GuildEngineer, CoalitionVanguard or OutcastCorsair, if none was chosen yet
+
+        Returns:
+            Confirmation.
+        """
+        if act < 7:
+            raise ValueError("Acts before VII are the slice; start PIE from L_Command instead.")
+        if act == 7:
+            return AetheriaPlaytestToolset.start_act_vii(captain_name, background)
+        gi = _game_instance()
+        if not gi.has_act_data(act):
+            raise RuntimeError(f"Act {act} has no chart yet (DT_StarNodes_Act<N>).")
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "start_act"):
+            raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
+        if not gi.get_editor_property("captain_name"):
+            gi.set_editor_property("captain_name", captain_name)
+        pc.start_act(act)
+        return f"Act {act} started; the command level reloads at the act's start node."
 
     @toolset_registry.tool_call
     @staticmethod

@@ -17,21 +17,76 @@ UAetheriaGameInstance::UAetheriaGameInstance()
 
 	LeapRoutesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_LeapRoutes.DT_LeapRoutes")));
 	StarNodesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_StarNodes.DT_StarNodes")));
-	ActVIILeapRoutesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_LeapRoutes_ActVII.DT_LeapRoutes_ActVII")));
-	ActVIIStarNodesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_StarNodes_ActVII.DT_StarNodes_ActVII")));
-	ActVIINodeEventsTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_NodeEvents_ActVII.DT_NodeEvents_ActVII")));
 	CouncilsTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_Councils.DT_Councils")));
 	BattlesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_Battles.DT_Battles")));
 }
 
 UDataTable* UAetheriaGameInstance::GetStarNodes() const
 {
-	return (CurrentAct >= 7 ? ActVIIStarNodesTable : StarNodesTable).LoadSynchronous();
+	return CurrentAct >= 7 ? GetActTable(CurrentAct, TEXT("StarNodes")) : StarNodesTable.LoadSynchronous();
 }
 
 UDataTable* UAetheriaGameInstance::GetLeapRoutes() const
 {
-	return (CurrentAct >= 7 ? ActVIILeapRoutesTable : LeapRoutesTable).LoadSynchronous();
+	return CurrentAct >= 7 ? GetActTable(CurrentAct, TEXT("LeapRoutes")) : LeapRoutesTable.LoadSynchronous();
+}
+
+UDataTable* UAetheriaGameInstance::GetNodeEvents() const
+{
+	return CurrentAct >= 7 ? GetActTable(CurrentAct, TEXT("NodeEvents")) : nullptr;
+}
+
+UDataTable* UAetheriaGameInstance::GetActTable(int32 Act, const TCHAR* Kind) const
+{
+	const FString Name = FString::Printf(TEXT("DT_%s_Act%s"), Kind, *ActNumeral(Act));
+	const FSoftObjectPath Path(FString::Printf(TEXT("/Game/Aetheria/Data/%s.%s"), *Name, *Name));
+	return Cast<UDataTable>(Path.TryLoad());
+}
+
+FString UAetheriaGameInstance::ActNumeral(int32 Act)
+{
+	switch (Act)
+	{
+	case 6: return TEXT("VI");
+	case 7: return TEXT("VII");
+	case 8: return TEXT("VIII");
+	case 9: return TEXT("IX");
+	case 10: return TEXT("X");
+	default: return FString::FromInt(Act);
+	}
+}
+
+FString UAetheriaGameInstance::ActTitle(int32 Act)
+{
+	switch (Act)
+	{
+	case 6: return TEXT("The Far Shore");
+	case 7: return TEXT("The Cinder Archive");
+	case 8: return TEXT("The Iron Tithe");
+	case 9: return TEXT("The Threshold");
+	case 10: return TEXT("Gate Zero");
+	default: return FString();
+	}
+}
+
+FName UAetheriaGameInstance::ActStartNode(int32 Act)
+{
+	switch (Act)
+	{
+	case 7: return TEXT("EmberRelay");
+	case 8: return TEXT("TitheMarker");
+	default: return NAME_None;
+	}
+}
+
+bool UAetheriaGameInstance::HasActData(int32 Act) const
+{
+	return !ActStartNode(Act).IsNone() && GetActTable(Act, TEXT("StarNodes")) != nullptr;
+}
+
+FName UAetheriaGameInstance::ActFlag(const TCHAR* Suffix) const
+{
+	return FName(*FString::Printf(TEXT("Act%s%s"), *ActNumeral(CurrentAct), Suffix));
 }
 
 FName UAetheriaGameInstance::RouteName(FName To) const
@@ -362,16 +417,26 @@ FName UAetheriaGameInstance::GetState(FName Key) const
 	return Value ? *Value : FName(TEXT("None"));
 }
 
-void UAetheriaGameInstance::StartActVII()
+void UAetheriaGameInstance::StartAct(int32 Act)
 {
-	CurrentAct = 7;
-	CurrentNode = TEXT("EmberRelay");
+	if (!HasActData(Act))
+	{
+		UE_LOG(LogAetheria, Error, TEXT("StartAct(%d): no chart for Act %s (DT_StarNodes_Act%s)."), Act, *ActNumeral(Act), *ActNumeral(Act));
+		return;
+	}
+	CurrentAct = Act;
+	CurrentNode = ActStartNode(Act);
 	PursuitClock = 0;
 	ChartedRoutes.Reset();
 	PendingBattle = NAME_None;
 	NextScreen = TEXT("ActStart");
-	LastReport = FText::FromString(TEXT("Act VII: The Cinder Archive."));
+	LastReport = FText::FromString(FString::Printf(TEXT("Act %s: %s."), *ActNumeral(Act), *ActTitle(Act)));
 	OnCampaignStateChanged.Broadcast();
+}
+
+void UAetheriaGameInstance::StartActVII()
+{
+	StartAct(7);
 }
 
 bool UAetheriaGameInstance::IsSupplyLineReady() const
