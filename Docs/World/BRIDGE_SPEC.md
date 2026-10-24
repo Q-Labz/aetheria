@@ -26,12 +26,30 @@ import at Uniform Scale 1.0, Nanite on, simple collision off (it's a set, not a 
 | SM_Console_Medical | 140×60×120 | Lattice/injury console (Thorne) |
 | SM_LoomFrame | 260×80×260 | Curved frame strung with light threads (Lyra) |
 | SM_HoloPad | Ø180×20 | Hologram pad ×2: Cormaker (amber), Kesh envoy (Act VIII+) |
+| SM_Bridge_WallBank | 280×54×420 | Wall computer bank: six readouts, a wide schematic or radar display, a status-light grid, data drums, vents, conduits. Eight, between the side-wall pilasters |
+| SM_Bridge_OverheadMonitor | 260×60×254 | Ceiling-hung cluster of six angled readouts (three aft, three forward). Two, over the command walk |
+| SM_Console_PitBank | 320×135×143 | Long crew-pit console: three slanted readouts, a status strip, a riser of four small readouts, two ratings' stools. Two, along the pit walls |
 | SM_Bridge_Props | — | Mug, jacket on a chair, Coalition badge, Nix's handheld (small warm accents) |
 
 Materials (`/Game/Aetheria/Bridge/Materials`): M_BridgeCeramic (`#E4E8EA`, satin, LocalPosition panel noise
 like M_ShipHull), M_BridgeCrystalFloor (`#141C22`, glossy, cyan inlay `#38E1FF` emissive lines),
 M_ViewportGlass (thin translucent, slight cyan tint), M_HoloProjection (additive cyan; amber instance for Cormaker),
 reuse M_Crystal for crystal trim. Check: SM_Bridge_Shell bounds ≈ 2,800 × 2,400 × 700 uu.
+
+**Screens and deck (slots `M_Screen`, `M_Floor`).** Every display face is in the `M_Screen` slot with its own
+UVs: channel 0 spans the face 0–1, channel 1 carries the display's content as (mode + variation) / 6 and
+(palette + 0.5) / 4. `M_BridgeScreen` (one Custom HLSL node; MI_BridgeScreen Glow 7.5) draws six animated modes on a
+dark CRT ground: scrolling data, radar sweep with contacts, bar graph, waveform, a wedge-hull schematic with a
+tracking reticle, and a blinking status-light grid. Palettes are pale blue, amber, red and green. Each placed copy
+of a kit piece shifts its timing and palette by its world position, so repeated banks never show the same readouts.
+Floors are `M_Floor` (MI_BridgeFloor: near-black, metallic, roughness 0.14), with plating seams aft and grating
+down the command walk and across the pit. The shell also gains ceiling ribs every 200, edge conduits, and a dado of
+vent grilles along the side walls.
+
+**Reimporting.** Rebuild with Blender, then `aetheria_tools.art_toolset.AetheriaArtToolset.reimport_static_meshes`
+replaces the meshes in place, keeping references and stored import settings. Create a new kit mesh with
+`StaticMeshTools.import_file` first: a first import through Interchange with legacy FBX options comes in 100 times
+too large.
 
 ## B2. Bridge set (built into L_Command, outliner folder `Bridge/`)
 
@@ -179,26 +197,30 @@ cloud edges (`DetailEdge` 1.5). It fades by camera distance, from full at `Detai
   | Wide | the holotable | f/5.6 |
 
   All shots use smooth focus changes.
-- *Lights.* The mood is a working warship: grey panels under neutral white practicals, with colour only from
-  the holograms and Lyra's loom:
+- *Lights.* The mood is a dark warship bridge in the Star Wars manner. Gunmetal panels and a black deck are lit
+  mostly by the screens. Low overhead pools, the light through the viewport, and each officer's console glow
+  on their face do the rest:
 
   | Light | Setting |
   |---|---|
-  | Ceiling | 13 at 5,600 K |
-  | Coves | neutral white, 10 at 5,200 K |
+  | Ceiling | 6 at 6,200 K |
+  | Coves | 7 at 6,800 K |
   | Holotable glow | pale blue `(150, 195, 255)`, 14 |
   | Lyra's loom | amber `(1.0, 0.60, 0.30)`, 10 |
   | Vex glow | pale blue `(165, 205, 255)`, 7 |
+  | `Bridge_FaceLight_<Officer>` | one soft rect light per officer, low and in front between the officer and their shot camera, shadowless, 4, tinted by their station (Tala and Thorne blue, Nix green, Jax, Lyra and Cormaker amber) |
+  | `Bridge_PitSpill_P/S` | cool screen spill in the crew pit, 5 |
+  | `Bridge_AlertRed` | faint red over the pit, 2 |
 
-  Bridge materials: MI_BridgeCeramic is grey `(0.56, 0.57, 0.58)`, satin and lightly worn; MI_BridgeDarkTrim is
-  neutral charcoal; MI_BridgeInlay floor lines are dim cool white (Glow 1.2), no longer cyan; the light strips and
-  viewport glass are neutral. The holotable rim and M_Crystal trim keep their cyan.
+  Bridge materials: MI_BridgeCeramic is dark gunmetal `(0.11, 0.115, 0.12)`, metallic 0.35; MI_BridgeDarkTrim is
+  near-black `(0.012, 0.013, 0.014)`, metallic 0.7; MI_BridgeLightStrip is cool white, Glow 2.2; MI_BridgeInlay
+  floor lines are dim, Glow 0.6. The holotable rim and M_Crystal trim keep their cyan.
 
   The lights carry volumetric scattering.
 - *Haze and grading.* `Bridge_Haze` is volumetric fog limited to the bridge (fog cut off at 3,000 uu), so the view
-  outside stays clear. The post-process volume adds contrast 1.08, saturation 1.06, film grain 0.06 and exposure
-  bias −0.7 against the fixed exposure. The ceramic `#E4E8EA` and the dark crystal floor now read as specified
-  instead of blown out.
+  outside stays clear; its density is 0.006, so the screens glow faintly in the air. The post-process volume adds
+  contrast 1.08, saturation 1.06, film grain 0.06 and exposure bias +0.6 against the fixed exposure (for the dark
+  palette).
 
 **Combat (`AAetheriaCommandPawn`).** The camera's focus follows the battle plane at every zoom. It uses f/4 with a
 1,200 mm virtual sensor: a long-lens, miniature look. The ships stay sharp while the planets and starfield below
