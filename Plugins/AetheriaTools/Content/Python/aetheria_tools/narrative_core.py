@@ -231,6 +231,11 @@ def validate(data):
 
 
 def _is_set_somewhere(flag, set_flags):
+    # A+B: every part must be settable; Not_X: X must be (HasFlag negates it)
+    if "+" in flag:
+        return all(part and _is_set_somewhere(part, set_flags) for part in flag.split("+"))
+    if flag.startswith("Not_"):
+        return _is_set_somewhere(flag[4:], set_flags)
     return flag in set_flags or flag.startswith(GAMEPLAY_FLAG_PREFIXES) or is_condition(flag)
 
 

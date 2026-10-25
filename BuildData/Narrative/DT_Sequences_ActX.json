@@ -376,7 +376,7 @@
         "Speaker": "WardenKesh",
         "Text": "Then the vow holds. I hope my children forgive us both.",
         "BackgroundOverride": {},
-        "RequiredFlag": "CureDelivered"
+        "RequiredFlag": "CureDelivered+Not_InversionUsed"
       },
       {
         "Speaker": "Narrator",
@@ -400,13 +400,13 @@
         "Speaker": "WardenKesh",
         "Text": "The Quiet Hollow is empty now. No one there is sick. I am going home to Seren Vael, Captain, to argue with the Choirs.",
         "BackgroundOverride": {},
-        "RequiredFlag": "CureDelivered"
+        "RequiredFlag": "CureDelivered+Not_InversionUsed"
       },
       {
         "Speaker": "Narrator",
         "Text": "The Severants stood at Gate Zero beside the fleet. The vow was ended by the people who swore it.",
         "BackgroundOverride": {},
-        "RequiredFlag": "State_SeverantVow_Answer"
+        "RequiredFlag": "State_SeverantVow_Answer+Not_InversionUsed"
       },
       {
         "Speaker": "Narrator",
@@ -478,7 +478,7 @@
         "Speaker": "ArisThorne",
         "Text": "I'm staying on Seren Vael, Captain. The Silence is cured. The people it hurt are not, yet.",
         "BackgroundOverride": {},
-        "RequiredFlag": "Loyalty_ArisThorne_Devoted"
+        "RequiredFlag": "Loyalty_ArisThorne_Devoted+Not_InversionUsed"
       },
       {
         "Speaker": "Narrator",

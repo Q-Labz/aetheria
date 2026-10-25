@@ -250,3 +250,56 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             raise RuntimeError("The PIE player controller is not PC_Command.")
         pc.run_node(node)
         return f"At {node}."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def list_ships(ship_class: str = "AetheriaShipBase") -> str:
+        """Lists the ships of a class in the running combat level: name, faction, hull and, for synced squadrons,
+        hulls lost and whether the squadron is disabled.
+
+        Args:
+            ship_class: C++ class name without the A prefix, e.g. AetheriaSyncedSquadron, AetheriaShipBase
+
+        Returns:
+            One line per ship.
+        """
+        cls = getattr(unreal, ship_class, None)
+        if cls is None:
+            raise ValueError(f"Unknown class {ship_class}.")
+        lines = []
+        for ship in unreal.GameplayStatics.get_all_actors_of_class(_game_world(), cls):
+            line = (f"{ship.get_editor_property('display_name')} faction={ship.get_editor_property('faction')} "
+                    f"hull={ship.get_editor_property('hull'):.0f}/{ship.get_editor_property('max_hull'):.0f} "
+                    f"dead={ship.get_editor_property('is_dead')}")
+            if hasattr(ship, "is_disabled"):
+                line += f" disabled={ship.is_disabled()}"
+            if isinstance(ship, unreal.AetheriaSyncedSquadron):
+                line += f" lost={ship.get_editor_property('ships_lost')}"
+            lines.append(line)
+        return "\n".join(lines) or "No ships of that class."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def fire_beam(target_class: str = "AetheriaSyncedSquadron") -> str:
+        """Fires the Crystal Dreadnought's Prismatic Stellar Beam at the first living ship of a class, as an aimed
+        Q + click does. The beam charges in game time: unpause the battle for it to land.
+
+        Args:
+            target_class: C++ class name without the A prefix, e.g. AetheriaSyncedSquadron
+
+        Returns:
+            What was targeted, or why the beam cannot fire.
+        """
+        world = _game_world()
+        flagships = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaFlagship)
+        if not flagships:
+            raise RuntimeError("No Crystal Dreadnought in the PIE world; stage a battle first.")
+        flagship = flagships[0]
+        if not flagship.can_fire_beam():
+            return f"The beam is not ready ({flagship.get_beam_cooldown_remaining():.0f} s)."
+        targets = [s for s in unreal.GameplayStatics.get_all_actors_of_class(world, getattr(unreal, target_class))
+                   if not s.get_editor_property("is_dead")]
+        if not targets:
+            return f"No living {target_class}."
+        flagship.fire_beam(targets[0].get_actor_location())
+        return f"Beam charging at {targets[0].get_editor_property('display_name')}."

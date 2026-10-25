@@ -45,6 +45,13 @@ class NarrativeCoreTest(unittest.TestCase):
                      "CureDelivered"):
             self.assertFalse(core.is_condition(flag), flag)
 
+    def test_negation_and_conjunction(self):
+        data = copy.deepcopy(self.data)
+        data["DT_Sequences"][0]["Lines"][0]["RequiredFlag"] = "CureDelivered+Not_InversionUsed"
+        self.assertEqual(core.validate(data), [])
+        data["DT_Sequences"][0]["Lines"][0]["RequiredFlag"] = "CureDelivered+Not_NeverSetAnywhere"
+        self.assertTrue(any("NeverSetAnywhere" in p for p in core.validate(data)))
+
     def test_malformed_condition_is_reported(self):
         data = copy.deepcopy(self.data)
         data["DT_Sequences"][0]["Lines"][0]["RequiredFlag"] = "Loyalty_Tala_Devoted"

@@ -60,7 +60,8 @@ Every requirement (lines, counsel, options, councils, battle groups) goes throug
 `UAetheriaGameInstance::HasFlag`, which reads story flags and also:
 `State_<Key>_<Value>`, `Leaning_<Custodian|Dominion|Undetermined>`,
 `Loyalty_<Officer>_<Devoted|Trusting|Steady|Strained|Estranged>` (bands of `WORLD_BIBLE.md` §6) and
-`Standing_<Hostile|Wary|Trusted>`. `validate_narrative` checks they are well formed.
+`Standing_<Hostile|Wary|Trusted>`; `Not_<X>` negates and `A+B` requires every part
+(`CureDelivered+Not_InversionUsed`). `validate_narrative` checks they are well formed.
 
 ### 4.2 Synced squadrons (Squadron III, the Architect's held squadrons)
 Twenty Phantom battle-cruisers of the fleet's own 200. Their hull is the **sync**: ordinary fire wears it down, and
@@ -144,5 +145,11 @@ Key's root, Squadron III, the cure's inversion, the Listener's question, Phantom
   and a visit in one act no longer swallows the next act's arrival scene.
 - Data: `BuildData/ActIX/*.csv`; `DT_Councils_ActIX`, `DT_Sequences_ActIX`, `DT_Battles_ActIX`, `DT_NodeEvents_ActIX`
   and the option tables in `BuildData/Narrative`.
-- Stand-ins: echo hulls and drones use the Phantom cruiser mesh, sentinels the Bastion pylon; no node scenery yet
-  (key-light colours only).
+- Stand-ins: echo hulls and drones use the Phantom cruiser mesh, sentinels the Bastion pylon.
+- Node scenery (L_Command and the combat map, folders `Nodes/<Node>`, tag `Node_<Node>`): built from the existing
+  environment kit with new planet instances `MI_Planet_RustmarchMajor`, `_SerenVael`, `_Meridian`, `_Vigil`, rings
+  `MI_Ring_Meridian`, `_SerenHarmonic`, `_Hush` and `MI_Star_Rustmarch`. Grieve: the gas giant and rings, Tithe buoys
+  for the Anchorage. Rustmarch: an orange star, Rustmarch Major, belt fragments. Seren Vael: the planet and its
+  harmonic ring. Meridian / the Yards: the ecumenopolis and its yard ring (sentinel pylons at the Yards). Forge Echo:
+  the black hole and accretion disc, the Ember Relay mesh as the stasis Forge. The Hush: crystal-blade fields as the
+  Listening Array under a violet shimmer ring. Purpose-built meshes (Anchorage, Array, Cutter's Rest) are still to do.

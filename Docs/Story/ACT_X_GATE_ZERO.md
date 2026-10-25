@@ -84,4 +84,6 @@ departed). The end screen shows the answer and Vex's; there is no Continue after
   and the option tables in `BuildData/Narrative`.
 - C++: `ActStartNode(10) = TheHush`; the ending chain in `AAetheriaCommandController::PlayActEnd`
   (`AfterEnding` → `X_Epilogue` → report); the final report and end-screen lines.
-- Stand-ins: no Gate Zero, Vigil or Hush scenery yet (key-light colours only).
+- Node scenery: the Vigil (a pale moon, the Severant Bastion and pylons); Gate Zero (the Omega Arch mesh at twice
+  its size with three pylons as the seal plates, under the Hush's violet ring). A purpose-built gate mesh is still to do.
+- `HasFlag` also reads `Not_<X>` and `A+B`: the Severant epilogue lines are gated on `+Not_InversionUsed`.

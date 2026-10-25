@@ -228,7 +228,8 @@ public:
 	/**
 	 *  Whether a story flag or a campaign condition holds. Besides story flags it reads
 	 *  State_<Key>_<Value> (VanceFate = Tried), Leaning_<Custodian|Dominion|Undetermined>,
-	 *  Loyalty_<Officer>_<Devoted|Trusting|Steady|Strained|Estranged> and Standing_<Hostile|Wary|Trusted>.
+	 *  Loyalty_<Officer>_<Devoted|Trusting|Steady|Strained|Estranged> and Standing_<Hostile|Wary|Trusted>;
+	 *  Not_<X> negates and A+B requires every part (CureDelivered+Not_InversionUsed).
 	 *  Every requirement in lines, counsel, options, councils and battle groups goes through here.
 	 */
 	UFUNCTION(BlueprintPure, Category="Council")
