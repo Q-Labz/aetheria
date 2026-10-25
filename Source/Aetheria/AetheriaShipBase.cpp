@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaShipBase.h"
+#include "AetheriaAudio.h"
+#include "Components/AudioComponent.h"
 #include "AetheriaBeamVFX.h"
 #include "AetheriaGameInstance.h"
 #include "AetheriaShipBar.h"
@@ -123,6 +125,14 @@ void AAetheriaShipBase::BeginPlay()
 	if (UAetheriaShipBar* Bar = Cast<UAetheriaShipBar>(HealthBar->GetUserWidgetObject()))
 	{
 		Bar->SetOwnerShip(this);
+	}
+
+	// the drive: bigger hulls rumble lower; static emplacements have none
+	if (MoveSpeed > 0.0f)
+	{
+		const float Pitch = FMath::Clamp(1.45f - MaxHull / 6000.0f, 0.55f, 1.4f);
+		EngineAudio = AetheriaAudio::Loop(this, TEXT("S_Engine_Loop"), RootComponent, AetheriaAudio::ERange::Engine,
+			0.25f, Pitch * FMath::FRandRange(0.97f, 1.03f));
 	}
 }
 
@@ -337,6 +347,13 @@ void AAetheriaShipBase::Die()
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	OnShipDestroyed.Broadcast(this);
 
+	if (EngineAudio)
+	{
+		EngineAudio->FadeOut(0.3f, 0.0f);
+	}
+	AetheriaAudio::PlayAt(this, TEXT("S_Explosion_Ship"), GetActorLocation(), AetheriaAudio::ERange::Battle,
+		FMath::Clamp(0.55f + MaxHull / 8000.0f, 0.6f, 1.0f), FMath::FRandRange(0.9f, 1.08f), TEXT("Explosion"));
+
 	// fireball with a white-hot core and a few secondary bursts around the hull
 	const FVector Location = GetActorLocation();
 	const float Radius = Collision->GetScaledSphereRadius();
@@ -392,6 +409,11 @@ void AAetheriaShipBase::FireBolt(const AActor* Target, float Width) const
 	if (Target)
 	{
 		AAetheriaLaserBolt::Spawn(GetWorld(), Muzzle->GetComponentLocation(), Target->GetActorLocation(), TracerColor, Width, BoltSpeed);
+		// the fleet's red bolts, the Tithe's green, the Severants' blue each have their own report
+		const TCHAR* Kind = Faction == E_Faction::Player ? TEXT("S_Blaster_Fleet")
+			: (Faction == E_Faction::Severant ? TEXT("S_Blaster_Severant") : TEXT("S_Blaster_Tithe"));
+		AetheriaAudio::PlayAt(this, AetheriaAudio::Variant(Kind, 3), Muzzle->GetComponentLocation(),
+			AetheriaAudio::ERange::Battle, 0.4f, FMath::FRandRange(0.94f, 1.06f), TEXT("Blaster"));
 	}
 }
 

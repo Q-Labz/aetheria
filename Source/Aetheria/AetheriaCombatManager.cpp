@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaCombatManager.h"
+#include "AetheriaAudio.h"
 #include "AetheriaAfterAction.h"
 #include "AetheriaFlagship.h"
 #include "AetheriaGameInstance.h"
@@ -45,6 +46,8 @@ AAetheriaCombatManager::AAetheriaCombatManager()
 void AAetheriaCombatManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AetheriaAudio::Loop(this, TEXT("A_Combat_Bed"), nullptr, AetheriaAudio::ERange::Battle, 0.45f);
 
 	using namespace AetheriaCombat;
 
@@ -423,6 +426,7 @@ void AAetheriaCombatManager::StartSurge()
 	}
 
 	bSurgeActive = true;
+	AetheriaAudio::PlayUI(this, TEXT("S_Surge"), 0.8f);
 	GI->ChronoCharge -= AetheriaCombat::SurgeCost;
 
 	SurgedShips.Reset();
@@ -482,6 +486,7 @@ void AAetheriaCombatManager::Victory()
 		return;
 	}
 	bBattleOver = true;
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_Victory"), 0.8f);
 	EndSurge();
 
 	const int32 Losses = GetPhantomLosses();
@@ -535,6 +540,7 @@ void AAetheriaCombatManager::Defeat()
 		return;
 	}
 	bBattleOver = true;
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_Defeat"), 0.8f);
 	EndSurge();
 
 	// the engagement is undone: Retry reopens it, Return to Command withdraws to the star map, not the victory debrief

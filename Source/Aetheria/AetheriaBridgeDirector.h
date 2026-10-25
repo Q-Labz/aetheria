@@ -74,6 +74,9 @@ protected:
 private:
 
 	void InitializeBridge();
+
+	/** One console readout chirp from a random screen on the set, then schedules the next */
+	void PlayConsoleChirp();
 	ACameraActor* FindShot(FName Shot);
 	void SetVexSpeaking(bool bSpeaking);
 	void SetArchitectSpeaking(bool bSpeaking);
@@ -88,6 +91,10 @@ private:
 	TArray<TObjectPtr<ULightComponent>> BridgeLights;
 
 	TArray<float> BaseIntensities;
+
+	/** Where console chirps come from: the bridge's consoles, banks and monitors */
+	TArray<FVector> ChirpSources;
+	FTimerHandle ChirpTimer;
 	bool bArchitectDimmed = false;
 	bool bInitialized = false;
 };

@@ -23,6 +23,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Rendering/DrawElements.h"
 #include "TimerManager.h"
+#include "AetheriaAudio.h"
 #include "Widgets/Layout/Anchors.h"
 
 using namespace AetheriaUI;
@@ -309,6 +310,7 @@ FReply UAetheriaDialogue::NativeOnKeyDown(const FGeometry& InGeometry, const FKe
 
 void UAetheriaDialogue::HandleContinue()
 {
+	AetheriaAudio::PlayUI(this, TEXT("S_UI_Click"), 0.5f);
 	Continue();
 }
 
@@ -422,6 +424,7 @@ void UAetheriaNodeButton::SetState(bool bIsCurrent, bool bIsSelected)
 
 void UAetheriaNodeButton::HandleClicked()
 {
+	AetheriaAudio::PlayUI(this, TEXT("S_UI_Click"), 0.5f);
 	if (ParentMap)
 	{
 		ParentMap->SelectNode(NodeID);
@@ -866,6 +869,7 @@ void UAetheriaStarMap::HandleLeap()
 
 	SetBusy(true);
 	SetShown(FlashOverlay, true);
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_Leap"), 0.8f);
 	FTimerManager& Timers = GetWorld()->GetTimerManager();
 	Timers.SetTimer(FlashTimer, FTimerDelegate::CreateWeakLambda(this, [this]() { SetShown(FlashOverlay, false); }), 0.6f, false);
 
@@ -985,6 +989,7 @@ void UAetheriaOptionButton::Setup(const FS_CouncilOption& InOption, UAetheriaCou
 
 void UAetheriaOptionButton::HandleClicked()
 {
+	AetheriaAudio::PlayUI(this, TEXT("S_UI_Click"), 0.6f);
 	if (ParentCouncil)
 	{
 		ParentCouncil->ChooseOption(Option);
@@ -1077,6 +1082,7 @@ void UAetheriaCouncil::SetupDef(FName InCouncilDef)
 void UAetheriaCouncil::NativeConstruct()
 {
 	Super::NativeConstruct();
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_Council"), 0.7f);
 
 	if (OptionButtonClass.IsNull())
 	{
@@ -1206,6 +1212,7 @@ void UAetheriaSliceEnd::BuildDefaultLayout()
 void UAetheriaSliceEnd::NativeConstruct()
 {
 	Super::NativeConstruct();
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_ActEnd"), 0.8f);
 
 	if (NewCommandButton) { NewCommandButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleNewCommand); }
 	if (QuitButton) { QuitButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleQuit); }
