@@ -146,6 +146,10 @@ creation:
 | Coalition Vanguard | Coalition key | Recovered by the Coalition line; carried as a Vanguard officer. |
 | Outcast Corsair | Coalition key, **stolen** | The Iron Tithe seized the Coalition key in the frontier wars and kept it in a Sector 7 vault. The outcasts took it back. Vance knows exactly who robbed him, which makes his grudge personal. |
 
+In every history the Iron Tithe seized the Coalition key in the frontier wars. For a Coalition Vanguard the Coalition
+later took it back; for an Outcast Corsair the outcasts stole it; for a Synod Envoy or Guild Engineer it is still in
+Vance's vault at Tithe Anchorage, to be recovered in Act VIII (`CoalitionKeyRecovered`; `ACT_VIII_IRON_TITHE.md` §4.5).
+
 The key is why the Captain is the Key-Bearer and why the Omega Arch answered. It does not change any
 slice or Act VII data: those acts never name which key it is, and lines that say "Key-Bearer" stay as they are.
 How the other two plates open in Act X is in §7.3.
@@ -862,7 +866,8 @@ because I heard what was on the other side, Key-Bearer. So did my father, and hi
 was a watch."
 
 **Flags for Act IX:** `VanceFate` (Tried / Absorbed / Severants / Released), `CoalitionKeyRecovered`
-(the Coalition key, taken from the Anchorage vault; never set for an Outcast Corsair, who already carries it), `CorsairsSettled` (from Cormaker's
+(the Coalition key, taken from the Anchorage vault; only for Synod Envoy and Guild Engineer Captains,
+since a Coalition Vanguard or Outcast Corsair already carries it), `CorsairsSettled` (from Cormaker's
 arc), `GraftForgeState` (Destroyed / Seized / Intact), `SeverantAllies` (count).
 
 ### 7.2 Act IX — *The Threshold*
@@ -931,7 +936,7 @@ settlement, Vance's fate, Lyra's heritage, the Archive's state.
    |---|---|---|
    | Synod | Warden Kesh speaks the Rite of Accord (`SeverantStanding` ≥ 30) | Architect override; force |
    | Guild | Jax Mercer's master's seal (Jax ≥ 60) | Architect override; force |
-   | Coalition | Tala Vane's command codes (Tala ≥ 60), or the Coalition key recovered from the Anchorage vault in Act VIII (`CoalitionKeyRecovered`; the vault is empty if the Captain is an Outcast Corsair) | Architect override; force |
+   | Coalition | Tala Vane's command codes (Tala ≥ 60), or the Coalition key recovered from the Anchorage vault in Act VIII (`CoalitionKeyRecovered`; the vault is empty if the Captain carries the Coalition key) | Architect override; force |
 
    *Architect override:* only if Custodian or `KeyShared`; the Architect says what it is doing, and asks first.
    *Force:* the Prismatic Stellar Beam cuts the plate; Instability +40 per plate, which can rupture the drive.

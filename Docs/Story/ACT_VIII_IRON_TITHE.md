@@ -35,6 +35,7 @@ The act asks the Captain to end the Tithe's war and decide what Vance and his pe
 | `SupplyLine`, shipments | Continue unchanged. The Weave and Joint lanes keep working; Act VIII adds no new anchors. |
 | `ArchitectLeaning`, `ArchitectRevelation2` | The Architect's lines in C1 and C3 vary by `ArchitectRevelation2`. |
 | `Instability`, `CrewInjured`, `FlagshipHullPct`, `PhantomShipsActive`, `CrewLoyalty` | Carry over. `PursuitClock` resets to 0: Vance knows exactly where the fleet is. |
+| `Background` | Decides where the Coalition key is (§4.5). Outcast Corsair: the Captain stole it from the Tithe, and Vance knows it. |
 
 ## 3. Star chart
 
@@ -97,7 +98,34 @@ The approach council at Grieve chooses how E3 is fought:
 | Approach | Requires | E3 |
 |---|---|---|
 | **Siege** | — | Full engagement: Anchorage defence group, *Writ of Sector 7*, carracks. Win: disable the *Writ*. |
-| **Infiltration** | Corsairs still with the fleet (`CorsairsDeparted` not set) | **Hold** the boarding lane for 90 s while Cormaker's Boarding Pods take the prison and the dock controls; the *Writ* engages directly. Fewer enemies; the prisoners are freed in the fight (`PrisonersFreed`). |
+| **Infiltration** | Corsairs still with the fleet (`CorsairsDeparted` not set) | **Hold** the boarding lane for 90 s while Cormaker's Boarding Pods take the prison, the vault and the dock controls; the *Writ* engages directly. Fewer enemies; the prisoners are freed in the fight (`PrisonersFreed`). |
+
+### 4.5 The Coalition key
+Gate Zero's three keys went to the Synod, the Guild and the Coalition, and the Captain carries one of them by
+background (`WORLD_BIBLE.md` §1.7). The Iron Tithe seized the Coalition key in the frontier wars. What happened to it
+next depends on the Captain's background:
+
+| Background | Where the Coalition key is | At the Anchorage vault (after E3) |
+|---|---|---|
+| Synod Envoy, Guild Engineer | Still in the Anchorage vault | Recovered: `CoalitionKeyRecovered`. Scene `VIII_Vault_Key`. |
+| Coalition Vanguard | The Coalition took it back; the Captain carries it | Empty. Scene `VIII_Vault_Vanguard`. |
+| Outcast Corsair | The Captain's outcasts stole it from a Sector 7 vault; the Captain carries it | Empty, with Vance's own lock still broken. Scene `VIII_Vault_Corsair`. |
+
+The vault is reached either way: Infiltration takes it during E3; after a Siege, Tala's boarding party finds it with
+the prisoners. Recovering the key is automatic (it is an item, not a choice); what it opens is decided in Act X
+(`WORLD_BIBLE.md` §7.3: with the key, the Coalition plate needs no officer, override or force).
+
+Lines (formal register for Vex; first-pass):
+- `VIII_Vault_Key` — Vex AI: "Captain, the vault holds a Precursor seal-key bearing the Coalition sigil. It matches
+  the plate pattern of Gate Zero. Commander Vance kept it under three locks and no inventory." Tala Vane: "We lost
+  that key at Halden Reach. I was there."
+- `VIII_Vault_Vanguard` — Vex AI: "The vault is empty, Captain. Its record lists one item, removed in the frontier
+  wars." Vance: "Your Coalition took back what we kept safe. Look where it brought you, Vanguard."
+- `VIII_Vault_Corsair` — Vex AI: "The vault is empty, Captain. The lock was cut from outside, years ago." Vance:
+  "Every miner in Sector 7 knew that story. I never knew it was you."
+
+Vance's terms (C1) also change for an Outcast Corsair Captain: an added line, Vance: "And bring back what you
+took from my vault, thief." (`BackgroundOverride` on the C1 arrival, `OutcastCorsair`.)
 
 ## 5. Council C1 — "Terms" (TitheMarker)
 
@@ -249,6 +277,7 @@ Rustmarch}. Phantom Fleet strength: {X} of 200. Report ends."
 | `CorsairsSettled` | `RustmarchPromised` / `CorsairsDeparted` / neither | Cormaker's Act IX arc (Cutter's Rest) |
 | `VanceHeard`, `ListenerTraced` | bool | Act IX threshold scene |
 | `PrisonersFreed`, `GraftedTreated`, `AnchorageDock` | bool | Act IX crew scenes; refits |
+| `CoalitionKeyRecovered` | bool (Synod Envoy and Guild Engineer only) | Act X: opens Gate Zero's Coalition plate |
 
 ## 12. Data, code and assets
 
@@ -269,7 +298,8 @@ Rustmarch}. Phantom Fleet strength: {X} of 200. Report ends."
 - `DT_NodeEvents_ActVIII`; `DT_Councils` rows Terms, ChoirCalls, ExarchCell, Choir, FairShares, Crucible,
   GraftedWounded, Approach, TithePaid, Sentence; their `DT_Council_<Name>` option tables; `DT_Battles` rows
   E1_TollLine, E2_ForgeDestroy, E2_ForgeHold, E3_Siege, E3_Infiltration, Ambush_ActVIII;
-  `DT_Sequences_ActVIII` (arrivals, outcomes, act report). Toolset `TABLES` / `GAMEPLAY_FLAGS` gain the new names.
+  `DT_Sequences_ActVIII` (arrivals, outcomes, act report; vault scenes `VIII_Vault_Key` / `_Vanguard` / `_Corsair`,
+  §4.5). Toolset `TABLES` / `GAMEPLAY_FLAGS` gain the new names, including `CoalitionKeyRecovered`.
 
 **Assets (generated in Blender like Act VII, `Tools/Blender/`):**
 - Ships: SM_TitheCarrack, SM_TitheCollector, SM_WritOfSector7.
