@@ -4,6 +4,7 @@
 #include "AetheriaAudio.h"
 #include "AetheriaCombatManager.h"
 #include "AetheriaFlagship.h"
+#include "AetheriaGameInstance.h"
 #include "AetheriaWeaponVFX.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -84,7 +85,13 @@ void AAetheriaSeverantShip::ReleasePulse()
 		bCaughtPlayer = true;
 		if (AAetheriaFlagship* Flagship = Cast<AAetheriaFlagship>(*It))
 		{
-			Flagship->InterruptBeam();
+			// Act VIII: the seized forge's dampers keep the beam charge (unless the grafts were given back)
+			const UAetheriaGameInstance* GI = GetAetheriaGameInstance();
+			const bool bShielded = GI && GI->StoryFlags.Contains(TEXT("SilenceShielding")) && !GI->StoryFlags.Contains(TEXT("GraftsReturned"));
+			if (!bShielded)
+			{
+				Flagship->InterruptBeam();
+			}
 		}
 	}
 
@@ -231,7 +238,7 @@ float AAetheriaSeverantBastion::TakeDamage(float DamageAmount, const FDamageEven
 		if (!bShieldNoted)
 		{
 			bShieldNoted = true;
-			PostComms(E_Speaker::VexAI, TEXT("The Bastion core is shielded while its pylons stand. Bring down the pylons first."));
+			PostComms(E_Speaker::VexAI, ShieldedNote);
 		}
 		AAetheriaImpactFlash::Spawn(GetWorld(), GetActorLocation() + FMath::VRand() * 500.0f, PulseColor, 300.0f, 0.3f, 80.0f);
 		return 0.0f;
@@ -239,7 +246,7 @@ float AAetheriaSeverantBastion::TakeDamage(float DamageAmount, const FDamageEven
 	if (!bShieldDownNoted)
 	{
 		bShieldDownNoted = true;
-		PostComms(E_Speaker::VexAI, TEXT("Pylons down. The core is exposed, Captain."));
+		PostComms(E_Speaker::VexAI, ExposedNote);
 	}
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

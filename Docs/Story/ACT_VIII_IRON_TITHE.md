@@ -356,8 +356,32 @@ Rustmarch}. Phantom Fleet strength: {X} of 200. Report ends."
 - **Stand-ins until phase 4.** Carrack → `BP_TitheCruiser`; grafted cruisers → `BP_EmitterFrigate`; the Graft Forge →
   `BP_SeverantBastion` with 3 `BP_BastionPylon`; *Writ of Sector 7* → an objective `BP_TitheCruiser` (destroyed, not
   disabled at 25%).
-- **Phase 4 follow-ups.** Withdrawing after a lost council battle leaves the council held (`Council_<Name>`), as in
-  Act VII: re-open it on withdrawal. A lost E2 should set `GraftForgeState = Intact` (the option sets it on choice).
-  Ithane's *Last Silence* in E3 (`ExarchStatus = Alive`) and the extra loyalist frigates in E2 (`Dead`) need dynamic
-  groups; `LyraChoir` (+2 allies), `GraftsReturned` (no shielding), Bio-Gel cost of treating the grafted, and the
-  60 s infiltration hold with `AnchorageMapped` are not applied yet.
+- **Combat (phase 4).** C++ in `AetheriaTitheShips.*`, thin BP children in `/Game/Aetheria/Ships`:
+  `AAetheriaGraftedShip` (a Severant-emitter hull in the Tithe faction; 1.5× damage while its pulse telegraphs) and
+  `BP_GraftedCruiser`; `BP_TitheCarrack` (closes on the flagship and rams for 900 every 8 s in contact; Tala warns on
+  the run); `BP_TitheCollector` (grapples the flagship, −20% speed each until destroyed); `BP_WritOfSector7` (12,000
+  hull, disabled, not destroyed, at 25%: it goes dark, counts as the objective, Vance yields) with `BP_WritGraftSpike`
+  (spawned on the Writ only with `VanceGraftsKnown` and `SeverantAgentsCaptured`; while it stands the Writ takes 60%
+  damage; destroying it ends the Writ's pulses); `BP_GraftForge` and `BP_ForgePylon` (the Bastion pattern, own lines).
+  Meshes are stand-ins (Tithe cruiser and interceptor hulls scaled, Bastion pylon) until phase 5.
+- **Battle data.** `FS_BattleGroup` gained `RequiredFlag`, `ForbiddenFlag`, `RequiredStates` and `CountFromState`;
+  `FS_Battle` gained `WinStates` and `HoldSecondsByFlag`. E2 adds two loyalist emitter frigates when
+  `ExarchStatus = Dead`; E3 adds *The Last Silence* when `Alive`, Kesh skiffs from `SeverantAllies` and two more with
+  `LyraChoir`; the infiltration hold is 60 s with `AnchorageMapped`; the Act VIII ambush is grafted until the forge is
+  resolved. The allied and non-allied E3 rows (and their Approach options) were folded together.
+- **Council battles.** The forge's outcome is a battle result now (`WinFlags`/`WinStates`), not an option effect, so a
+  lost E2 resolves nothing. Withdrawing from a lost council battle (Return to Command) reopens that council
+  (`PendingBattleCouncil`, `NextScreen = NodeCouncils`); a retry keeps it chosen. The Graft Forge therefore cannot end
+  `Intact` any more; the `Intact` rows in §4.1 apply only if a later act sets it. Loyalty changes from the first choice
+  stay applied.
+- **Also.** Silence shielding: with `SilenceShielding` and not `GraftsReturned`, pulses no longer cancel the beam charge.
+  Departed Corsairs no longer spawn the Corsair gunship. Still open: the Bio-Gel cost of treating the grafted
+  (options have no Bio-Gel delta yet).
+- **Phase 4 checks.** Build succeeded; `validate_fleet` and `validate_narrative` report no problems. PIE, every Act VIII
+  battle staged and won with the playtest tools: E1 9 hostiles (Carrack, 2 cruisers, 6 interceptors); E2 destroy 10
+  (crucible, 3 pylons, 2 grafted, 4 interceptors) → `Destroyed`; E2 hold → `Seized` + `SilenceShielding`; E3 siege 13
+  with the graft spike (both intel flags); E3 infiltration → `PrisonersFreed`, hold 60 s with `AnchorageMapped`;
+  ambush plain cruisers once the forge is resolved. A lost E2 with Return to Command reopened the Crucible and resolved
+  nothing. Playtest additions: `win_battle` also ends hold battles (`ForceVictory`), `lose_battle` (`ForceDefeat`),
+  `stage_battle(..., council=...)`. Not yet seen in play: the ram, grapple and spike behaviours under real combat, and
+  the state-driven groups (Ithane, loyalists, Severant allies), which need a states setter in the playtest tools.

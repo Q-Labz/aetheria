@@ -35,7 +35,7 @@ ACT_VIII_COUNCILS = ("Terms", "FairShares", "TollLine", "ChoirCalls", "ExarchCel
                      "GraftedWounded", "Approach", "TithePaid", "Sentence")
 ACT_VIII_NODES = ("TitheMarker", "Rustmarch", "TollLine", "SerenVael", "GraftForge", "Grieve")
 ACT_VIII_BATTLES = ("E1_TollLine", "E1_TollLineStalled", "E2_ForgeDestroy", "E2_ForgeHold", "E3_Siege",
-                    "E3_SiegeAllied", "E3_Infiltration", "E3_InfiltrationAllied", "Ambush_ActVIII")
+                    "E3_Infiltration", "Ambush_ActVIII")
 
 # Extra source files merged into a table on load
 TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII", "DT_Sequences_ActVIII"),
@@ -170,6 +170,11 @@ def validate(data):
             elif kind == "battle":
                 if not row.get("Groups"):
                     problems.append(f"{where}: has no ship groups.")
+                for i, group in enumerate(row.get("Groups", [])):
+                    for key in ("RequiredFlag", "ForbiddenFlag"):
+                        flag = group.get(key, "None")
+                        if flag != "None" and not _is_set_somewhere(flag, set_flags):
+                            problems.append(f"{where}.Groups[{i}]: {key} '{flag}' is never set.")
                 if row.get("Debrief", "None") not in ("None", *sequences):
                     problems.append(f"{where}: debrief '{row.get('Debrief')}' is not in DT_Sequences.")
                 for bg, sequence in row.get("BackgroundAftermath", {}).items():
@@ -271,7 +276,8 @@ OPTION_DEFAULTS = {
 
 # Defaults for sequence and battle fields added in Act VIII
 SEQUENCE_DEFAULTS = {"SetFlags": []}
-BATTLE_DEFAULTS = {"BackgroundAftermath": {}}
+BATTLE_DEFAULTS = {"BackgroundAftermath": {}, "WinStates": {}, "HoldSecondsByFlag": {}}
+GROUP_DEFAULTS = {"RequiredFlag": "None", "ForbiddenFlag": "None", "RequiredStates": {}, "CountFromState": "None"}
 
 
 def to_import_json(rows, table=None):
@@ -279,6 +285,8 @@ def to_import_json(rows, table=None):
     defaults = {"option": OPTION_DEFAULTS, "sequence": SEQUENCE_DEFAULTS, "battle": BATTLE_DEFAULTS}
     if table is not None and TABLE_KIND.get(table) in defaults:
         rows = [{**defaults[TABLE_KIND[table]], **row} for row in rows]
+    if table is not None and TABLE_KIND.get(table) == "battle":
+        rows = [{**row, "Groups": [{**GROUP_DEFAULTS, **group} for group in row.get("Groups", [])]} for row in rows]
     return json.dumps(rows, ensure_ascii=False)
 
 

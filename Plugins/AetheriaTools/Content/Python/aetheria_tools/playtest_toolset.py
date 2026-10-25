@@ -129,12 +129,13 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def stage_battle(battle: str, node: str = "") -> str:
+    def stage_battle(battle: str, node: str = "", council: str = "") -> str:
         """Opens a DT_Battles battle in the running PIE session (Act VII state), as a council's StartBattle does.
 
         Args:
             battle: DT_Battles row, e.g. E1, E2, E4_Assault
             node: Star node to fight at, which picks the combat scenery (empty keeps the current node)
+            council: DT_Councils row that started the battle (marked held; reopened if the battle is lost)
 
         Returns:
             Confirmation.
@@ -144,6 +145,11 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             gi.set_editor_property("current_node", node)
         gi.set_editor_property("current_act", max(7, gi.get_editor_property("current_act")))
         gi.set_editor_property("pending_battle", battle)
+        if council:
+            flags = gi.get_editor_property("story_flags")
+            flags.add(f"Council_{council}")
+            gi.set_editor_property("story_flags", flags)
+        gi.set_editor_property("pending_battle_council", council or "None")
         gi.set_editor_property("next_screen", "PostCombat")
         unreal.GameplayStatics.open_level(_game_world(), "L_Combat_LanternDrift")
         return f"Staging {battle} in L_Combat_LanternDrift."
@@ -151,7 +157,8 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def win_battle(return_to_command: bool = False) -> str:
-        """Wins the battle in the running combat level: every hostile ship dies, as if destroyed in the fight.
+        """Wins the battle in the running combat level: every hostile ship dies, as if destroyed in the fight,
+        and a hold battle's timer runs out.
 
         Args:
             return_to_command: Then leave the after-action report for the bridge, as its Continue does
@@ -165,12 +172,32 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             if ship.get_editor_property("faction") != unreal.E_Faction.PLAYER:
                 ship.die()
                 killed += 1
+        managers = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaCombatManager)
+        if not managers:
+            raise RuntimeError("The PIE world has no combat manager; stage a battle first.")
+        managers[0].force_victory()
         if return_to_command:
-            managers = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaCombatManager)
-            if not managers:
-                raise RuntimeError("The PIE world has no combat manager; stage a battle first.")
             managers[0].return_to_command()
         return f"{killed} hostile ships destroyed. " + AetheriaPlaytestToolset.get_campaign_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def lose_battle(return_to_command: bool = False) -> str:
+        """Loses the battle in the running combat level, as if the Crystal Dreadnought fell.
+
+        Args:
+            return_to_command: Then withdraw to the bridge, as the after-action report's Return to Command does
+
+        Returns:
+            The campaign state.
+        """
+        managers = unreal.GameplayStatics.get_all_actors_of_class(_game_world(), unreal.AetheriaCombatManager)
+        if not managers:
+            raise RuntimeError("The PIE world has no combat manager; stage a battle first.")
+        managers[0].force_defeat()
+        if return_to_command:
+            managers[0].return_to_command()
+        return AetheriaPlaytestToolset.get_campaign_state()
 
     @toolset_registry.tool_call
     @staticmethod

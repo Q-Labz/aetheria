@@ -113,6 +113,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
 	FName PendingBattle = NAME_None;
 
+	/** Council (DT_Councils row) whose option started PendingBattle; reopened if the battle is lost */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	FName PendingBattleCouncil = NAME_None;
+
 	// ---- Data ----
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")

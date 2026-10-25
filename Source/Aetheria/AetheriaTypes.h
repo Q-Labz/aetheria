@@ -325,6 +325,22 @@ struct FS_BattleGroup
 	/** Battle is won when every ship of this group is destroyed (empty objective: all enemies) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
 	bool bObjective = false;
+
+	/** The group is fielded only if this story flag is set (None: always) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName RequiredFlag = NAME_None;
+
+	/** The group is left out if this story flag is set */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName ForbiddenFlag = NAME_None;
+
+	/** The group is fielded only if every one of these campaign states has this value (ExarchStatus = Alive) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<FName, FName> RequiredStates;
+
+	/** Read the ship count from this campaign state instead of Count (SeverantAllies); missing or not a number: 0 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName CountFromState = NAME_None;
 };
 
 /** A battle definition (DT_Battles) */
@@ -352,6 +368,14 @@ struct FS_Battle : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
 	TArray<FName> WinFlags;
+
+	/** Campaign states set on victory (GraftForgeState = Destroyed) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<FName, FName> WinStates;
+
+	/** Defend battles: a shorter (or longer) hold when a story flag is set (AnchorageMapped -> 60 s) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<FName, float> HoldSecondsByFlag;
 
 	/** Sequence played back on the bridge after a victory */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")

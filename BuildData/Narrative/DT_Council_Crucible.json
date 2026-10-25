@@ -36,12 +36,8 @@
     "PursuitDelta": 0,
     "ExposureDelta": 0,
     "HullDelta": 0.0,
-    "SetFlags": [
-      "ForgeResolved"
-    ],
-    "SetStates": {
-      "GraftForgeState": "Destroyed"
-    },
+    "SetFlags": [],
+    "SetStates": {},
     "NextCouncil": "None",
     "StartBattle": "E2_ForgeDestroy"
   },
@@ -83,13 +79,8 @@
     "PursuitDelta": 0,
     "ExposureDelta": 0,
     "HullDelta": 0.0,
-    "SetFlags": [
-      "ForgeResolved",
-      "SilenceShielding"
-    ],
-    "SetStates": {
-      "GraftForgeState": "Seized"
-    },
+    "SetFlags": [],
+    "SetStates": {},
     "NextCouncil": "None",
     "StartBattle": "E2_ForgeHold"
   },

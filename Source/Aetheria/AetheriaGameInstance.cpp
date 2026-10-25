@@ -429,6 +429,7 @@ void UAetheriaGameInstance::StartAct(int32 Act)
 	PursuitClock = 0;
 	ChartedRoutes.Reset();
 	PendingBattle = NAME_None;
+	PendingBattleCouncil = NAME_None;
 	NextScreen = TEXT("ActStart");
 	LastReport = FText::FromString(FString::Printf(TEXT("Act %s: %s."), *ActNumeral(Act), *ActTitle(Act)));
 	OnCampaignStateChanged.Broadcast();
@@ -654,5 +655,6 @@ void UAetheriaGameInstance::ResetCampaign()
 	PendingShipments = Defaults->PendingShipments;
 	OutpostDarkLeaps = Defaults->OutpostDarkLeaps;
 	PendingBattle = NAME_None;
+	PendingBattleCouncil = NAME_None;
 	NextScreen = TEXT("NewGame");
 }

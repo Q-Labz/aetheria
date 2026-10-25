@@ -83,6 +83,12 @@ void AAetheriaCommandController::BeginPlay()
 	{
 		ShowStarMap();
 	}
+	else if (GI->NextScreen == TEXT("NodeCouncils"))
+	{
+		// back from a lost council battle: the council is open again at this node
+		GI->NextScreen = StarMap;
+		ContinueNode();
+	}
 	else
 	{
 		ShowCreation();
@@ -453,6 +459,7 @@ void AAetheriaCommandController::OnCouncilChosen(FName Council, const FS_Council
 	if (GI)
 	{
 		GI->StoryFlags.Add(FName(*(TEXT("Council_") + Council.ToString())));
+		GI->PendingBattleCouncil = Opt.StartBattle.IsNone() ? NAME_None : Council;
 	}
 	PendingNextCouncil = Opt.NextCouncil;
 	PendingStartBattle = Opt.StartBattle;
