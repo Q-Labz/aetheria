@@ -1,0 +1,287 @@
+[
+  {
+    "Name": "Refused",
+    "Label": "Withdraw from Seren Vael.",
+    "ApprovalHint": "The council will not receive the fleet.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Severant council refuses to receive the fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "I'm sorry, Captain. They will not hear me either.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": -40,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "SeverantAllies": "0"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "StandWith",
+    "Label": "Ask them to stand with the fleet.",
+    "ApprovalHint": "Kesh will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "The Tithe holds a door it no longer guards. Stand with us at Grieve.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Two Severant skiffs have been assigned to the fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -39,
+    "MaxStanding": 29,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 5,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "SeverantAlliesRaised"
+    ],
+    "SetStates": {
+      "SeverantAllies": "2"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "StandWithAll",
+    "Label": "Ask them to stand with the fleet.",
+    "ApprovalHint": "The council will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "The Tithe holds a door it no longer guards. Stand with us at Grieve.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Four Severant skiffs have been assigned to the fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "CureDelivered"
+    ],
+    "MinStanding": 30,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 5,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "SeverantAlliesRaised"
+    ],
+    "SetStates": {
+      "SeverantAllies": "4"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "StandWithKesh",
+    "Label": "Ask them to stand with the fleet.",
+    "ApprovalHint": "Kesh will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "The Tithe holds a door it no longer guards. Stand with us at Grieve.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Four of the council's skiffs, Captain. And two of mine. We share this.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Six Severant vessels have been assigned to the fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "CureDelivered"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": 30,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 5,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "SeverantAlliesRaised",
+      "KeshSkiffsJoin"
+    ],
+    "SetStates": {
+      "SeverantAllies": "6"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "ReturnGrafts",
+    "Label": "Offer the Anchorage's grafts back to them.",
+    "ApprovalHint": "Kesh and Thorne will approve. Jax will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 5,
+    "LoyaltyDeltas": {
+      "ArisThorne": 5,
+      "JaxMercer": -10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "The forge grew those spikes from your people's craft. They are yours to unmake.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "Thank you, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "There goes our shielding.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -39,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {
+      "GraftForgeState": "Seized"
+    },
+    "StandingDelta": 20,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "SeverantAlliesRaised",
+      "GraftsReturned"
+    ],
+    "SetStates": {
+      "SeverantAllies": "2"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Report",
+    "Label": "Ask nothing. Report what we found at the Archive.",
+    "ApprovalHint": "Lyra will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 5,
+    "LoyaltyDeltas": {
+      "Lyra": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "You told them the truth and asked for nothing. They will remember that longer than any alliance.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Severant standing has improved. No vessels have been assigned.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -39,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 10,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "SeverantAllies": "0"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

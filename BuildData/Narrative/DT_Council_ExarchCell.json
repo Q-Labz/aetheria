@@ -1,0 +1,134 @@
+[
+  {
+    "Name": "WeakPoint",
+    "Label": "How do the grafts die?",
+    "ApprovalHint": "The forge's weak point.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "Cut the crucible's cables in the wrong order and the Silence turns inward. It will eat its own growth.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Logged. A sabotage of the Graft Forge is now possible.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {
+      "ExarchStatus": "Deposed"
+    },
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "ForgeWeakPoint"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Listener",
+    "Label": "What did Vance hear at the Arch?",
+    "ApprovalHint": "Nix will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "NixNull": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "The same thing we did. He was only braver about it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "Braver about what?",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "Listening.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {
+      "ExarchStatus": "Deposed"
+    },
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "ListenerTraced"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Leave",
+    "Label": "Nothing. Leave the Exarch to the council.",
+    "ApprovalHint": "Severant standing +10.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "They will judge Ithane by their own law. It is the right thing, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {
+      "ExarchStatus": "Deposed"
+    },
+    "StandingDelta": 10,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

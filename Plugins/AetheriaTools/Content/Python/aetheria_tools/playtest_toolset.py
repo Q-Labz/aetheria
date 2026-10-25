@@ -13,6 +13,17 @@ def _game_world():
     return world
 
 
+def _set_captain(gi, captain_name, background):
+    """Names the Captain and sets the background, if no Captain was created yet."""
+    if gi.get_editor_property("captain_name"):
+        return
+    gi.set_editor_property("captain_name", captain_name)
+    # E_SynodEnvoy -> SYNOD_ENVOY in Python
+    member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(background)).upper()
+    if hasattr(unreal.E_Background, member):
+        gi.set_editor_property("background", getattr(unreal.E_Background, member))
+
+
 def _game_instance():
     gi = unreal.GameplayStatics.get_game_instance(_game_world())
     if not gi:
@@ -38,12 +49,7 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             Confirmation.
         """
         gi = _game_instance()
-        if not gi.get_editor_property("captain_name"):
-            gi.set_editor_property("captain_name", captain_name)
-            # E_SynodEnvoy -> SYNOD_ENVOY in Python
-            member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(background)).upper()
-            if hasattr(unreal.E_Background, member):
-                gi.set_editor_property("background", getattr(unreal.E_Background, member))
+        _set_captain(gi, captain_name, background)
         pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
         if not pc or not hasattr(pc, "start_act_vii"):
             raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
@@ -75,8 +81,7 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
         pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
         if not pc or not hasattr(pc, "start_act"):
             raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
-        if not gi.get_editor_property("captain_name"):
-            gi.set_editor_property("captain_name", captain_name)
+        _set_captain(gi, captain_name, background)
         pc.start_act(act)
         return f"Act {act} started; the command level reloads at the act's start node."
 
@@ -91,7 +96,7 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
         gi = _game_instance()
         flags = sorted(str(f) for f in gi.get_editor_property("story_flags"))
         states = {str(k): str(v) for k, v in gi.get_editor_property("states").items()}
-        return (f"act={gi.get_editor_property('current_act')} node={gi.get_editor_property('current_node')} "
+        return (f"act={gi.get_editor_property('current_act')} background={gi.get_editor_property('background')} node={gi.get_editor_property('current_node')} "
                 f"next={gi.get_editor_property('next_screen')} battle={gi.get_editor_property('pending_battle')} "
                 f"standing={gi.get_editor_property('severant_standing')} leaning={gi.get_editor_property('architect_leaning')} "
                 f"instability={gi.get_editor_property('instability'):.0f} pursuit={gi.get_editor_property('pursuit_clock')} "
@@ -142,6 +147,30 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
         gi.set_editor_property("next_screen", "PostCombat")
         unreal.GameplayStatics.open_level(_game_world(), "L_Combat_LanternDrift")
         return f"Staging {battle} in L_Combat_LanternDrift."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def win_battle(return_to_command: bool = False) -> str:
+        """Wins the battle in the running combat level: every hostile ship dies, as if destroyed in the fight.
+
+        Args:
+            return_to_command: Then leave the after-action report for the bridge, as its Continue does
+
+        Returns:
+            How many ships died and the campaign state.
+        """
+        world = _game_world()
+        killed = 0
+        for ship in unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaShipBase):
+            if ship.get_editor_property("faction") != unreal.E_Faction.PLAYER:
+                ship.die()
+                killed += 1
+        if return_to_command:
+            managers = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaCombatManager)
+            if not managers:
+                raise RuntimeError("The PIE world has no combat manager; stage a battle first.")
+            managers[0].return_to_command()
+        return f"{killed} hostile ships destroyed. " + AetheriaPlaytestToolset.get_campaign_state()
 
     @toolset_registry.tool_call
     @staticmethod

@@ -1,0 +1,153 @@
+[
+  {
+    "Name": "Siege",
+    "Label": "Lay siege with the fleet.",
+    "ApprovalHint": "Battle: disable the Writ of Sector 7.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "All ships. We take the Anchorage.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "SeverantAlliesRaised"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E3_Siege"
+  },
+  {
+    "Name": "SiegeAllied",
+    "Label": "Lay siege with the fleet and the Severant skiffs.",
+    "ApprovalHint": "Battle: disable the Writ of Sector 7. Severant allies join.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "All ships, and our Severant friends. We take the Anchorage.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "SeverantAlliesRaised"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E3_SiegeAllied"
+  },
+  {
+    "Name": "Infiltrate",
+    "Label": "Send the Boarding Pods; the fleet holds the lane.",
+    "ApprovalHint": "Cormaker will approve. Battle: hold the boarding lane.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Pods away. Keep him busy, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "CorsairsDeparted",
+      "SeverantAlliesRaised"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E3_Infiltration"
+  },
+  {
+    "Name": "InfiltrateAllied",
+    "Label": "Send the Boarding Pods; the fleet and the Severants hold the lane.",
+    "ApprovalHint": "Cormaker will approve. Battle: hold the boarding lane. Severant allies join.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Pods away. Keep him busy, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "SeverantAlliesRaised"
+    ],
+    "ForbiddenFlags": [
+      "CorsairsDeparted"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E3_InfiltrationAllied"
+  }
+]

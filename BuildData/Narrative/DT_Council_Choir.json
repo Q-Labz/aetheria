@@ -1,0 +1,86 @@
+[
+  {
+    "Name": "Sing",
+    "Label": "Sing with them for one watch.",
+    "ApprovalHint": "Lyra will approve. Pursuit +1.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Lyra": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "Thank you. I will bring the Choir's answer back with me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Lyra has returned. Two Choir skiffs have asked to follow her.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "LyraHeritageRevealed"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 1,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "LyraChoir"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Keep",
+    "Label": "We need you aboard, Lyra.",
+    "ApprovalHint": "Lyra will not approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Lyra": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "Of course, Captain. They have waited an age. They can wait for this.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "LyraHeritageRevealed"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

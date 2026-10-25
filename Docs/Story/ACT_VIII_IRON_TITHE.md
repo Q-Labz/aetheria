@@ -338,3 +338,26 @@ Rustmarch}. Phantom Fleet strength: {X} of 200. Report ends."
 - **Import caveat.** Run `load_narrative_tables` once per editor session. A second run in the same session failed
   and left every JSON-built table empty in memory (the files on disk were untouched); restart the editor without
   saving if that happens.
+- **Narrative data (phase 3).** Source in `BuildData/Narrative`: `DT_Councils_ActVIII`, `DT_Sequences_ActVIII` and
+  `DT_Battles_ActVIII` merge into the shared tables (`TABLE_EXTRA_SOURCES`); `DT_Council_<Name>` for Terms, FairShares,
+  TollLine, ChoirCalls, ExarchCell, Choir, Crucible, GraftedWounded, Approach, TithePaid and Sentence (39 options);
+  `DT_NodeEvents_ActVIII` (6 nodes). Sequence rows are prefixed `VIII_` (the Act VII table already has
+  `TitheMarker_Arrival`). `validate_narrative` reports no problems.
+- **The Coalition key (§4.5).** Each E3 battle row maps the Captain's background to a vault scene
+  (`BackgroundAftermath`), played after the debrief of a win. `VIII_Vault_Key` sets `CoalitionKeyRecovered` through the
+  sequence's `SetFlags`. Vance's thief line on `VIII_TitheMarker_Arrival` has empty `Text` and an `OutcastCorsair`
+  override; a line whose resolved text is empty is skipped.
+- **How the act ends.** E3 sets `VanceCaptured`; The Tithe Paid (or Sentence, after "Hear him out") sets
+  `ActVIIIFinaleWon` and `VanceFate`; `ContinueNode` then plays the act end once no council is left at the node.
+- **Variants as options.** As in Act VII, a battle variant is a separate option with flag or standing requirements:
+  E1 with or without the Carrack (`TermsStalled`), E3 siege or infiltration, each with or without Severant allies
+  (`SeverantAlliesRaised`, 4 Kesh skiffs). `SeverantAllies` is a state ("0", "2", "4", "6"); the battle rows field a
+  fixed 4 until phase 4 reads the count.
+- **Stand-ins until phase 4.** Carrack → `BP_TitheCruiser`; grafted cruisers → `BP_EmitterFrigate`; the Graft Forge →
+  `BP_SeverantBastion` with 3 `BP_BastionPylon`; *Writ of Sector 7* → an objective `BP_TitheCruiser` (destroyed, not
+  disabled at 25%).
+- **Phase 4 follow-ups.** Withdrawing after a lost council battle leaves the council held (`Council_<Name>`), as in
+  Act VII: re-open it on withdrawal. A lost E2 should set `GraftForgeState = Intact` (the option sets it on choice).
+  Ithane's *Last Silence* in E3 (`ExarchStatus = Alive`) and the extra loyalist frigates in E2 (`Dead`) need dynamic
+  groups; `LyraChoir` (+2 allies), `GraftsReturned` (no shielding), Bio-Gel cost of treating the grafted, and the
+  60 s infiltration hold with `AnchorageMapped` are not applied yet.

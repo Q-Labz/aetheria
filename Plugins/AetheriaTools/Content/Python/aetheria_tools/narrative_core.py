@@ -15,7 +15,11 @@ BACKGROUNDS = ("SynodEnvoy", "GuildEngineer", "CoalitionVanguard", "OutcastCorsa
 GAMEPLAY_FLAGS = frozenset({"AnomalousDamping", "BeamAnomaly", "UsedArchConduit", "LanternCleared",
                             # slice consequences and Act VII rules in UAetheriaGameInstance / PC_Command
                             "SquadronIIIAlienated", "ArchitectSilent", "CureSynthesising", "CureReady", "SeedsAboard",
-                            "AmbushSprung", "ActVIIComplete"})
+                            "AmbushSprung", "ActVIIComplete",
+                            # Act VIII (ACT_VIII_IRON_TITHE.md)
+                            "AmbushSprung_ActVIII", "ActVIIIComplete",
+                            # set by the Anchorage vault sequence (§4.5), Synod Envoy and Guild Engineer only
+                            "CoalitionKeyRecovered"})
 
 # Flags the game sets by pattern: per node, per council, per battle, per Weave anchor, per shipment order
 GAMEPLAY_FLAG_PREFIXES = ("Visited_", "Council_", "Won_", "Anchor_", "Ordered_")
@@ -26,8 +30,17 @@ ACT_VII_COUNCILS = ("Lifeline", "Kesh", "KeshCure", "AshChoir", "Salvage", "Echo
 ACT_VII_NODES = ("EmberRelay", "AshfallVerge", "GlassSea", "TetherPoint", "CinderArchive", "QuietHollow",
                  "PyreGate", "TitheMarker", "VaultOfRecords")
 
+# Act VIII option tables and nodes (ACT_VIII_IRON_TITHE.md)
+ACT_VIII_COUNCILS = ("Terms", "FairShares", "TollLine", "ChoirCalls", "ExarchCell", "Choir", "Crucible",
+                     "GraftedWounded", "Approach", "TithePaid", "Sentence")
+ACT_VIII_NODES = ("TitheMarker", "Rustmarch", "TollLine", "SerenVael", "GraftForge", "Grieve")
+ACT_VIII_BATTLES = ("E1_TollLine", "E1_TollLineStalled", "E2_ForgeDestroy", "E2_ForgeHold", "E3_Siege",
+                    "E3_SiegeAllied", "E3_Infiltration", "E3_InfiltrationAllied", "Ambush_ActVIII")
+
 # Extra source files merged into a table on load
-TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII",)}
+TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII", "DT_Sequences_ActVIII"),
+                       "DT_Councils": ("DT_Councils_ActVIII",),
+                       "DT_Battles": ("DT_Battles_ActVIII",)}
 
 # Tables imported from CSV (BuildData/<path>) instead of JSON
 CSV_TABLES = {
@@ -45,10 +58,12 @@ TABLES = {
     "DT_Council_Relay": ("S_CouncilOption", ("Grant", "Sandbox", "Refuse", "Rite")),
     "DT_Council_Directive": ("S_CouncilOption", ("Passage", "Arch", "Command")),
     # Act VII (ACT_VII_CINDER_ARCHIVE.md)
-    "DT_Councils": ("S_CouncilDef", ACT_VII_COUNCILS),
-    **{f"DT_Council_{name}": ("S_CouncilOption", ()) for name in ACT_VII_COUNCILS},
+    "DT_Councils": ("S_CouncilDef", ACT_VII_COUNCILS + ACT_VIII_COUNCILS),
+    **{f"DT_Council_{name}": ("S_CouncilOption", ()) for name in ACT_VII_COUNCILS + ACT_VIII_COUNCILS},
     "DT_NodeEvents_ActVII": ("S_NodeEvent", ACT_VII_NODES),
-    "DT_Battles": ("S_Battle", ("E1", "E2", "E3", "E4_Defend", "E4_DefendAllied", "E4_Assault", "E4_Vance", "Ambush")),
+    "DT_NodeEvents_ActVIII": ("S_NodeEvent", ACT_VIII_NODES),
+    "DT_Battles": ("S_Battle", ("E1", "E2", "E3", "E4_Defend", "E4_DefendAllied", "E4_Assault", "E4_Vance", "Ambush")
+                   + ACT_VIII_BATTLES),
 }
 
 # What each table holds, for validation
@@ -93,7 +108,9 @@ def validate(data):
     set_flags = set(GAMEPLAY_FLAGS)
     for table, kind in TABLE_KIND.items():
         for r in data.get(table, []):
-            if kind == "option":
+            if kind == "sequence":
+                set_flags.update(r.get("SetFlags", []))
+            elif kind == "option":
                 set_flags.add(r.get("SetFlag", "None"))
                 set_flags.update(r.get("SetFlags", []))
             elif kind == "node":
@@ -155,6 +172,11 @@ def validate(data):
                     problems.append(f"{where}: has no ship groups.")
                 if row.get("Debrief", "None") not in ("None", *sequences):
                     problems.append(f"{where}: debrief '{row.get('Debrief')}' is not in DT_Sequences.")
+                for bg, sequence in row.get("BackgroundAftermath", {}).items():
+                    if bg not in BACKGROUNDS:
+                        problems.append(f"{where}: aftermath for unknown background '{bg}'.")
+                    if sequence not in sequences:
+                        problems.append(f"{where}: aftermath '{sequence}' is not in DT_Sequences.")
     return problems
 
 
@@ -201,6 +223,8 @@ def resolve_sequence(data, sequence, background, flags, captain_name):
         if flag != "None" and flag not in flags:
             continue
         text = line.get("BackgroundOverride", {}).get(background, line["Text"])
+        if not text:
+            continue
         resolved.append((line["Speaker"], text.replace("{Captain}", captain_name)))
     return resolved
 
@@ -245,10 +269,16 @@ OPTION_DEFAULTS = {
 }
 
 
+# Defaults for sequence and battle fields added in Act VIII
+SEQUENCE_DEFAULTS = {"SetFlags": []}
+BATTLE_DEFAULTS = {"BackgroundAftermath": {}}
+
+
 def to_import_json(rows, table=None):
-    """Serializes rows in the JSON layout DataTable import expects, filling option fields older rows lack."""
-    if table is not None and TABLE_KIND.get(table) == "option":
-        rows = [{**OPTION_DEFAULTS, **row} for row in rows]
+    """Serializes rows in the JSON layout DataTable import expects, filling fields older rows lack."""
+    defaults = {"option": OPTION_DEFAULTS, "sequence": SEQUENCE_DEFAULTS, "battle": BATTLE_DEFAULTS}
+    if table is not None and TABLE_KIND.get(table) in defaults:
+        rows = [{**defaults[TABLE_KIND[table]], **row} for row in rows]
     return json.dumps(rows, ensure_ascii=False)
 
 
@@ -295,7 +325,8 @@ def _validate_line(line, where, set_flags):
     problems = []
     if line.get("Speaker") not in SPEAKERS:
         problems.append(f"{where}: unknown speaker '{line.get('Speaker')}'.")
-    if not str(line.get("Text", "")).strip():
+    # Empty text with overrides: a line only those backgrounds see
+    if not str(line.get("Text", "")).strip() and not line.get("BackgroundOverride"):
         problems.append(f"{where}: empty text.")
     for bg in line.get("BackgroundOverride", {}):
         if bg not in BACKGROUNDS:

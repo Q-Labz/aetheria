@@ -1,0 +1,99 @@
+[
+  {
+    "Name": "Try",
+    "Label": "Try him before the fleet.",
+    "ApprovalHint": "Tala will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 10,
+      "Cormaker": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Whatever he heard, he still held Sector 7 with conscripts. He answers for that.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Remnant crews will be interned at the Anchorage.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "VanceTried",
+      "ActVIIIFinaleWon"
+    ],
+    "SetStates": {
+      "VanceFate": "Tried"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Release",
+    "Label": "Release him with his crews, unarmed.",
+    "ApprovalHint": "Thorne will approve. Tala and Cormaker will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 10,
+    "LoyaltyDeltas": {
+      "ArisThorne": 5,
+      "TalaVane": -15,
+      "Cormaker": -15
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Then I will keep listening, Key-Bearer. Somebody should.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "We will see him again, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "VanceReleased",
+      "ActVIIIFinaleWon"
+    ],
+    "SetStates": {
+      "VanceFate": "Released"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

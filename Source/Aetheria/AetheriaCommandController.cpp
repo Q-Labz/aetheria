@@ -165,6 +165,10 @@ void AAetheriaCommandController::PlaySequence(FName Row, FName AfterKey)
 		return;
 	}
 
+	if (GI)
+	{
+		GI->StoryFlags.Append(Sequence->SetFlags);
+	}
 	PlayLines(Sequence->Lines, AfterKey);
 }
 
@@ -275,7 +279,13 @@ void AAetheriaCommandController::OnSequenceDone()
 	}
 	else if (After == TEXT("AfterDebrief"))
 	{
-		if (GI && GI->StoryFlags.Contains(GI->ActFlag(TEXT("FinaleWon"))) && !GI->StoryFlags.Contains(GI->ActFlag(TEXT("Complete"))))
+		if (!PendingAftermath.IsNone())
+		{
+			const FName Aftermath = PendingAftermath;
+			PendingAftermath = NAME_None;
+			PlaySequence(Aftermath, TEXT("AfterDebrief"));
+		}
+		else if (GI && GI->StoryFlags.Contains(GI->ActFlag(TEXT("FinaleWon"))) && !GI->StoryFlags.Contains(GI->ActFlag(TEXT("Complete"))))
 		{
 			PlayActEnd();
 		}
@@ -413,6 +423,12 @@ void AAetheriaCommandController::ContinueNode()
 			}
 		}
 	}
+	// an act whose finale is decided in a council after its last battle (Act VIII) ends once no council is left
+	if (GI->StoryFlags.Contains(GI->ActFlag(TEXT("FinaleWon"))) && !GI->StoryFlags.Contains(GI->ActFlag(TEXT("Complete"))))
+	{
+		PlayActEnd();
+		return;
+	}
 	ShowStarMap();
 }
 
@@ -463,6 +479,8 @@ void AAetheriaCommandController::AfterDataBattle()
 	}
 	const UDataTable* Battles = GI ? GI->BattlesTable.LoadSynchronous() : nullptr;
 	const FS_Battle* Row = Battles ? Battles->FindRow<FS_Battle>(Battle, TEXT("AfterDataBattle"), false) : nullptr;
+	const FName* Aftermath = Row && GI ? Row->BackgroundAftermath.Find(GI->Background) : nullptr;
+	PendingAftermath = Aftermath && GI->StoryFlags.Contains(FName(*(TEXT("Won_") + Battle.ToString()))) ? *Aftermath : NAME_None;
 	if (Row && !Row->Debrief.IsNone())
 	{
 		PlaySequence(Row->Debrief, TEXT("AfterDebrief"));

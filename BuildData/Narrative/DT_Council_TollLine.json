@@ -1,0 +1,116 @@
+[
+  {
+    "Name": "Engage",
+    "Label": "Engage the picket.",
+    "ApprovalHint": "Battle: destroy the picket. Kill the Carrack before it rams.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "You came the long way, Key-Bearer. Good. The Toll Line remembers how to collect.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "TermsStalled"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E1_TollLine"
+  },
+  {
+    "Name": "EngageStalled",
+    "Label": "Engage the picket while the Carrack waits for a reply.",
+    "ApprovalHint": "Battle: destroy the picket. The Carrack is not here.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Carrack is holding at the Anchorage, awaiting our reply to the terms.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "TermsStalled"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E1_TollLineStalled"
+  },
+  {
+    "Name": "Slip",
+    "Label": "Slip through the minefield.",
+    "ApprovalHint": "Hull −8%. Pursuit +1.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Shields forward, and nobody breathe.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Through. Hull integrity reduced.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 1,
+    "ExposureDelta": 0,
+    "HullDelta": -0.08,
+    "SetFlags": [
+      "TollLineSlipped"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]
