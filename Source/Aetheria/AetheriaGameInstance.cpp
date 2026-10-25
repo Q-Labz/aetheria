@@ -446,6 +446,26 @@ bool UAetheriaGameInstance::HasFlag(FName Flag) const
 		return true;
 	}
 
+	// A+B: every part holds; Not_X: X does not hold
+	const FString Text = Flag.ToString();
+	if (Text.Contains(TEXT("+")))
+	{
+		TArray<FString> Parts;
+		Text.ParseIntoArray(Parts, TEXT("+"));
+		for (const FString& Part : Parts)
+		{
+			if (!HasFlag(FName(*Part)))
+			{
+				return false;
+			}
+		}
+		return Parts.Num() > 0;
+	}
+	if (Text.StartsWith(TEXT("Not_")))
+	{
+		return !HasFlag(FName(*Text.Mid(4)));
+	}
+
 	// campaign conditions read live: Prefix_Rest, Rest split once more for State_ and Loyalty_
 	FString Prefix, Rest;
 	if (!Flag.ToString().Split(TEXT("_"), &Prefix, &Rest))

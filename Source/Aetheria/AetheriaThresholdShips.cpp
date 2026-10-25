@@ -21,7 +21,7 @@ namespace
 	const FLinearColor ListenerTracer(0.72f, 0.32f, 1.0f);
 	const FLinearColor AnswererTracer(0.70f, 0.95f, 1.0f);
 
-	void SetMesh(AAetheriaShipBase* Ship, const TCHAR* Path, float Scale)
+	void SetThresholdMesh(AAetheriaShipBase* Ship, const TCHAR* Path, float Scale)
 	{
 		ConstructorHelpers::FObjectFinder<UStaticMesh> Mesh(Path);
 		if (Mesh.Succeeded())
@@ -31,8 +31,8 @@ namespace
 		}
 	}
 
-	const TCHAR* PhantomMesh = TEXT("/Game/Aetheria/Meshes/SM_PhantomCruiser.SM_PhantomCruiser");
-	const TCHAR* PylonMesh = TEXT("/Game/Aetheria/Environments/SM_BastionPylon.SM_BastionPylon");
+	const TCHAR* ThresholdPhantomMesh = TEXT("/Game/Aetheria/Meshes/SM_PhantomCruiser.SM_PhantomCruiser");
+	const TCHAR* ThresholdPylonMesh = TEXT("/Game/Aetheria/Environments/SM_BastionPylon.SM_BastionPylon");
 
 	// Vex explains the firing line once per battle, not once per sentinel
 	TWeakObjectPtr<UWorld> LanceWarnedWorld;
@@ -158,7 +158,7 @@ AAetheriaEchoHull::AAetheriaEchoHull()
 	AggroRange = 16000.0f;
 
 	GetCollision()->InitSphereRadius(260.0f);
-	SetMesh(this, PhantomMesh, 1.8f);
+	SetThresholdMesh(this, ThresholdPhantomMesh, 1.8f);
 }
 
 void AAetheriaEchoHull::Tick(float DeltaSeconds)
@@ -209,7 +209,7 @@ AAetheriaYardSentinel::AAetheriaYardSentinel()
 	WeaponRange = 3000.0f;
 
 	GetCollision()->InitSphereRadius(420.0f);
-	SetMesh(this, PylonMesh, 1.3f);
+	SetThresholdMesh(this, ThresholdPylonMesh, 1.3f);
 }
 
 void AAetheriaYardSentinel::BeginPlay()
@@ -311,5 +311,5 @@ AAetheriaSentinelDrone::AAetheriaSentinelDrone()
 	BoltWidth = 8.0f;
 
 	GetCollision()->InitSphereRadius(120.0f);
-	SetMesh(this, PhantomMesh, 0.45f);
+	SetThresholdMesh(this, ThresholdPhantomMesh, 0.45f);
 }

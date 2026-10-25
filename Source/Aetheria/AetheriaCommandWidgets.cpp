@@ -17,6 +17,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
+#include "Components/ScrollBox.h"
 #include "Components/VerticalBox.h"
 #include "Engine/DataTable.h"
 #include "Engine/World.h"
@@ -1195,8 +1196,11 @@ void UAetheriaSliceEnd::BuildDefaultLayout()
 
 	TitleText = MakeText(WidgetTree, TEXT("TitleText"), TEXT("END OF VERTICAL SLICE — ACT VI: THE FAR SHORE"), 22, Cyan, true);
 	AddToBox(Box, TitleText, FMargin(0.0f, 0.0f, 0.0f, 16.0f));
+	// the summary grows with every act: it scrolls, so the buttons below always stay inside the panel
+	UScrollBox* SummaryScroll = WidgetTree->ConstructWidget<UScrollBox>(UScrollBox::StaticClass(), TEXT("SummaryScroll"));
 	SummaryText = MakeText(WidgetTree, TEXT("SummaryText"), FString(), 15, TextColor, true);
-	AddToBox(Box, SummaryText, FMargin(0.0f), true);
+	SummaryScroll->AddChild(SummaryText);
+	AddToBox(Box, SummaryScroll, FMargin(0.0f), true);
 
 	UHorizontalBox* Row = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("Buttons"));
 	ContinueButton = MakeButton(WidgetTree, TEXT("ContinueButton"), TEXT("CONTINUE: ACT VII — THE CINDER ARCHIVE"), 15);
