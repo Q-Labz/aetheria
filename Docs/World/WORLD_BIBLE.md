@@ -10,6 +10,8 @@ If this document disagrees with any of them, they win and this document is wrong
 **Marking.** Canon statements carry no tag. Anything invented here is marked **[NEW]**. A whole section
 or table marked [NEW] is invented throughout, except where a line is tagged *(canon)*. Proposed
 variables, flags and tables are suggestions for later specs. Nothing here is implemented.
+**[SETTLED]** marks an invention the project owner confirmed on 2026-10-24 (§8). Treat it as canon from
+then on.
 
 **Scale.** Exterior meshes use 1 uu = 1 m in the fiction (SM_CrystalDreadnought is 1,018.5 uu, the
 "1,020 m" ship). The Omega Arch is 3 km across. Interior sets (§5) use the engine's normal 1 uu = 1 cm.
@@ -73,7 +75,7 @@ That something is **the Listener**. Its packets sit inside Severant comm traffic
 not be translated by any Precursor. Vex AI: "It is not a call for help, Captain. Nor a threat. It is a
 question."
 
-**[NEW] working assumption for Acts IX–X.** The question is *what are you?* It echoes Lyra's line at the
+**[SETTLED]** The question is *what are you?* It echoes Lyra's line at the
 Ember Relay: "It's waiting to learn what we are." The Precursors could not agree on an answer, and that
 disagreement was the Severance. The game never states the question outright until Act X (§7.3).
 
@@ -128,9 +130,29 @@ Omega Arch:
 Commander Vance of the **Iron Tithe** followed through the Arch with his Sector 7 picket. "Key-Bearer.
 You opened a door that should have stayed shut. I followed you through it."
 
-**[NEW]** The ten Phantom squadrons are numbered I–X. The split between Battle-Cruisers and Heavy
-Carriers is not fixed by canon; art should assume roughly four cruisers to one carrier per squadron
-and keep the total at twenty.
+**[SETTLED]** The ten Phantom squadrons are numbered I–X. Each squadron is **16 Phantom Battle-Cruisers and
+4 Phantom Heavy Carriers**: 160 cruisers and 40 carriers across the fleet, 200 in all.
+
+### 1.7 The three keys [SETTLED]
+
+The Severants split Gate Zero's keys among the Synod, the Guild and the Coalition (canon). Each key opens
+one of the gate's three seal plates. Which key the Captain carries depends on the background chosen at
+creation:
+
+| Background | Key carried | How it was obtained |
+|---|---|---|
+| Synod Envoy | Synod key | Entrusted by the Synod as its envoy. |
+| Guild Engineer | Guild key | Held by the Guild yards; issued to a master engineer. |
+| Coalition Vanguard | Coalition key | Recovered by the Coalition line; carried as a Vanguard officer. |
+| Outcast Corsair | Coalition key, **stolen** | The Iron Tithe seized the Coalition key in the frontier wars and kept it in a Sector 7 vault. The outcasts took it back. Vance knows exactly who robbed him, which makes his grudge personal. |
+
+In every history the Iron Tithe seized the Coalition key in the frontier wars. For a Coalition Vanguard the Coalition
+later took it back; for an Outcast Corsair the outcasts stole it; for a Synod Envoy or Guild Engineer it is still in
+Vance's vault at Tithe Anchorage, to be recovered in Act VIII (`CoalitionKeyRecovered`; `ACT_VIII_IRON_TITHE.md` §4.5).
+
+The key is why the Captain is the Key-Bearer and why the Omega Arch answered. It does not change any
+slice or Act VII data: those acts never name which key it is, and lines that say "Key-Bearer" stay as they are.
+How the other two plates open in Act X is in §7.3.
 
 ---
 
@@ -175,7 +197,7 @@ near-black with sparse, sharp stars and only a faint dusty nebula (MI_SpaceSky),
   Vance is bought by Exarch Ithane and fits Severant grafts ("Every ship I own will carry one before we meet
   again"). Vance wants the Dreadnought "myself". A Coalition Vanguard Captain "held the line against those
   codes once". In data the faction is `VanceRemnant`.
-- **[NEW] Origin.** The Iron Tithe was the toll-and-quarantine authority of Sector 7, the approach to the Omega
+- **[SETTLED] Origin.** The Iron Tithe was the toll-and-quarantine authority of Sector 7, the approach to the Omega
   Arch. For generations it levied a tithe (in iron, fuel, and conscripts) on any ship entering the sector and
   turned back anyone who tried to reach the Arch. The Coalition fought it in border actions; that is where a
   Vanguard Captain met those codes. When the Key-Bearer opened the Arch, the Tithe's whole reason to exist
@@ -486,7 +508,7 @@ Proposed node IDs follow the existing naming. Leap costs are suggestions to be b
 
 #### 3.5.8 Gate Zero (`GateZero`)
 - **Canon:** the Severants sealed Gate Zero and split its keys among the Synod, Guild and Coalition.
-  Its location is not fixed by canon; this bible places it at the far edge beyond the Hush.
+  **[SETTLED]** It lies at the galaxy's edge, beyond the Hush.
 - **Structure / backdrop:** a ring twice the Arch's diameter (6 km), dark ceramic `#3A3836`, its inner face
   blocked by three interlocking seal plates, each marked with a sigil (Synod, Guild, Coalition). The
   key-sockets in each plate glow faint when the Key-Bearer is near. Behind it: the Listener's shimmer,
@@ -664,8 +686,8 @@ Ordered top to bottom of the command tower and hull. Each is a candidate set or 
    Injured crew are seen here.
 8. **Hangar and Corsair Dock** (hull, ventral): bays for Corsair gunships and Boarding Pods; Cormaker's people
    visit here; Kesh's tender docks here when in person.
-9. **Crew Quarters and Mess** (hull, mid-dorsal): background life; the fleet's 1,000-odd crew [NEW: crew
-   size is not canon; treat as "about a thousand" in dialogue if needed].
+9. **Crew Quarters and Mess** (hull, mid-dorsal): background life. **[SETTLED]** About a thousand crew serve
+   aboard the Dreadnought; dialogue says "about a thousand", never an exact figure.
 
 ---
 
@@ -695,7 +717,8 @@ decisions about the Key; the Architect's tracks `ArchitectLeaning`. Kesh tracks 
   someone from her old unit. Her question: is she the Captain's conscience or the Captain's weapon?
   - Act VIII: wants Vance captured and tried; will argue hard against using Tithe crews.
   - Act IX: if the Architect leans Dominion, Tala proposes cutting it out of the Key; the player decides.
-  - Act X: Devoted → Tala volunteers to carry a Gate Zero key plate personally, standing for the Coalition.
+  - Act X: Tala's Coalition command codes can open the Coalition plate when the Captain doesn't carry its key
+    (§7.3). Devoted → she stands at the plate herself, for the Coalition.
 - **Loyalty hooks:** gains from caution, accountability, refusing the Architect; loses from trusting the Architect
   with control or from mercy to Vance without terms.
 
@@ -708,7 +731,8 @@ decisions about the Key; the Architect's tracks `ArchitectLeaning`. Kesh tracks 
   - Act VIII: the Graft Forge: Jax wants to strip grafts for Silence shielding on the fleet.
   - Act IX: Meridian's yards: Jax can resynchronise desynchronised Phantom ships with Answerer parts. No new
     hulls: only repairs to ships the fleet already has.
-  - Act X: the Guild key plate at Gate Zero; Devoted → Jax can open it without the Architect.
+  - Act X: Jax's Guild master's seal can open the Guild plate when the Captain doesn't carry its key (§7.3).
+    Devoted → Jax opens it without the Architect's help, even under a Dominion Architect.
 - **Hooks:** gains from practical choices, salvage, engineering trust; loses from waste and from abandoning hull repairs.
 
 ### 6.3 Dr. Aris Thorne — Chief Medical Officer
@@ -841,7 +865,9 @@ Outcome example (Hear him out) — Vance: "You think I kept the door shut becaus
 because I heard what was on the other side, Key-Bearer. So did my father, and his. The Tithe was never a toll. It
 was a watch."
 
-**Flags for Act IX:** `VanceFate` (Tried / Absorbed / Severants / Released), `CorsairsSettled` (from Cormaker's
+**Flags for Act IX:** `VanceFate` (Tried / Absorbed / Severants / Released), `CoalitionKeyRecovered`
+(the Coalition key, taken from the Anchorage vault; only for Synod Envoy and Guild Engineer Captains,
+since a Coalition Vanguard or Outcast Corsair already carries it), `CorsairsSettled` (from Cormaker's
 arc), `GraftForgeState` (Destroyed / Seized / Intact), `SeverantAllies` (count).
 
 ### 7.2 Act IX — *The Threshold*
@@ -903,8 +929,17 @@ settlement, Vance's fate, Lyra's heritage, the Archive's state.
 **Beats.**
 1. **The Hush to Gate Zero.** The gate's three seal plates bear the sigils of the Synod, the Guild and the Coalition.
    The Key-Bearer can open it only with the three keys (canon: the keys were split among the three powers).
-   **[NEW]** The Key-Bearer's key is the Synod's; the Guild and Coalition plates need Jax and Tala at ≥ 60, or the
-   Architect's override (Custodian or `KeyShared`), or force (Prismatic Beam, high Instability cost).
+   **[SETTLED]** The Captain's own key (§1.7) opens its plate. Each of the other two plates opens one of these ways
+   (the player chooses among those available; none is automatic):
+
+   | Plate | Officer route | Other routes |
+   |---|---|---|
+   | Synod | Warden Kesh speaks the Rite of Accord (`SeverantStanding` ≥ 30) | Architect override; force |
+   | Guild | Jax Mercer's master's seal (Jax ≥ 60) | Architect override; force |
+   | Coalition | Tala Vane's command codes (Tala ≥ 60), or the Coalition key recovered from the Anchorage vault in Act VIII (`CoalitionKeyRecovered`; the vault is empty if the Captain carries the Coalition key) | Architect override; force |
+
+   *Architect override:* only if Custodian or `KeyShared`; the Architect says what it is doing, and asks first.
+   *Force:* the Prismatic Stellar Beam cuts the plate; Instability +40 per plate, which can rupture the drive.
 2. **Ithane's last stand** (if alive): Ithane tries to destroy the gate rather than see it opened.
 3. **The return** (ArchWake): Before the answer, the fleet can leap back to the Arch, where Outpost One's
    shipments and families can be seen through the ring. Optional; sets the stakes.
@@ -946,21 +981,28 @@ loyalty band; Vex AI's final line (changed by the Captain's answer to Vex's one 
 
 ---
 
-## 8. Open questions and canon gaps
+## 8. Settled questions and remaining gaps
 
-Things canon leaves open, with this bible's working answer. Confirm before content depends on them.
+Questions canon left open. The project owner settled the first seven on 2026-10-24; they are tagged
+**[SETTLED]** where they appear in this document.
 
-| Question | Canon status | Working answer here |
+| Question | Decision | Where |
 |---|---|---|
-| Where is the Zero Beacon physically? | Not fixed | A carrier, not a place; the Ember Relay and Gate Zero both carry it. |
-| Where is Gate Zero? | Not fixed | Beyond the Hush, at the galaxy's edge (§3.5.8). |
-| Which key does the Captain bear? | "Key-Bearer" for all backgrounds | The Synod key; the other two plates are opened in Act X (§7.3). |
-| Acts I–V episodes | Outcome only | Not authored here; §1.6 summary only. |
-| Phantom class split | Not fixed | ~4 cruisers : 1 carrier per squadron (§1.6). |
-| What the Listener is | Signal, a question | Never a ship; a presence in signal. |
-| Iron Tithe origin | Sector 7, Coalition enemy, "Remnant" | Toll-and-quarantine authority of the Arch approach (§2.2). |
-| Fleet crew size | Not fixed | "About a thousand" aboard the Dreadnought. |
-| New Speaker values | `WardenKesh`, `ExarchIthane` proposed in Act VII | None beyond those; Vance already exists as `CommanderVance`. |
+| Where is Gate Zero? | At the galaxy's edge, beyond the Hush. | §3.5.8 |
+| Which key does the Captain bear? | Depends on background: Synod Envoy → Synod, Guild Engineer → Guild, Coalition Vanguard → Coalition, Outcast Corsair → the Coalition key, stolen from an Iron Tithe vault. | §1.7, §7.3 |
+| What is the Listener's question? | "What are you?" Not stated outright until Act X. | §1.3, §7.3 |
+| What was the Iron Tithe? | The toll-and-quarantine authority on the Sector 7 approach to the Arch, keeping a hereditary watch on the Listener's signal. | §2.2 |
+| Phantom squadron mix | 16 Battle-Cruisers + 4 Heavy Carriers per squadron (160 + 40 = 200). | §1.6 |
+| Dreadnought crew size | About a thousand. | §5.4 |
+| New Speaker values | `WardenKesh`, `ExarchIthane` (proposed in Act VII); Vance is `CommanderVance`. No others needed. | — |
+
+Still open (working answers, not yet confirmed):
+
+| Question | Working answer |
+|---|---|
+| Where is the Zero Beacon physically? | A carrier, not a place; the Ember Relay and Gate Zero both carry it. |
+| Acts I–V episodes | Not authored; §1.6 summary only. |
+| What the Listener is | Never a ship; a presence in signal (§2.7). |
 
 **Canon constraints to protect in every act:** 214 ships (1 + 1 + 200 + 12) at the start of the expedition; the
 fleet never gains new hulls from Precursor sites; the Prismatic Stellar Beam, Chrono Surge, Crystalline Barrier

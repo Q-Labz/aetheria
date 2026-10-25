@@ -1,0 +1,127 @@
+[
+  {
+    "Name": "Break",
+    "Label": "Break the Wall.",
+    "ApprovalHint": "Battle: destroy the hardliners' flagship.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "All ships. Break the Wall.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "X_E1_Vigil",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Parley",
+    "Label": "Let Kesh speak to them first.",
+    "ApprovalHint": "Kesh will approve. Those who will not listen still fight.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Some will listen. Not all. Be ready, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "CureDelivered"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": 30,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 5,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "KeshParley"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "X_E1_VigilParley",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Inversion",
+    "Label": "Release the inversion.",
+    "ApprovalHint": "No battle. Thorne will not forgive it. The Severants will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -10,
+    "LoyaltyDeltas": {
+      "ArisThorne": -40
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Vigil is silent. Every Severant aboard the hardliner picket is dead. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "I'm going to my quarters, Captain. Don't send for me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {
+      "CureInversion": "Kept"
+    },
+    "StandingDelta": -60,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "InversionUsed",
+      "VigilBroken"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  }
+]

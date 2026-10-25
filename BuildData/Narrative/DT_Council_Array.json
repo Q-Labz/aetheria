@@ -1,0 +1,128 @@
+[
+  {
+    "Name": "Leave",
+    "Label": "Leave the Array standing. We may need it to answer.",
+    "ApprovalHint": "Lyra and Nix will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Lyra": 5,
+      "NixNull": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "Then it will be listening when we speak.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "ArrayState": "Standing"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Weave",
+    "Label": "Weave a lane through the Hush to Gate Zero.",
+    "ApprovalHint": "Lyra will strongly approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Lyra": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "It sings in the same key as the Choirs. I can follow it all the way to the gate.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "LyraHeritageRevealed"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "HushLane"
+    ],
+    "SetStates": {
+      "ArrayState": "Standing"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Destroy",
+    "Label": "Destroy the Array. Our answer will be our own.",
+    "ApprovalHint": "Tala will approve. Lyra will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": -5,
+    "LoyaltyDeltas": {
+      "TalaVane": 5,
+      "Lyra": -10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Array is down, Captain. Interference has fallen by half. The question has not stopped.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {
+      "ArrayState": "Destroyed"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  }
+]

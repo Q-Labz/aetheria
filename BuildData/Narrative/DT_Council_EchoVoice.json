@@ -1,0 +1,131 @@
+[
+  {
+    "Name": "NixAnswers",
+    "Label": "Let Nix answer it.",
+    "ApprovalHint": "Nix will approve. Thorne will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "NixNull": 10,
+      "ArisThorne": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "NixNull",
+        "Text": "Hello. ...It heard me, Captain. It heard me immediately.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "SquadronIIIAlienated"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "ListenerContact",
+      "NixLatticeStrained"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "LyraListens",
+    "Label": "Let Lyra listen, and only listen.",
+    "ApprovalHint": "Lyra will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Lyra": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Lyra",
+        "Text": "It's a pattern, Captain. It's the Choirs' oldest pattern. Someone taught it to them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "SquadronIIIAlienated"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "LyraHeardPattern"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Cut",
+    "Label": "Cut the channel. It speaks to us when we choose.",
+    "ApprovalHint": "Tala will approve. Nix will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 5,
+      "NixNull": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "NixNull",
+        "Text": "Cut. It'll find another channel, Captain. It always does.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "SquadronIIIAlienated"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "ChannelCut"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  }
+]

@@ -15,10 +15,23 @@ BACKGROUNDS = ("SynodEnvoy", "GuildEngineer", "CoalitionVanguard", "OutcastCorsa
 GAMEPLAY_FLAGS = frozenset({"AnomalousDamping", "BeamAnomaly", "UsedArchConduit", "LanternCleared",
                             # slice consequences and Act VII rules in UAetheriaGameInstance / PC_Command
                             "SquadronIIIAlienated", "ArchitectSilent", "CureSynthesising", "CureReady", "SeedsAboard",
-                            "AmbushSprung", "ActVIIComplete"})
+                            "AmbushSprung", "ActVIIComplete",
+                            # Act VIII (ACT_VIII_IRON_TITHE.md)
+                            "AmbushSprung_ActVIII", "ActVIIIComplete",
+                            # set by the Anchorage vault sequence (§4.5), Synod Envoy and Guild Engineer only
+                            "CoalitionKeyRecovered",
+                            # Acts IX and X (ACT_IX_THRESHOLD.md, ACT_X_GATE_ZERO.md)
+                            "AmbushSprung_ActIX", "ActIXComplete", "AmbushSprung_ActX", "ActXComplete"})
 
 # Flags the game sets by pattern: per node, per council, per battle, per Weave anchor, per shipment order
 GAMEPLAY_FLAG_PREFIXES = ("Visited_", "Council_", "Won_", "Anchor_", "Ordered_")
+
+# Conditions UAetheriaGameInstance::HasFlag reads live instead of from the story flags (Act IX):
+# State_<Key>_<Value>, Leaning_<disposition>, Loyalty_<Officer>_<band>, Standing_<band>
+LEANINGS = ("Custodian", "Dominion", "Undetermined")
+LOYALTY_BANDS = ("Devoted", "Trusting", "Steady", "Strained", "Estranged")
+STANDING_BANDS = ("Hostile", "Wary", "Trusted")
+LOYALTY_OFFICERS = ("TalaVane", "JaxMercer", "ArisThorne", "NixNull", "Lyra", "Cormaker")
 
 # Act VII option tables (DT_Council_<Name>), one per council in DT_Councils
 ACT_VII_COUNCILS = ("Lifeline", "Kesh", "KeshCure", "AshChoir", "Salvage", "Echo", "Canopy",
@@ -26,27 +39,68 @@ ACT_VII_COUNCILS = ("Lifeline", "Kesh", "KeshCure", "AshChoir", "Salvage", "Echo
 ACT_VII_NODES = ("EmberRelay", "AshfallVerge", "GlassSea", "TetherPoint", "CinderArchive", "QuietHollow",
                  "PyreGate", "TitheMarker", "VaultOfRecords")
 
+# Act VIII option tables and nodes (ACT_VIII_IRON_TITHE.md)
+ACT_VIII_COUNCILS = ("Terms", "FairShares", "TollLine", "ChoirCalls", "ExarchCell", "Choir", "Crucible",
+                     "GraftedWounded", "Approach", "TithePaid", "Sentence")
+ACT_VIII_NODES = ("TitheMarker", "Rustmarch", "TollLine", "SerenVael", "GraftForge", "Grieve")
+ACT_VIII_BATTLES = ("E1_TollLine", "E1_TollLineStalled", "E2_ForgeDestroy", "E2_ForgeHold", "E3_Siege",
+                    "E3_Infiltration", "Ambush_ActVIII")
+
+# Act IX option tables, nodes and battles (ACT_IX_THRESHOLD.md)
+ACT_IX_COUNCILS = ("Anchorage", "CuttersRest", "LastWarden", "SerenVaelEnvoy", "Inversion", "YardWake", "Yards",
+                   "Threshold", "SquadronIII", "EchoVoice", "Array", "TalaProposal", "RootContest", "FleetKey",
+                   "Farewell_Tala", "Farewell_Jax", "Farewell_Thorne", "Farewell_Nix", "Farewell_Lyra", "Farewell_Cormaker")
+ACT_IX_NODES = ("Grieve", "Rustmarch", "SerenVael", "MeridianYards", "Meridian", "ForgeEcho", "TheHush")
+ACT_IX_BATTLES = ("E1_CuttersRest", "E2_YardWake", "E3_Sync", "E4_Root", "Ambush_ActIX")
+
+# Act X option tables, nodes and battles (ACT_X_GATE_ZERO.md)
+ACT_X_COUNCILS = ("VanceReturns", "LastStand", "GateApproach", "PlateSynod", "PlateGuild", "PlateCoalition",
+                  "VexQuestion", "Answer", "EnvoyWords", "Return")
+ACT_X_NODES = ("TheHush", "Vigil", "GateZero", "ArchWake")
+ACT_X_BATTLES = ("X_E0_VanceAtHush", "X_E1_Vigil", "X_E1_VigilParley", "X_E2_GateHold", "Ambush_ActX")
+# The endings: PlayActEnd plays X_Ending_<Ending>, then X_Epilogue
+ACT_X_ENDINGS = ("Envoy", "Chorus", "Accord", "Door", "Wall")
+
+DATA_COUNCILS = ACT_VII_COUNCILS + ACT_VIII_COUNCILS + ACT_IX_COUNCILS + ACT_X_COUNCILS
+
 # Extra source files merged into a table on load
-TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII",)}
+TABLE_EXTRA_SOURCES = {"DT_Sequences": ("DT_Sequences_ActVII", "DT_Sequences_ActVIII", "DT_Sequences_ActIX",
+                                        "DT_Sequences_ActX"),
+                       "DT_Councils": ("DT_Councils_ActVIII", "DT_Councils_ActIX", "DT_Councils_ActX"),
+                       "DT_Battles": ("DT_Battles_ActVIII", "DT_Battles_ActIX", "DT_Battles_ActX")}
 
 # Tables imported from CSV (BuildData/<path>) instead of JSON
 CSV_TABLES = {
     "DT_StarNodes_ActVII": ("S_StarNode", "ActVII/DT_StarNodes_ActVII.csv"),
     "DT_LeapRoutes_ActVII": ("S_LeapRoute", "ActVII/DT_LeapRoutes_ActVII.csv"),
+    "DT_StarNodes_ActVIII": ("S_StarNode", "ActVIII/DT_StarNodes_ActVIII.csv"),
+    "DT_LeapRoutes_ActVIII": ("S_LeapRoute", "ActVIII/DT_LeapRoutes_ActVIII.csv"),
+    "DT_StarNodes_ActIX": ("S_StarNode", "ActIX/DT_StarNodes_ActIX.csv"),
+    "DT_LeapRoutes_ActIX": ("S_LeapRoute", "ActIX/DT_LeapRoutes_ActIX.csv"),
+    "DT_StarNodes_ActX": ("S_StarNode", "ActX/DT_StarNodes_ActX.csv"),
+    "DT_LeapRoutes_ActX": ("S_LeapRoute", "ActX/DT_LeapRoutes_ActX.csv"),
 }
+
+SLICE_SEQUENCES = ("Briefing", "CombatIntro", "PostCombat", "VanceIntercept", "ArchitectReveal",
+                   "Consequence_Custodian", "Consequence_Dominion", "Consequence_Undetermined")
+# Sequences PC_Command plays by name in Acts IX-X: act openings, ambush intros, the endings and the epilogue
+NAMED_SEQUENCES = ("ActIX_Opening", "ActX_Opening", "Ambush_ActIX_Intro", "Ambush_ActX_Intro", "X_Epilogue",
+                   *(f"X_Ending_{ending}" for ending in ACT_X_ENDINGS))
 
 # Table name -> (row struct asset name, rows the slice requires).
 TABLES = {
-    "DT_Sequences": ("S_Sequence", (
-        "Briefing", "CombatIntro", "PostCombat", "VanceIntercept", "ArchitectReveal",
-        "Consequence_Custodian", "Consequence_Dominion", "Consequence_Undetermined")),
+    "DT_Sequences": ("S_Sequence", SLICE_SEQUENCES + NAMED_SEQUENCES),
     "DT_Council_Relay": ("S_CouncilOption", ("Grant", "Sandbox", "Refuse", "Rite")),
     "DT_Council_Directive": ("S_CouncilOption", ("Passage", "Arch", "Command")),
     # Act VII (ACT_VII_CINDER_ARCHIVE.md)
-    "DT_Councils": ("S_CouncilDef", ACT_VII_COUNCILS),
-    **{f"DT_Council_{name}": ("S_CouncilOption", ()) for name in ACT_VII_COUNCILS},
+    "DT_Councils": ("S_CouncilDef", DATA_COUNCILS),
+    **{f"DT_Council_{name}": ("S_CouncilOption", ()) for name in DATA_COUNCILS},
     "DT_NodeEvents_ActVII": ("S_NodeEvent", ACT_VII_NODES),
-    "DT_Battles": ("S_Battle", ("E1", "E2", "E3", "E4_Defend", "E4_DefendAllied", "E4_Assault", "E4_Vance", "Ambush")),
+    "DT_NodeEvents_ActVIII": ("S_NodeEvent", ACT_VIII_NODES),
+    "DT_NodeEvents_ActIX": ("S_NodeEvent", ACT_IX_NODES),
+    "DT_NodeEvents_ActX": ("S_NodeEvent", ACT_X_NODES),
+    "DT_Battles": ("S_Battle", ("E1", "E2", "E3", "E4_Defend", "E4_DefendAllied", "E4_Assault", "E4_Vance", "Ambush")
+                   + ACT_VIII_BATTLES + ACT_IX_BATTLES + ACT_X_BATTLES),
 }
 
 # What each table holds, for validation
@@ -91,7 +145,9 @@ def validate(data):
     set_flags = set(GAMEPLAY_FLAGS)
     for table, kind in TABLE_KIND.items():
         for r in data.get(table, []):
-            if kind == "option":
+            if kind == "sequence":
+                set_flags.update(r.get("SetFlags", []))
+            elif kind == "option":
                 set_flags.add(r.get("SetFlag", "None"))
                 set_flags.update(r.get("SetFlags", []))
             elif kind == "node":
@@ -125,11 +181,19 @@ def validate(data):
                 for flag in row.get("RequiredFlags", []) + row.get("ForbiddenFlags", []):
                     if not _is_set_somewhere(flag, set_flags):
                         problems.append(f"{where}: requires flag '{flag}', which nothing sets.")
+                for flag in row.get("ClearFlags", []):
+                    if flag not in set_flags:
+                        problems.append(f"{where}: clears flag '{flag}', which nothing sets.")
+                if row.get("PhantomDelta", 0) < 0:
+                    problems.append(f"{where}: PhantomDelta must not be negative; battles and ruptures remove ships.")
                 if row.get("NextCouncil", "None") not in ("None", *councils):
                     problems.append(f"{where}: NextCouncil '{row.get('NextCouncil')}' is not in DT_Councils.")
                 if row.get("StartBattle", "None") not in ("None", *battles):
                     problems.append(f"{where}: StartBattle '{row.get('StartBattle')}' is not in DT_Battles.")
             elif kind == "council":
+                for flag in row.get("RequiredFlags", []):
+                    if not _is_set_somewhere(flag, set_flags):
+                        problems.append(f"{where}: requires flag '{flag}', which nothing sets.")
                 if f"DT_Council_{row.get('Name')}" not in data:
                     problems.append(f"{where}: no option table DT_Council_{row.get('Name')}.")
                 if row.get("SituationSpeaker") not in SPEAKERS:
@@ -151,13 +215,38 @@ def validate(data):
             elif kind == "battle":
                 if not row.get("Groups"):
                     problems.append(f"{where}: has no ship groups.")
+                for i, group in enumerate(row.get("Groups", [])):
+                    for key in ("RequiredFlag", "ForbiddenFlag"):
+                        flag = group.get(key, "None")
+                        if flag != "None" and not _is_set_somewhere(flag, set_flags):
+                            problems.append(f"{where}.Groups[{i}]: {key} '{flag}' is never set.")
                 if row.get("Debrief", "None") not in ("None", *sequences):
                     problems.append(f"{where}: debrief '{row.get('Debrief')}' is not in DT_Sequences.")
+                for bg, sequence in row.get("BackgroundAftermath", {}).items():
+                    if bg not in BACKGROUNDS:
+                        problems.append(f"{where}: aftermath for unknown background '{bg}'.")
+                    if sequence not in sequences:
+                        problems.append(f"{where}: aftermath '{sequence}' is not in DT_Sequences.")
     return problems
 
 
 def _is_set_somewhere(flag, set_flags):
-    return flag in set_flags or flag.startswith(GAMEPLAY_FLAG_PREFIXES)
+    return flag in set_flags or flag.startswith(GAMEPLAY_FLAG_PREFIXES) or is_condition(flag)
+
+
+def is_condition(flag):
+    """Whether a flag is a well-formed live condition that HasFlag reads instead of a story flag."""
+    prefix, _, rest = flag.partition("_")
+    if prefix == "Leaning":
+        return rest in LEANINGS
+    if prefix == "Standing":
+        return rest in STANDING_BANDS
+    key, _, value = rest.partition("_")
+    if prefix == "State":
+        return bool(key) and bool(value) and "_" not in value
+    if prefix == "Loyalty":
+        return key in LOYALTY_OFFICERS and value in LOYALTY_BANDS
+    return False
 
 
 def architect_outcomes(data):
@@ -199,6 +288,8 @@ def resolve_sequence(data, sequence, background, flags, captain_name):
         if flag != "None" and flag not in flags:
             continue
         text = line.get("BackgroundOverride", {}).get(background, line["Text"])
+        if not text:
+            continue
         resolved.append((line["Speaker"], text.replace("{Captain}", captain_name)))
     return resolved
 
@@ -240,13 +331,24 @@ OPTION_DEFAULTS = {
     "RequiredFlags": [], "ForbiddenFlags": [], "MinStanding": -1000, "MaxStanding": 1000, "MinLoyaltyAny": {},
     "RequiredStates": {}, "StandingDelta": 0, "PursuitDelta": 0, "ExposureDelta": 0, "HullDelta": 0.0,
     "SetFlags": [], "SetStates": {}, "NextCouncil": "None", "StartBattle": "None",
+    # Act IX
+    "ClearFlags": [], "PhantomDelta": 0,
 }
 
 
+# Defaults for sequence and battle fields added in Act VIII
+SEQUENCE_DEFAULTS = {"SetFlags": []}
+BATTLE_DEFAULTS = {"BackgroundAftermath": {}, "WinStates": {}, "HoldSecondsByFlag": {}}
+GROUP_DEFAULTS = {"RequiredFlag": "None", "ForbiddenFlag": "None", "RequiredStates": {}, "CountFromState": "None"}
+
+
 def to_import_json(rows, table=None):
-    """Serializes rows in the JSON layout DataTable import expects, filling option fields older rows lack."""
-    if table is not None and TABLE_KIND.get(table) == "option":
-        rows = [{**OPTION_DEFAULTS, **row} for row in rows]
+    """Serializes rows in the JSON layout DataTable import expects, filling fields older rows lack."""
+    defaults = {"option": OPTION_DEFAULTS, "sequence": SEQUENCE_DEFAULTS, "battle": BATTLE_DEFAULTS}
+    if table is not None and TABLE_KIND.get(table) in defaults:
+        rows = [{**defaults[TABLE_KIND[table]], **row} for row in rows]
+    if table is not None and TABLE_KIND.get(table) == "battle":
+        rows = [{**row, "Groups": [{**GROUP_DEFAULTS, **group} for group in row.get("Groups", [])]} for row in rows]
     return json.dumps(rows, ensure_ascii=False)
 
 
@@ -293,7 +395,8 @@ def _validate_line(line, where, set_flags):
     problems = []
     if line.get("Speaker") not in SPEAKERS:
         problems.append(f"{where}: unknown speaker '{line.get('Speaker')}'.")
-    if not str(line.get("Text", "")).strip():
+    # Empty text with overrides: a line only those backgrounds see
+    if not str(line.get("Text", "")).strip() and not line.get("BackgroundOverride"):
         problems.append(f"{where}: empty text.")
     for bg in line.get("BackgroundOverride", {}):
         if bg not in BACKGROUNDS:

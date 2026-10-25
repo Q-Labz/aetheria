@@ -1,0 +1,78 @@
+[
+  {
+    "Name": "Stay",
+    "Label": "Ask them to stay. Hear what they need.",
+    "ApprovalHint": "They may stay.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "ArisThorne": 25
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "ArisThorne",
+        "Text": "I'll stay. Until the gate. My patients are aboard.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Go",
+    "Label": "Accept the resignation.",
+    "ApprovalHint": "They will leave the fleet.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "ArisThorne",
+        "Text": "Look after my wounded, Captain. Please.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "ThorneDeparted"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  }
+]

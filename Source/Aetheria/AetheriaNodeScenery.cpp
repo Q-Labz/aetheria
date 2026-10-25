@@ -28,6 +28,15 @@ AAetheriaNodeScenery::AAetheriaNodeScenery()
 	NodeLightColors.Add(TEXT("PyreGate"), FLinearColor(0.86f, 0.92f, 1.0f));       // the Vault shaft's white
 	NodeLightColors.Add(TEXT("TitheMarker"), FLinearColor(1.0f, 0.66f, 0.60f));    // the Anchorage's red light
 	NodeLightColors.Add(TEXT("VaultOfRecords"), FLinearColor(0.80f, 0.90f, 1.0f)); // the polar shaft
+	NodeLightColors.Add(TEXT("Grieve"), FLinearColor(0.92f, 0.80f, 0.72f)); // Grieve's rust-banded glow
+	NodeLightColors.Add(TEXT("Rustmarch"), FLinearColor(1.0f, 0.74f, 0.45f)); // the small orange star
+	NodeLightColors.Add(TEXT("SerenVael"), FLinearColor(0.92f, 0.96f, 1.0f)); // salt-white glare
+	NodeLightColors.Add(TEXT("MeridianYards"), FLinearColor(0.78f, 0.96f, 1.0f)); // crystal veins of the yard ring
+	NodeLightColors.Add(TEXT("Meridian"), FLinearColor(0.80f, 0.95f, 1.0f)); // the ecumenopolis lattice
+	NodeLightColors.Add(TEXT("ForgeEcho"), FLinearColor(1.0f, 0.78f, 0.52f)); // the accretion disc
+	NodeLightColors.Add(TEXT("TheHush"), FLinearColor(0.70f, 0.62f, 1.0f)); // the Listener's shimmer
+	NodeLightColors.Add(TEXT("Vigil"), FLinearColor(0.68f, 0.82f, 1.0f)); // Silence blue
+	NodeLightColors.Add(TEXT("GateZero"), FLinearColor(0.82f, 0.74f, 0.95f)); // the seal plates' glow
 }
 
 void AAetheriaNodeScenery::BeginPlay()

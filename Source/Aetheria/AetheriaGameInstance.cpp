@@ -17,21 +17,78 @@ UAetheriaGameInstance::UAetheriaGameInstance()
 
 	LeapRoutesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_LeapRoutes.DT_LeapRoutes")));
 	StarNodesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_StarNodes.DT_StarNodes")));
-	ActVIILeapRoutesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_LeapRoutes_ActVII.DT_LeapRoutes_ActVII")));
-	ActVIIStarNodesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_StarNodes_ActVII.DT_StarNodes_ActVII")));
-	ActVIINodeEventsTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_NodeEvents_ActVII.DT_NodeEvents_ActVII")));
 	CouncilsTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_Councils.DT_Councils")));
 	BattlesTable = TSoftObjectPtr<UDataTable>(FSoftObjectPath(TEXT("/Game/Aetheria/Data/DT_Battles.DT_Battles")));
 }
 
 UDataTable* UAetheriaGameInstance::GetStarNodes() const
 {
-	return (CurrentAct >= 7 ? ActVIIStarNodesTable : StarNodesTable).LoadSynchronous();
+	return CurrentAct >= 7 ? GetActTable(CurrentAct, TEXT("StarNodes")) : StarNodesTable.LoadSynchronous();
 }
 
 UDataTable* UAetheriaGameInstance::GetLeapRoutes() const
 {
-	return (CurrentAct >= 7 ? ActVIILeapRoutesTable : LeapRoutesTable).LoadSynchronous();
+	return CurrentAct >= 7 ? GetActTable(CurrentAct, TEXT("LeapRoutes")) : LeapRoutesTable.LoadSynchronous();
+}
+
+UDataTable* UAetheriaGameInstance::GetNodeEvents() const
+{
+	return CurrentAct >= 7 ? GetActTable(CurrentAct, TEXT("NodeEvents")) : nullptr;
+}
+
+UDataTable* UAetheriaGameInstance::GetActTable(int32 Act, const TCHAR* Kind) const
+{
+	const FString Name = FString::Printf(TEXT("DT_%s_Act%s"), Kind, *ActNumeral(Act));
+	const FSoftObjectPath Path(FString::Printf(TEXT("/Game/Aetheria/Data/%s.%s"), *Name, *Name));
+	return Cast<UDataTable>(Path.TryLoad());
+}
+
+FString UAetheriaGameInstance::ActNumeral(int32 Act)
+{
+	switch (Act)
+	{
+	case 6: return TEXT("VI");
+	case 7: return TEXT("VII");
+	case 8: return TEXT("VIII");
+	case 9: return TEXT("IX");
+	case 10: return TEXT("X");
+	default: return FString::FromInt(Act);
+	}
+}
+
+FString UAetheriaGameInstance::ActTitle(int32 Act)
+{
+	switch (Act)
+	{
+	case 6: return TEXT("The Far Shore");
+	case 7: return TEXT("The Cinder Archive");
+	case 8: return TEXT("The Iron Tithe");
+	case 9: return TEXT("The Threshold");
+	case 10: return TEXT("Gate Zero");
+	default: return FString();
+	}
+}
+
+FName UAetheriaGameInstance::ActStartNode(int32 Act)
+{
+	switch (Act)
+	{
+	case 7: return TEXT("EmberRelay");
+	case 8: return TEXT("TitheMarker");
+	case 9: return TEXT("Grieve");
+	case 10: return TEXT("TheHush");
+	default: return NAME_None;
+	}
+}
+
+bool UAetheriaGameInstance::HasActData(int32 Act) const
+{
+	return !ActStartNode(Act).IsNone() && GetActTable(Act, TEXT("StarNodes")) != nullptr;
+}
+
+FName UAetheriaGameInstance::ActFlag(const TCHAR* Suffix) const
+{
+	return FName(*FString::Printf(TEXT("Act%s%s"), *ActNumeral(CurrentAct), Suffix));
 }
 
 FName UAetheriaGameInstance::RouteName(FName To) const
@@ -277,7 +334,15 @@ void UAetheriaGameInstance::ApplyOption(const FS_CouncilOption& Opt)
 		ModifyLoyalty(Delta.Key, Delta.Value);
 	}
 
-	Instability = FMath::Clamp(Instability + Opt.InstabilityDelta, 0.0f, 100.0f);
+	// an option that pushes the drive past containment ruptures it (Gate Zero: cutting a plate with the beam)
+	if (Instability + Opt.InstabilityDelta > OverflowThreshold)
+	{
+		ResolveRupture(Instability + Opt.InstabilityDelta - OverflowThreshold);
+	}
+	else
+	{
+		Instability = FMath::Clamp(Instability + Opt.InstabilityDelta, 0.0f, 100.0f);
+	}
 	ChronoCharge = FMath::Clamp(ChronoCharge + Opt.ChronoDelta, 0.0f, 100.0f);
 
 	if (!Opt.SetFlag.IsNone())
@@ -297,6 +362,14 @@ void UAetheriaGameInstance::ApplyOption(const FS_CouncilOption& Opt)
 	for (const TPair<FName, FName>& State : Opt.SetStates)
 	{
 		States.Add(State.Key, State.Value);
+	}
+	for (const FName& Flag : Opt.ClearFlags)
+	{
+		StoryFlags.Remove(Flag);
+	}
+	if (Opt.PhantomDelta > 0)
+	{
+		ResyncPhantoms(Opt.PhantomDelta);
 	}
 	if (Opt.SetFlags.Contains(TEXT("OutpostDark")))
 	{
@@ -318,14 +391,14 @@ bool UAetheriaGameInstance::IsOptionAvailable(const FS_CouncilOption& Opt) const
 	}
 	for (const FName& Flag : Opt.RequiredFlags)
 	{
-		if (!StoryFlags.Contains(Flag))
+		if (!HasFlag(Flag))
 		{
 			return false;
 		}
 	}
 	for (const FName& Flag : Opt.ForbiddenFlags)
 	{
-		if (StoryFlags.Contains(Flag))
+		if (HasFlag(Flag))
 		{
 			return false;
 		}
@@ -362,16 +435,85 @@ FName UAetheriaGameInstance::GetState(FName Key) const
 	return Value ? *Value : FName(TEXT("None"));
 }
 
-void UAetheriaGameInstance::StartActVII()
+bool UAetheriaGameInstance::HasFlag(FName Flag) const
 {
-	CurrentAct = 7;
-	CurrentNode = TEXT("EmberRelay");
+	if (Flag.IsNone())
+	{
+		return true;
+	}
+	if (StoryFlags.Contains(Flag))
+	{
+		return true;
+	}
+
+	// campaign conditions read live: Prefix_Rest, Rest split once more for State_ and Loyalty_
+	FString Prefix, Rest;
+	if (!Flag.ToString().Split(TEXT("_"), &Prefix, &Rest))
+	{
+		return false;
+	}
+	FString Key, Value;
+	if (Prefix == TEXT("Leaning"))
+	{
+		return LeaningState() == FName(*Rest);
+	}
+	if (Prefix == TEXT("Standing"))
+	{
+		return StandingBand() == FName(*Rest);
+	}
+	if (Prefix == TEXT("State") && Rest.Split(TEXT("_"), &Key, &Value))
+	{
+		return GetState(FName(*Key)) == FName(*Value);
+	}
+	if (Prefix == TEXT("Loyalty") && Rest.Split(TEXT("_"), &Key, &Value))
+	{
+		const int64 Officer = StaticEnum<E_Speaker>()->GetValueByNameString(Key);
+		return Officer != INDEX_NONE && LoyaltyBand(static_cast<E_Speaker>(Officer)) == FName(*Value);
+	}
+	return false;
+}
+
+FName UAetheriaGameInstance::LoyaltyBand(E_Speaker Who) const
+{
+	const int32 Loyalty = CrewLoyalty.FindRef(Who);
+	if (Loyalty >= 75) return TEXT("Devoted");
+	if (Loyalty >= 60) return TEXT("Trusting");
+	if (Loyalty >= 20) return TEXT("Steady");
+	if (Loyalty >= 0) return TEXT("Strained");
+	return TEXT("Estranged");
+}
+
+int32 UAetheriaGameInstance::ResyncPhantoms(int32 Count)
+{
+	// canon: the fleet never gains hulls; only desynchronised or alienated ships come back
+	const int32 Room = FMath::Max(0, 200 - PhantomShipsDestroyed - PhantomShipsActive);
+	const int32 Restored = FMath::Clamp(Count, 0, Room);
+	PhantomShipsActive += Restored;
+	OnCampaignStateChanged.Broadcast();
+	return Restored;
+}
+
+void UAetheriaGameInstance::StartAct(int32 Act)
+{
+	if (!HasActData(Act))
+	{
+		UE_LOG(LogAetheria, Error, TEXT("StartAct(%d): no chart for Act %s (DT_StarNodes_Act%s)."), Act, *ActNumeral(Act), *ActNumeral(Act));
+		return;
+	}
+	CurrentAct = Act;
+	CurrentNode = ActStartNode(Act);
 	PursuitClock = 0;
 	ChartedRoutes.Reset();
 	PendingBattle = NAME_None;
+	PendingBattleCouncil = NAME_None;
 	NextScreen = TEXT("ActStart");
-	LastReport = FText::FromString(TEXT("Act VII: The Cinder Archive."));
+	LastReport = FText::FromString(FString::Printf(TEXT("Act %s: %s."), *ActNumeral(Act), *ActTitle(Act)));
 	OnCampaignStateChanged.Broadcast();
+}
+
+void UAetheriaGameInstance::StartActVII()
+{
+	StartAct(7);
 }
 
 bool UAetheriaGameInstance::IsSupplyLineReady() const
@@ -506,10 +648,11 @@ FName UAetheriaGameInstance::LeaningState() const
 
 void UAetheriaGameInstance::ResolveLine(const FS_Line& L, FText& Out, bool& Show) const
 {
-	Show = L.RequiredFlag.IsNone() || StoryFlags.Contains(L.RequiredFlag);
+	Show = HasFlag(L.RequiredFlag);
 
 	const FText* Override = L.BackgroundOverride.Find(Background);
 	FString Text = (Override ? *Override : L.Text).ToString();
+	Show = Show && !Text.IsEmpty();
 	Text.ReplaceInline(TEXT("{Captain}"), *CaptainName);
 	Text.ReplaceInline(TEXT("{Background}"), *BackgroundTitle());
 	Out = FText::FromString(Text);
@@ -573,6 +716,7 @@ void UAetheriaGameInstance::ResetCampaign()
 	BioGelDoses = Defaults->BioGelDoses;
 	SpireRecalibrations = Defaults->SpireRecalibrations;
 	PhantomShipsActive = Defaults->PhantomShipsActive;
+	PhantomShipsDestroyed = Defaults->PhantomShipsDestroyed;
 	PursuitClock = Defaults->PursuitClock;
 	CurrentNode = Defaults->CurrentNode;
 	ChartedRoutes = Defaults->ChartedRoutes;
@@ -588,5 +732,6 @@ void UAetheriaGameInstance::ResetCampaign()
 	PendingShipments = Defaults->PendingShipments;
 	OutpostDarkLeaps = Defaults->OutpostDarkLeaps;
 	PendingBattle = NAME_None;
+	PendingBattleCouncil = NAME_None;
 	NextScreen = TEXT("NewGame");
 }

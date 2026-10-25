@@ -55,6 +55,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
 	int32 PhantomShipsActive = 200;
 
+	/** Phantom vessels destroyed in battle (Act IX): gone for good, unlike desynchronised or alienated ships */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
+	int32 PhantomShipsDestroyed = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
 	int32 PursuitClock = 0;
 
@@ -90,7 +94,7 @@ public:
 
 	// ---- Act VII (ACT_VII_CINDER_ARCHIVE.md) ----
 
-	/** 6 = the slice (Act VI), 7 = The Cinder Archive */
+	/** 6 = the slice (Act VI), 7 = The Cinder Archive, 8 = The Iron Tithe, 9 = The Threshold, 10 = Gate Zero */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
 	int32 CurrentAct = 6;
 
@@ -113,6 +117,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
 	FName PendingBattle = NAME_None;
 
+	/** Council (DT_Councils row) whose option started PendingBattle; reopened if the battle is lost */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
+	FName PendingBattleCouncil = NAME_None;
+
 	// ---- Data ----
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
@@ -120,15 +128,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
 	TSoftObjectPtr<UDataTable> StarNodesTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
-	TSoftObjectPtr<UDataTable> ActVIILeapRoutesTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
-	TSoftObjectPtr<UDataTable> ActVIIStarNodesTable;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
-	TSoftObjectPtr<UDataTable> ActVIINodeEventsTable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Data")
 	TSoftObjectPtr<UDataTable> CouncilsTable;
@@ -142,6 +141,29 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Data")
 	UDataTable* GetLeapRoutes() const;
+
+	/** Arrival events of the current data-driven act (DT_NodeEvents_Act<N>); null in the slice */
+	UFUNCTION(BlueprintPure, Category="Data")
+	UDataTable* GetNodeEvents() const;
+
+	/** A per-act table, /Game/Aetheria/Data/DT_<Kind>_Act<Numeral> (Kind: StarNodes, LeapRoutes, NodeEvents) */
+	UDataTable* GetActTable(int32 Act, const TCHAR* Kind) const;
+
+	/** Roman numeral used in act asset and flag names (7 -> "VII") */
+	static FString ActNumeral(int32 Act);
+
+	/** "The Cinder Archive", "The Iron Tithe" */
+	static FString ActTitle(int32 Act);
+
+	/** Node a data-driven act starts at */
+	static FName ActStartNode(int32 Act);
+
+	/** Whether an act's chart has been built (its star-node table exists) */
+	UFUNCTION(BlueprintPure, Category="Data")
+	bool HasActData(int32 Act) const;
+
+	/** Act-scoped flag name: "Act<Numeral><Suffix>" for the current act (ActVIIIFinaleWon) */
+	FName ActFlag(const TCHAR* Suffix) const;
 
 	// ---- Events ----
 
@@ -203,7 +225,28 @@ public:
 	UFUNCTION(BlueprintPure, Category="Council")
 	FName GetState(FName Key) const;
 
+	/**
+	 *  Whether a story flag or a campaign condition holds. Besides story flags it reads
+	 *  State_<Key>_<Value> (VanceFate = Tried), Leaning_<Custodian|Dominion|Undetermined>,
+	 *  Loyalty_<Officer>_<Devoted|Trusting|Steady|Strained|Estranged> and Standing_<Hostile|Wary|Trusted>.
+	 *  Every requirement in lines, counsel, options, councils and battle groups goes through here.
+	 */
+	UFUNCTION(BlueprintPure, Category="Council")
+	bool HasFlag(FName Flag) const;
+
+	/** Devoted (>= 75), Trusting (60-74), Steady (20-59), Strained (0-19) or Estranged (< 0) (WORLD_BIBLE.md 6) */
+	UFUNCTION(BlueprintPure, Category="Crew")
+	FName LoyaltyBand(E_Speaker Who) const;
+
+	/** Brings up to Count Phantom vessels back into the fleet's sync, never past 200 minus the destroyed */
+	UFUNCTION(BlueprintCallable, Category="Crew")
+	int32 ResyncPhantoms(int32 Count);
+
 	// ---- Act VII ----
+
+	/** Carries the campaign into a data-driven act at its start node (7 from the slice's end, then 8, ...) */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void StartAct(int32 Act);
 
 	/** Carries the campaign from the slice's end into Act VII at the Ember Relay */
 	UFUNCTION(BlueprintCallable, Category="Act VII")

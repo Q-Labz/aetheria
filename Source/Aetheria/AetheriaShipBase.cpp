@@ -411,7 +411,7 @@ void AAetheriaShipBase::FireBolt(const AActor* Target, float Width) const
 		AAetheriaLaserBolt::Spawn(GetWorld(), Muzzle->GetComponentLocation(), Target->GetActorLocation(), TracerColor, Width, BoltSpeed);
 		// the fleet's red bolts, the Tithe's green, the Severants' blue each have their own report
 		const TCHAR* Kind = Faction == E_Faction::Player ? TEXT("S_Blaster_Fleet")
-			: (Faction == E_Faction::Severant ? TEXT("S_Blaster_Severant") : TEXT("S_Blaster_Tithe"));
+			: (Faction == E_Faction::VanceRemnant ? TEXT("S_Blaster_Tithe") : TEXT("S_Blaster_Severant"));
 		AetheriaAudio::PlayAt(this, AetheriaAudio::Variant(Kind, 3), Muzzle->GetComponentLocation(),
 			AetheriaAudio::ERange::Battle, 0.4f, FMath::FRandRange(0.94f, 1.06f), TEXT("Blaster"));
 	}

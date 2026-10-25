@@ -1,0 +1,320 @@
+[
+  {
+    "Name": "Key",
+    "Label": "Turn the Coalition key.",
+    "ApprovalHint": "The Captain's own key.",
+    "RequiresBackground": true,
+    "RequiredBackground": "CoalitionVanguard",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "For every Vanguard who held the line. Open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Coalition plate is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "StolenKey",
+    "Label": "Turn the key you took from the Tithe.",
+    "ApprovalHint": "The Captain's own key.",
+    "RequiresBackground": true,
+    "RequiredBackground": "OutcastCorsair",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "Stolen fair and square. Open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Coalition plate is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "VaultKey",
+    "Label": "Turn the key from the Anchorage vault.",
+    "ApprovalHint": "Tala will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Lost at Halden Reach, found in Vance's vault, home in the Coalition's lock.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Coalition plate is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "CoalitionKeyRecovered"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Codes",
+    "Label": "Ask Tala for her command codes.",
+    "ApprovalHint": "Tala will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Codes entered. Vane, T., First Officer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "For the Coalition, Captain. And for Halden Reach.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_TalaVane_Devoted"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Coalition plate is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "TalaDeparted"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {
+      "TalaVane": 60
+    },
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Override",
+    "Label": "Let the Architect override the plate.",
+    "ApprovalHint": "Lyra will approve. Tala will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 5,
+    "LoyaltyDeltas": {
+      "Lyra": 2,
+      "TalaVane": -2
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "The Coalition plate is open. I said what I was doing, Key-Bearer. I asked first.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "KeyShared"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 1,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "OverrideCustodian",
+    "Label": "Let the Architect override the plate.",
+    "ApprovalHint": "Lyra will approve. Tala will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 5,
+    "LoyaltyDeltas": {
+      "Lyra": 2,
+      "TalaVane": -2
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "The Coalition plate is open. I said what I was doing, Key-Bearer. I asked first.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "Leaning_Custodian"
+    ],
+    "ForbiddenFlags": [
+      "KeyShared"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 1,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Force",
+    "Label": "Cut the plate with the Prismatic Stellar Beam.",
+    "ApprovalHint": "Star-Drive instability +40. The drive may rupture.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {},
+    "InstabilityDelta": 40.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Beam's through the plate. The drive is screaming, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "PlateCoalition"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  }
+]

@@ -1,0 +1,292 @@
+[
+  {
+    "Name": "ActVIII_Opening",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "ACT VIII — THE IRON TITHE. Fleet Log: the fleet holds at the outer marker of Tithe Anchorage. Commander Vance's main body withdrew here from the Cinder Archive.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, the Anchorage lies in the ring gap of the gas giant Grieve. It was a Tithe listening post on this side of the Arch long before the Arch was opened.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Forty hulls, Captain, and whatever Ithane sold him. He has had time to dig in.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "And every one of those hulls is carrying Severant spikes by now. He said so himself.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "VanceGraftsKnown"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The marker is transmitting. It is addressed to the Key-Bearer by name.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_TitheMarker_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Tithe Anchorage marker transmits on every channel the fleet can hear. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "",
+        "BackgroundOverride": {
+          "OutcastCorsair": "And bring back what you took from my vault, thief."
+        },
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_Rustmarch_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Rustmarch: a shattered planetoid belt around a small orange star. Ore-rich, unclaimed, and untouched by the Tithe. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Look at it, Captain. Iron you can cut with a hand torch, and nobody's name on any of it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_TollLine_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Toll Line: the Iron Tithe's old blockade. Derelict toll platforms hold station among live mines. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Mine density is high around every lane out of here, Captain. A charted route would avoid most of them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_SerenVael_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Seren Vael, the last living Severant world. Salt flats, white stone, and a harmonic ring that flickers when the Silence spikes. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "The Choirs are singing, Captain. All of them at once. I have never heard it from outside.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_GraftForge_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Orbit of Cauter, Grieve's volcanic moon. The Graft Forge is anchored to the surface by three cables. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Tithe slabs outside, Severant ceramic inside. Two cultures bolted together, and the middle of it is growing spikes.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_Grieve_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Tithe Anchorage is in sight. The Remnant holds forty hulls and an empty dock cut to the Dreadnought's dimensions. Commander Vance has prepared a berth for this ship. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Anchorage's guns are grafted, Captain. We cannot close on it while the Graft Forge supplies them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "The forge is dealt with. The Anchorage is open to us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ForgeResolved"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_E1_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Toll Line picket is destroyed. The lane to Grieve is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "You broke a blockade that kept you alive, Key-Bearer. You will understand that eventually.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_E2_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Graft Forge engagement is concluded.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "The crucible is ours. Give me a watch and the Dreadnought shrugs off their pulses.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SilenceShielding"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "There are Tithe crews down there with spikes grown into their hulls and their lungs. Captain, they need treatment.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_E3_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Writ of Sector 7 is disabled. Commander Vance has been taken aboard under guard.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Captain, the prison block is open. Coalition crews. Some of them have been here since the border wars.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "PrisonersFreed"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Key-Bearer. I would like to speak to you before you decide anything.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_Vault_Key",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, the vault holds a Precursor seal-key bearing the Coalition sigil. It matches the plate pattern of Gate Zero. Commander Vance kept it under three locks and no inventory.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "We lost that key at Halden Reach. I was there.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": [
+      "CoalitionKeyRecovered"
+    ]
+  },
+  {
+    "Name": "VIII_Vault_Vanguard",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The vault is empty, Captain. Its record lists one item, removed in the frontier wars.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Your Coalition took back what we kept safe. Look where it brought you, Vanguard.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "VIII_Vault_Corsair",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The vault is empty, Captain. The lock was cut from outside, years ago.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Every miner in Sector 7 knew that story. I never knew it was you.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Ambush_ActVIII_Intro",
+    "Lines": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Captain, Remnant drive signatures on top of us. The pursuit clock ran out.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "You are inside my sector now, Key-Bearer. Every lane here was built to be watched.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  },
+  {
+    "Name": "Ambush_ActVIII_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Remnant raiders have withdrawn toward Grieve.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ]
+  }
+]

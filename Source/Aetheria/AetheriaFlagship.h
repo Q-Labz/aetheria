@@ -4,9 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "AetheriaShipBase.h"
+#include "GameFramework/DamageType.h"
 #include "AetheriaFlagship.generated.h"
 
 class UAudioComponent;
+
+/** Damage dealt by the Prismatic Stellar Beam (synced Phantom squadrons lose ships to it, not just sync) */
+UCLASS()
+class UAetheriaBeamDamage : public UDamageType
+{
+	GENERATED_BODY()
+};
 
 /**
  *  The Crystal Dreadnought and its Prismatic Stellar Beam (SLICE_SPEC.md section 9).

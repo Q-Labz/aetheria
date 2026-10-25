@@ -23,15 +23,41 @@ class NarrativeCoreTest(unittest.TestCase):
     def test_row_counts_match_build_plan(self):
         counts = {t: len(rows) for t, rows in self.data.items()}
         # slice (CLAUDE.md phase 2): 8 sequences of its own, Relay 4, Directive 3
-        slice_sequences = [r for r in self.data["DT_Sequences"] if r["Name"] in core.TABLES["DT_Sequences"][1]]
+        slice_sequences = [r for r in self.data["DT_Sequences"] if r["Name"] in core.SLICE_SEQUENCES]
         self.assertEqual(len(slice_sequences), 8)
         self.assertEqual(counts["DT_Council_Relay"], 4)
         self.assertEqual(counts["DT_Council_Directive"], 3)
-        # Act VII: every council has its option table, every node an event row
-        self.assertEqual(counts["DT_Councils"], len(core.ACT_VII_COUNCILS))
+        # Acts VII to X: every council has its option table, every node an event row
+        self.assertEqual(counts["DT_Councils"], len(core.DATA_COUNCILS))
         self.assertEqual(counts["DT_NodeEvents_ActVII"], len(core.ACT_VII_NODES))
-        for name in core.ACT_VII_COUNCILS:
+        self.assertEqual(counts["DT_NodeEvents_ActVIII"], len(core.ACT_VIII_NODES))
+        self.assertEqual(counts["DT_NodeEvents_ActIX"], len(core.ACT_IX_NODES))
+        self.assertEqual(counts["DT_NodeEvents_ActX"], len(core.ACT_X_NODES))
+        for name in core.DATA_COUNCILS:
             self.assertGreater(counts[f"DT_Council_{name}"], 0, name)
+        battles = {r["Name"] for r in self.data["DT_Battles"]}
+        self.assertTrue(set(core.ACT_VIII_BATTLES + core.ACT_IX_BATTLES + core.ACT_X_BATTLES) <= battles)
+
+    def test_conditions(self):
+        for flag in ("State_VanceFate_Tried", "Leaning_Custodian", "Loyalty_TalaVane_Devoted", "Standing_Trusted"):
+            self.assertTrue(core.is_condition(flag), flag)
+        for flag in ("State_VanceFate", "Leaning_Kind", "Loyalty_Tala_Devoted", "Loyalty_VexAI_Devoted", "Standing_Friendly",
+                     "CureDelivered"):
+            self.assertFalse(core.is_condition(flag), flag)
+
+    def test_malformed_condition_is_reported(self):
+        data = copy.deepcopy(self.data)
+        data["DT_Sequences"][0]["Lines"][0]["RequiredFlag"] = "Loyalty_Tala_Devoted"
+        self.assertTrue(any("Loyalty_Tala_Devoted" in p for p in core.validate(data)))
+
+    def test_clear_flags_must_be_set_somewhere(self):
+        data = copy.deepcopy(self.data)
+        data["DT_Council_CuttersRest"][0]["ClearFlags"] = ["NeverSetAnywhere"]
+        self.assertTrue(any("clears flag 'NeverSetAnywhere'" in p for p in core.validate(data)))
+
+    def test_every_act_x_ending_is_reachable(self):
+        endings = {o["SetStates"].get("Ending") for o in self.data["DT_Council_Answer"] + self.data["DT_Council_EnvoyWords"]}
+        self.assertEqual(endings - {None}, set(core.ACT_X_ENDINGS))
 
     def test_act_vii_source_is_valid(self):
         self.assertEqual(core.validate(self.data), [])
@@ -71,6 +97,27 @@ class NarrativeCoreTest(unittest.TestCase):
         data = copy.deepcopy(self.data)
         data["DT_Sequences"][0]["Lines"][0]["BackgroundOverride"] = {"Pirate": "Arr."}
         self.assertIn("unknown background 'Pirate'", "\n".join(core.validate(data)))
+
+    def test_validate_reports_unknown_aftermath_sequence(self):
+        data = copy.deepcopy(self.data)
+        battle = next(r for r in data["DT_Battles"] if r["Name"] == "E3_Siege")
+        battle["BackgroundAftermath"]["GuildEngineer"] = "VIII_Vault_Missing"
+        self.assertIn("aftermath 'VIII_Vault_Missing'", "\n".join(core.validate(data)))
+
+    def test_vault_scene_by_background(self):
+        # ACT_VIII §4.5: the key is in the vault for Synod Envoy and Guild Engineer only
+        battle = next(r for r in self.data["DT_Battles"] if r["Name"] == "E3_Infiltration")
+        sequences = {r["Name"]: r for r in self.data["DT_Sequences"]}
+        for bg in core.BACKGROUNDS:
+            scene = sequences[battle["BackgroundAftermath"][bg]]
+            self.assertEqual("CoalitionKeyRecovered" in scene.get("SetFlags", []),
+                             bg in ("SynodEnvoy", "GuildEngineer"), bg)
+
+    def test_override_only_line_shows_for_its_background_only(self):
+        thief = "And bring back what you took from my vault, thief."
+        for bg in core.BACKGROUNDS:
+            lines = [t for _, t in core.resolve_sequence(self.data, "VIII_TitheMarker_Arrival", bg, [], "Hale")]
+            self.assertEqual(thief in lines, bg == "OutcastCorsair", bg)
 
     def test_both_architect_outcomes_are_reachable_for_every_background(self):
         outcomes = core.architect_outcomes(self.data)

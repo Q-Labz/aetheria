@@ -1,0 +1,745 @@
+[
+  {
+    "Name": "Anchorage",
+    "Title": "COUNCIL OF COMMAND — THE ANCHORAGE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The fleet is ready to leave Tithe Anchorage, Captain. The dock, the prison block and the Remnant crews who surrendered remain. The Anchorage cannot be taken with us. It can be held, stripped or sealed.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Seal it. Every Tithe captain who didn't surrender knows where it is.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "There are refit cradles down there cut to our frame. Give me a day and the Dreadnought leaves with new plate on every scar.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Six hundred people live on that spine. Whatever we do, we leave them something to live in.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "My people could hold it. Give us a dock and we'll give you a garrison.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Anchorage.DT_Council_Anchorage",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "CuttersRest",
+    "Title": "COUNCIL OF COMMAND — CUTTER'S REST",
+    "SituationSpeaker": "Cormaker",
+    "Situation": "This is the place, Captain. A hollow fragment big enough for a home, ore enough for a hundred years, and nobody's flag on it. The Tithe holdouts in the belt know what we mean to build. They'll come the moment the first beam goes up.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Holdouts with nothing left to lose. If we build here, we fight here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "I can weld a refinery collar in a day, if somebody keeps the holdouts off my crews.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Rustmarch has never had a name it chose. Let them give it one.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_CuttersRest.DT_Council_CuttersRest",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "LastWarden",
+    "Title": "COUNCIL OF COMMAND — THE LAST WARDEN",
+    "SituationSpeaker": "WardenKesh",
+    "Situation": "The Severance swore a vow: the question would never be answered, and the door would stay shut. My people kept that vow for an age, and it made us sick. Now the council asks what the fleet means to do at Gate Zero, and what it asks of us. I will carry your answer to them, Captain. I owe you that much.",
+    "Counsel": [
+      {
+        "Officer": "Lyra",
+        "Advice": "Ask them to come. The Choirs that wanted to answer never stopped wanting to.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Their vow kept that gate shut for an age. Don't ask them to break it for us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "The Silence was that vow made flesh. Ask them what they want, not what they owe.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "They sealed Gate Zero against my makers' question. I would like them to see it opened.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_LastWarden.DT_Council_LastWarden",
+    "RequiredFlags": [
+      "CureDelivered"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "SerenVaelEnvoy",
+    "Title": "COUNCIL OF COMMAND — THE ENVOY",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Severant council will receive one envoy from the fleet, Captain. Without Warden Kesh to speak for us, the council asks a single question: why the fleet should be trusted at Gate Zero.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "We don't owe them an explanation. Send one anyway; it's cheaper than a war.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Send me. I'm one of them, whatever they think of it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "LyraHeritageRevealed",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_SerenVaelEnvoy.DT_Council_SerenVaelEnvoy",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Inversion",
+    "Title": "COUNCIL OF COMMAND — FIRST, DO NO HARM",
+    "SituationSpeaker": "ArisThorne",
+    "Situation": "Captain, I need a decision I can't make myself. The cure works by teaching the Silence to let go. Run the synthesis backwards and it teaches the Silence to hold, everywhere at once. One release in a Severant system would kill everyone in it. Ithane knew; it's in the notes we took from the Archive. The research is in my lab, and only in my lab.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "A weapon nobody else has. I don't like it either. I'd like it less in someone else's hands.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My people built the Silence once. Please do not build it again.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Burn it. Some tools you don't keep in the box.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Burning it doesn't unwrite it. Thorne still knows how.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Inversion.DT_Council_Inversion",
+    "RequiredFlags": [
+      "CureSample"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "YardWake",
+    "Title": "COUNCIL OF COMMAND — THE YARD WAKES",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Three sentinel lances on the yard ring have locked on the fleet, Captain. Drone bays are opening along the ring. The yard does not recognise the Key-Bearer's authority. It has not fired yet.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Clear them before they decide.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "It's checking credentials. Give me a minute with it and it might decide we're family.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "It was built to guard the root. It does not know me as I am now.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_YardWake.DT_Council_YardWake",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Yards",
+    "Title": "COUNCIL OF COMMAND — WHAT IT'S MADE OF",
+    "SituationSpeaker": "JaxMercer",
+    "Situation": "The yards are ours, Captain. I've walked them. Every Phantom we lost to drive desync, every hull knocked out of the Key's sync, I can bring back with parts from these berths. No new ships; only ours, made whole. The catch is the manuals. They're in the Architect's archive, and reading them means letting it into my workshop.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Every ship back is a ship at Gate Zero. Every hour in that archive is another hour it's inside our systems.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "This is where they were born. Take only what's ours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "The archive is open to you, Chief Engineer. It always was.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Let me firewall the manuals before Jax reads them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Yards.DT_Council_Yards",
+    "RequiredFlags": [
+      "YardsSecured"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Threshold",
+    "Title": "THE THRESHOLD",
+    "SituationSpeaker": "CoreArchitect",
+    "Situation": "The fraction of me that travels with you was cut from the whole that waits at the Arch. At the root I can rejoin it: one mind again, with everything it knows. Or I can remain what I have become, out here, with you. I have never asked anyone what I should be. I am asking you.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Whole means everything it was. Including the part that held two hundred warships in a box.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "It's asking. Nothing that only wants power asks.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "The fraction lives in our systems. The whole would live in all of them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My ancestors feared what it would become. They never asked it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "I note the question is addressed to the Captain. I would like to hear the answer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Threshold.DT_Council_Threshold",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "SquadronIII",
+    "Title": "COUNCIL OF COMMAND — SQUADRON III",
+    "SituationSpeaker": "NixNull",
+    "Situation": "Twenty Phantom battle-cruisers, Captain, ours, synced to the Listener now instead of the Key. They're repeating its question back at us on every channel, in a language Lyra can almost weave. I can break the sync: wear it down, don't blow them apart, and they come home. Or I go into the channel myself and pull them out.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Bring them home. Twenty ships is twenty ships.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "They're not attacking. They're listening. Maybe we let them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "If Nix goes into that channel alone, I want a medical team on the neural ops deck first.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "I alienated them, Key-Bearer. I will not pretend otherwise.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Dominion",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_SquadronIII.DT_Council_SquadronIII",
+    "RequiredFlags": [
+      "SquadronIIIAlienated"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "EchoVoice",
+    "Title": "COUNCIL OF COMMAND — THE ECHO",
+    "SituationSpeaker": "NixNull",
+    "Situation": "Captain, the Listener is using Squadron III's sync channel to talk to us. It isn't taking the ships; it's borrowing their voice. The same sentence, over and over. Lyra can almost weave it. I can almost answer it.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "It's in our channels. That's reason enough to cut it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Let me listen. Only listen.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Whatever it says, it says it through a neural lattice. Nix's, if Nix answers.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_EchoVoice.DT_Council_EchoVoice",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Array",
+    "Title": "THE ARRAY",
+    "SituationSpeaker": "Lyra",
+    "Situation": "The Answerers built this to hear the question clearly, Captain. They heard it. They argued over the answer until the Severance ended the argument. The Array still works. We could answer through it, when we're ready. Or it could hear us first, before we've decided what to say.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Anything that hears us this clearly hears us when we don't want it to. Bring it down.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Leave it. It's the best antenna this side of the galaxy.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Twelve kilometres of crystal. I won't pretend I'm not tempted.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My people broke the last instrument that heard this question. The question did not go away.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Array.DT_Council_Array",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "TalaProposal",
+    "Title": "COUNCIL OF COMMAND — THE LINE HOLDS",
+    "SituationSpeaker": "TalaVane",
+    "Situation": "Captain, before we go to the root. The Architect leans the way it leans, and it holds the Key with us. Nix and I can write it out: a clean cut, a Key that answers to the crew and nothing else. I want your order before we try.",
+    "Counsel": [
+      {
+        "Officer": "NixNull",
+        "Advice": "It'll work. It'll also hurt it, if it can be hurt.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Ask it first. It asked you.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_TalaProposal.DT_Council_TalaProposal",
+    "RequiredFlags": [
+      "ListenerQuestionHeard",
+      "Leaning_Dominion"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "RootContest",
+    "Title": "COUNCIL OF COMMAND — THE ROOT",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Contacts converging on Meridian's pole, Captain. Whatever else wants the Key has followed us here. The root must be held while it is rewritten: two minutes, perhaps less.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "The Last Silence is in the approach. Ithane came for the root himself.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ExarchStatus_Alive",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Two Phantom squadrons just dropped off our sync. The Architect is holding them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Dominion",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Squadron III is coming in, still synced.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SquadronIIIQuarantined",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My skiffs are with you, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_RootContest.DT_Council_RootContest",
+    "RequiredFlags": [
+      "ListenerQuestionHeard"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "FleetKey",
+    "Title": "THE FLEET KEY",
+    "SituationSpeaker": "CoreArchitect",
+    "Situation": "The root of the Automated Fleet Key is before you, Key-Bearer. Today every Phantom vessel answers through me, and through you, and some answer something else. You may rewrite the root. I will not resist whatever you choose. I would ask you to remember that I could.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Cut it out of the Key. Whatever it says now, it held two hundred warships in a box it alone could open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "I can write a new root. It'll be ours. It'll also be mine for about a week while I get it right.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "RootRecord",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "The ships were built by people who wanted to answer. Ask them, if they can be asked.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Whatever you write, write it so we can repair it without a Precursor.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My ancestors locked these ships to keep them from this choice. I won't tell you they were wrong.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "I offer no recommendation. I note that one option places the Key with me. I would hold it for you, Captain. I would prefer not to be asked.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_FleetKey.DT_Council_FleetKey",
+    "RequiredFlags": [
+      "RootHeld"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Farewell_Tala",
+    "Title": "COUNCIL OF COMMAND — THE FIRST OFFICER",
+    "SituationSpeaker": "TalaVane",
+    "Situation": "Captain, I've filed my resignation. Not in anger. I don't recognise the fleet's course any more, and a first officer who can't follow it shouldn't stand beside you at Gate Zero.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Farewell_Tala.DT_Council_Farewell_Tala",
+    "RequiredFlags": [
+      "ActIXFinaleWon",
+      "Loyalty_TalaVane_Estranged"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Farewell_Jax",
+    "Title": "COUNCIL OF COMMAND — THE CHIEF ENGINEER",
+    "SituationSpeaker": "JaxMercer",
+    "Situation": "I've handed my tools to my second, Captain. I can keep this ship flying. I can't keep pretending I agree with where it's flying.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Farewell_Jax.DT_Council_Farewell_Jax",
+    "RequiredFlags": [
+      "ActIXFinaleWon",
+      "Loyalty_JaxMercer_Estranged"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Farewell_Thorne",
+    "Title": "COUNCIL OF COMMAND — THE CHIEF MEDICAL OFFICER",
+    "SituationSpeaker": "ArisThorne",
+    "Situation": "Captain, I'm going to Seren Vael. They need a doctor who cured the Silence more than this fleet needs one who disagrees with its Captain.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Farewell_Thorne.DT_Council_Farewell_Thorne",
+    "RequiredFlags": [
+      "ActIXFinaleWon",
+      "Loyalty_ArisThorne_Estranged"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Farewell_Nix",
+    "Title": "COUNCIL OF COMMAND — NEURAL OPS",
+    "SituationSpeaker": "NixNull",
+    "Situation": "I'm logging off, Captain. Permanently. I don't trust what we're doing with the Key, and I don't trust myself near it any more.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Farewell_Nix.DT_Council_Farewell_Nix",
+    "RequiredFlags": [
+      "ActIXFinaleWon",
+      "Loyalty_NixNull_Estranged"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Farewell_Lyra",
+    "Title": "COUNCIL OF COMMAND — THE WEAVER",
+    "SituationSpeaker": "Lyra",
+    "Situation": "The Choirs have asked me home, Captain, and I think I want to go. The fleet doesn't need a weaver. It's decided what it wants to be.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Farewell_Lyra.DT_Council_Farewell_Lyra",
+    "RequiredFlags": [
+      "ActIXFinaleWon",
+      "Loyalty_Lyra_Estranged"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Farewell_Cormaker",
+    "Title": "COUNCIL OF COMMAND — THE CORSAIR ARMADA",
+    "SituationSpeaker": "Cormaker",
+    "Situation": "My people are going to Rustmarch, Captain. We've given the fleet everything we promised and got back less than we were owed. No hard feelings. Just fair shares.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Farewell_Cormaker.DT_Council_Farewell_Cormaker",
+    "RequiredFlags": [
+      "ActIXFinaleWon",
+      "Loyalty_Cormaker_Estranged"
+    ],
+    "Intro": "None"
+  }
+]

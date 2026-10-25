@@ -1,0 +1,185 @@
+[
+  {
+    "Name": "Promise",
+    "Label": "Promise them Rustmarch when this is over.",
+    "ApprovalHint": "Cormaker will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 15
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "Rustmarch is yours when this is over. My word, not his.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Then we'll take your word, Captain. It's the first one anyone's given us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "RustmarchPromised"
+    ],
+    "SetStates": {
+      "CorsairsSettled": "Promised"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Mislead",
+    "Label": "Use the offer: feed Vance a false position.",
+    "ApprovalHint": "Tala and Cormaker will approve. Pursuit −2.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 5,
+      "Cormaker": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Oh, I'll tell him where you are. I'll just be wrong about it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "That will buy us two leaps, maybe three.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": -2,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "VanceMisled"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "LetGo",
+    "Label": "Let them take the deal and go.",
+    "ApprovalHint": "Cormaker will not approve. The Corsairs leave the fleet.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": -20
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Is that what we're worth to you? Fine. We'll find our own way, the way we always have.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Corsair Armada has broken formation. Twelve vessels departing for Rustmarch.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "CorsairsDeparted",
+      "CorsairsReduced"
+    ],
+    "SetStates": {
+      "CorsairsSettled": "Departed"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Stay",
+    "Label": "The Corsairs stay with the fleet. No promises.",
+    "ApprovalHint": "Tala will approve. Cormaker will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 5,
+      "Cormaker": -10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "No promises. Story of my life, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "They stay. That is what matters.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "CorsairsStay"
+    ],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

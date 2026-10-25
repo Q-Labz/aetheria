@@ -8,6 +8,7 @@
 #include "AetheriaPhantomSquadron.h"
 #include "AetheriaShipBase.h"
 #include "AetheriaTacticalController.h"
+#include "AetheriaThresholdShips.h"
 #include "Aetheria.h"
 #include "Engine/DataTable.h"
 #include "Engine/TargetPoint.h"
@@ -87,7 +88,7 @@ void AAetheriaCombatManager::BeginPlay()
 		}
 	}
 
-	if (GI && GI->Background == E_Background::OutcastCorsair)
+	if (GI && GI->Background == E_Background::OutcastCorsair && !GI->StoryFlags.Contains(TEXT("CorsairsDeparted")))
 	{
 		if (UClass* Class = CorsairClass.LoadSynchronous())
 		{
@@ -152,11 +153,31 @@ void AAetheriaCombatManager::BeginPlay()
 	{
 		for (const FS_Line& Line : Battle.OpeningComms)
 		{
-			Log(Line.Speaker, Line.Text.ToString());
+			// lines gated by the campaign (Remnant cruisers only if Vance's crews were absorbed) and background
+			FText Text;
+			bool bShow = true;
+			if (GI)
+			{
+				GI->ResolveLine(Line, Text, bShow);
+			}
+			if (bShow)
+			{
+				Log(Line.Speaker, GI ? Text.ToString() : Line.Text.ToString());
+			}
 		}
 		if (Battle.HoldSeconds > 0.0f)
 		{
 			HoldRemaining = Battle.HoldSeconds;
+			if (GI)
+			{
+				for (const TPair<FName, float>& ByFlag : Battle.HoldSecondsByFlag)
+				{
+					if (GI->StoryFlags.Contains(ByFlag.Key))
+					{
+						HoldRemaining = ByFlag.Value;
+					}
+				}
+			}
 			Log(E_Speaker::VexAI, FString::Printf(TEXT("Hold position for %d seconds, Captain."), FMath::RoundToInt(HoldRemaining)));
 		}
 		GetWorldTimerManager().SetTimer(BattleTimer, this, &AAetheriaCombatManager::BattleTick, 1.0f, true);
@@ -302,13 +323,30 @@ bool AAetheriaCombatManager::SpawnBattle(UAetheriaGameInstance* GI, TArray<AAeth
 	int32 AllyIndex = 0;
 	for (const FS_BattleGroup& Group : Battle.Groups)
 	{
+		// groups that depend on the campaign: Ithane's flagship, loyalist frigates, Severant allies
+		if (!GI->HasFlag(Group.RequiredFlag) || (!Group.ForbiddenFlag.IsNone() && GI->HasFlag(Group.ForbiddenFlag)))
+		{
+			continue;
+		}
+		bool bStatesMatch = true;
+		for (const TPair<FName, FName>& State : Group.RequiredStates)
+		{
+			bStatesMatch &= GI->GetState(State.Key) == State.Value;
+		}
+		if (!bStatesMatch)
+		{
+			continue;
+		}
+		const int32 Count = Group.CountFromState.IsNone() ? Group.Count
+			: FMath::Clamp(FCString::Atoi(*GI->GetState(Group.CountFromState).ToString()), 0, 12);
+
 		UClass* Class = Group.ShipClass.LoadSynchronous();
 		if (!Class)
 		{
 			UE_LOG(LogAetheria, Warning, TEXT("Battle %s: a group has no ship class"), *BattleId.ToString());
 			continue;
 		}
-		for (int32 i = 0; i < Group.Count; ++i)
+		for (int32 i = 0; i < Count; ++i)
 		{
 			FTransform Where;
 			if (Group.bAllied)
@@ -342,6 +380,11 @@ bool AAetheriaCombatManager::SpawnBattle(UAetheriaGameInstance* GI, TArray<AAeth
 				Ship->AggroRange = FMath::Min(Ship->AggroRange, AllyEscortRange);
 				PlayerShips.AddUnique(Ship);
 				Ship->OnShipDestroyed.AddDynamic(this, &AAetheriaCombatManager::OnPlayerLost);
+				// a reclaimed Phantom squadron flying with the fleet: its losses count against the Phantom Fleet
+				if (AAetheriaPhantomSquadron* Squadron = Cast<AAetheriaPhantomSquadron>(Ship))
+				{
+					Squadrons.AddUnique(Squadron);
+				}
 				continue;
 			}
 			if (Group.bObjective)
@@ -491,11 +534,35 @@ void AAetheriaCombatManager::Victory()
 
 	const int32 Losses = GetPhantomLosses();
 	const float HullPct = (Flagship && Flagship->MaxHull > 0.0f) ? Flagship->Hull / Flagship->MaxHull : 0.0f;
+	int32 Reclaimed = 0;
+	int32 SyncedLost = 0;
 
 	if (UAetheriaGameInstance* GI = GetAetheriaGameInstance())
 	{
 		GI->FlagshipHullPct = HullPct;
 		GI->PhantomShipsActive -= Losses;
+		GI->PhantomShipsDestroyed += Losses;
+
+		// Phantom squadrons fought in the Listener's sync or the Architect's hold (Act IX): what the beam
+		// destroyed is gone; what was disabled comes back to the Key
+		for (const AAetheriaShipBase* Enemy : EnemyShips)
+		{
+			const AAetheriaSyncedSquadron* Synced = Cast<AAetheriaSyncedSquadron>(Enemy);
+			if (!Synced)
+			{
+				continue;
+			}
+			SyncedLost += Synced->ShipsLost;
+			GI->PhantomShipsDestroyed += Synced->ShipsLost;
+			if (Synced->bReclaimAddsToFleet)
+			{
+				Reclaimed += GI->ResyncPhantoms(Synced->GetReclaimedShips());
+			}
+			else
+			{
+				GI->PhantomShipsActive -= Synced->ShipsLost;
+			}
+		}
 		if (BattleId.IsNone())
 		{
 			GI->StoryFlags.Add(TEXT("LanternCleared"));
@@ -507,6 +574,11 @@ void AAetheriaCombatManager::Victory()
 			{
 				GI->StoryFlags.Add(Flag);
 			}
+			for (const TPair<FName, FName>& State : Battle.WinStates)
+			{
+				GI->States.Add(State.Key, State.Value);
+			}
+			GI->PendingBattleCouncil = NAME_None;
 		}
 		GI->NextScreen = TEXT("PostCombat");
 	}
@@ -517,9 +589,12 @@ void AAetheriaCombatManager::Victory()
 		: AliveObjectives == 0 && Battle.Groups.ContainsByPredicate([](const FS_BattleGroup& Group) { return Group.bObjective; })
 			? FString(TEXT("Objective destroyed."))
 			: FString(TEXT("Hostile picket destroyed."));
+	const FString SyncNote = Reclaimed > 0 || SyncedLost > 0
+		? FString::Printf(TEXT("\nPhantom vessels reclaimed from the sync: %d. Destroyed under the sync: %d."), Reclaimed, SyncedLost)
+		: FString();
 	const FString Body = FString::Printf(
-		TEXT("Result: %s\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
-		*Result, FMath::RoundToInt(HullPct * 100.0f), Losses, FleetStrength,
+		TEXT("Result: %s\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.%s\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
+		*Result, FMath::RoundToInt(HullPct * 100.0f), Losses + SyncedLost, FleetStrength, *SyncNote,
 		Flagship ? Flagship->BeamShots : 0, Flagship ? Flagship->BeamKills : 0);
 
 	const FText Title = BattleId.IsNone() || Battle.Title.IsEmpty()
@@ -549,6 +624,7 @@ void AAetheriaCombatManager::Defeat()
 	{
 		GI->NextScreen = TEXT("StarMap");
 	}
+	bDefeated = true;
 
 	ShowAfterAction(false, FText::FromString(TEXT("MISSION REPORT")),
 		FText::FromString(TEXT("The Crystal Dreadnought has been lost. The Key-Bearer's flag is struck. The armada scatters into the dark.")));
@@ -578,8 +654,27 @@ void AAetheriaCombatManager::ShowAfterAction(bool bWon, const FText& Title, cons
 
 void AAetheriaCombatManager::ReturnToCommand()
 {
+	// withdrawing from a lost council battle: that council's choice is open again back on the bridge
+	UAetheriaGameInstance* GI = GetAetheriaGameInstance();
+	if (bDefeated && GI && !GI->PendingBattleCouncil.IsNone())
+	{
+		GI->StoryFlags.Remove(FName(*(TEXT("Council_") + GI->PendingBattleCouncil.ToString())));
+		GI->PendingBattleCouncil = NAME_None;
+		GI->NextScreen = TEXT("NodeCouncils");
+	}
 	UGameplayStatics::SetGamePaused(this, false);
 	UGameplayStatics::OpenLevelBySoftObjectPtr(this, CommandLevel);
+}
+
+void AAetheriaCombatManager::ForceVictory()
+{
+	HoldRemaining = 0.0f;
+	Victory();
+}
+
+void AAetheriaCombatManager::ForceDefeat()
+{
+	Defeat();
 }
 
 void AAetheriaCombatManager::RetryEngagement()

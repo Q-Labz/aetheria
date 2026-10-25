@@ -1,0 +1,40 @@
+[
+  {
+    "Name": "TheHush",
+    "ArrivalSequence": "X_Hush_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "VanceReturns"
+    ]
+  },
+  {
+    "Name": "Vigil",
+    "ArrivalSequence": "X_Vigil_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "LastStand"
+    ]
+  },
+  {
+    "Name": "GateZero",
+    "ArrivalSequence": "X_Gate_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "LastStand",
+      "GateApproach",
+      "PlateSynod",
+      "PlateGuild",
+      "PlateCoalition",
+      "VexQuestion",
+      "Answer"
+    ]
+  },
+  {
+    "Name": "ArchWake",
+    "ArrivalSequence": "X_ArchWake_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Return"
+    ]
+  }
+]
