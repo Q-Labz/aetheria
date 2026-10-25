@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaWeaponVFX.h"
+#include "AetheriaAudio.h"
 #include "Components/PointLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
@@ -206,6 +207,8 @@ void AAetheriaLaserBolt::Tick(float DeltaSeconds)
 	if (FVector::Dist(Location, Target) <= Step)
 	{
 		AAetheriaImpactFlash::Spawn(GetWorld(), Target, BoltColor, BoltWidth * 9.0f, 0.25f, 60.0f);
+		AetheriaAudio::PlayAt(this, TEXT("S_Bolt_Impact"), Target, AetheriaAudio::ERange::Battle, 0.3f,
+			FMath::FRandRange(0.85f, 1.15f), TEXT("Impact"));
 		Destroy();
 		return;
 	}

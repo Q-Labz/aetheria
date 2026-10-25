@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaSeverantShips.h"
+#include "AetheriaAudio.h"
 #include "AetheriaCombatManager.h"
 #include "AetheriaFlagship.h"
 #include "AetheriaWeaponVFX.h"
@@ -59,6 +60,8 @@ void AAetheriaSeverantShip::BeginPulse()
 		Telegraph->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	}
 	GetWorldTimerManager().SetTimer(ReleaseTimer, FTimerDelegate::CreateUObject(this, &AAetheriaSeverantShip::ReleasePulse), TelegraphTime, false);
+	AetheriaAudio::PlayAt(this, TEXT("S_Pulse_Telegraph"), GetActorLocation(), AetheriaAudio::ERange::Battle, 0.85f,
+		FMath::Clamp(1.5f / FMath::Max(TelegraphTime, 0.1f), 0.5f, 2.0f), TEXT("Pulse"));
 }
 
 void AAetheriaSeverantShip::ReleasePulse()
@@ -68,6 +71,7 @@ void AAetheriaSeverantShip::ReleasePulse()
 		return;
 	}
 	AAetheriaImpactFlash::Spawn(GetWorld(), GetActorLocation(), FLinearColor(0.8f, 0.9f, 1.0f), PulseRadius * 2.2f, 0.35f, 900.0f);
+	AetheriaAudio::PlayAt(this, TEXT("S_Pulse_Release"), GetActorLocation(), AetheriaAudio::ERange::Battle, 1.0f, 1.0f, TEXT("Pulse"));
 
 	const float RadiusSq = FMath::Square(PulseRadius);
 	bool bCaughtPlayer = false;

@@ -244,3 +244,26 @@ node's star (`NodeLightColors`). That covers the sun through the bridge viewport
 | VaultOfRecords | pale blue |
 
 The colour switches when a leap lands; nodes without an entry keep the light as placed.
+
+## E. Sound
+
+Every sound is synthesized from code: `Tools/Audio/make_sounds.py` (pure Python, seeded, no samples) writes 48 kHz WAVs to
+`Source_Art/Audio`; `aetheria_tools.art_toolset.AetheriaArtToolset.import_sounds` imports them to `/Game/Aetheria/Audio`
+(loops flagged). `AetheriaAudio` (C++) plays them by name; the folder is always cooked (`DefaultGame.ini`).
+
+| Sound | Where it plays |
+|---|---|
+| `A_Bridge_Hum` (12 s loop) | the bridge, under everything (BridgeDirector) |
+| `S_Console_Chirp_01..08`, `S_Relay_Click` | a random console, bank or monitor every 0.7–2.6 s |
+| `A_Combat_Bed` (12 s loop) | under every battle (CombatManager) |
+| `S_Engine_Loop` | each moving ship, pitched by hull size, fading out when it dies |
+| `S_Blaster_Fleet/Tithe/Severant_01..03` | each shot, by faction: the fleet's red bolts, the Tithe's green, the Severants' blue |
+| `S_Bolt_Impact`, `S_Explosion_Ship` | bolt hits, ship deaths |
+| `S_Beam_Charge`, `S_Beam_Fire` | the Prismatic Stellar Beam (the charge is cut short by a Silence Pulse) |
+| `S_Pulse_Telegraph`, `S_Pulse_Release` | Silence Pulse build-up and release |
+| `S_Surge` | Chrono Surge |
+| `M_Sting_Council`, `M_Sting_Leap`, `M_Sting_Victory`, `M_Sting_Defeat`, `M_Sting_ActEnd` | a council opening, a leap, the battle outcome, the act end |
+| `S_UI_Click` | dialogue Continue, star-map nodes, council options |
+
+Combat sounds are spatialized for the overhead camera (battle sounds full within 9,000 uu, falling off over 16,000; engines
+7,000 / 9,000; bridge chirps 1,200 / 3,000). Blasters, impacts, explosions and pulses are each capped at six at once.

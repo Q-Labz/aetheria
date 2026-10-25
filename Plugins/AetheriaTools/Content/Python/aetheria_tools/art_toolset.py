@@ -71,3 +71,42 @@ class AetheriaArtToolset(unreal.ToolsetDefinition):
                 raise RuntimeError(f"Import failed: {task.filename}")
             imported.extend(paths)
         return imported
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def import_sounds(folder_path: str, source_files: list[str], looping: list[str] = []) -> list[str]:
+        """Imports WAV files as sound waves into a folder, replacing assets of the same name in place.
+
+        Args:
+            folder_path: Content folder, e.g. /Game/Aetheria/Audio
+            source_files: Absolute paths of the .wav files; each asset is named after its file
+            looping: Asset names to mark as looping (ambience beds, engine loops)
+
+        Returns:
+            The object paths of the imported sound waves.
+        """
+        tasks = []
+        for source in source_files:
+            if not os.path.isfile(source):
+                raise ValueError(f"No such file: {source}")
+            task = unreal.AssetImportTask()
+            task.filename = source
+            task.destination_path = folder_path
+            task.destination_name = os.path.splitext(os.path.basename(source))[0]
+            task.replace_existing = True
+            task.automated = True
+            task.save = False
+            tasks.append(task)
+        unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks(tasks)
+        imported = []
+        for task in tasks:
+            paths = list(task.imported_object_paths)
+            if not paths:
+                raise RuntimeError(f"Import failed: {task.filename}")
+            for path in paths:
+                wave = unreal.load_asset(path)
+                if isinstance(wave, unreal.SoundWave):
+                    wave.set_editor_property("looping", task.destination_name in looping)
+                unreal.EditorAssetLibrary.save_loaded_asset(wave)
+            imported.extend(paths)
+        return imported

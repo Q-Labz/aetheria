@@ -6,6 +6,8 @@
 #include "AetheriaShipBase.h"
 #include "AetheriaFlagship.generated.h"
 
+class UAudioComponent;
+
 /**
  *  The Crystal Dreadnought and its Prismatic Stellar Beam (SLICE_SPEC.md section 9).
  *  BP_Flagship is a Blueprint child of this class.
@@ -87,4 +89,8 @@ protected:
 	void DischargeBeam();
 
 	FTimerHandle BeamChargeTimer;
+
+	/** The charge whine, cut short if a Silence Pulse interrupts it */
+	UPROPERTY(Transient)
+	TObjectPtr<UAudioComponent> ChargeAudio;
 };
