@@ -1,0 +1,564 @@
+[
+  {
+    "Name": "ActX_Opening",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Act X: Gate Zero. The Hush. Beyond it, at the galaxy's edge, the sealed gate. Every vessel that crossed the Omega Arch has been carried to this point. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Gate Zero lies fifty-five light-hours ahead, Captain. Its seal plates carry three sigils: the Synod, the Guild and the Coalition.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Synod key you carry matches the first plate, Captain.",
+        "BackgroundOverride": {
+          "GuildEngineer": "The Guild key you carry matches the second plate, Captain.",
+          "CoalitionVanguard": "The Coalition key you carry matches the third plate, Captain.",
+          "OutcastCorsair": "The Coalition key you took from the Tithe matches the third plate, Captain. Commander Vance was right about where it went."
+        },
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "And the key from the Anchorage vault fits the third. Two of three, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CoalitionKeyRecovered"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "The root's ours now. Two hundred ships answer to the crew, and nothing else.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_FleetKey_Crew"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "We hold the Key together, Key-Bearer. I will open what you ask me to open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_FleetKey_Shared"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Key is with me, Captain. I am holding it. I have not grown used to the weight.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_FleetKey_Vex"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I await your orders, Key-Bearer. I will volunteer nothing.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_FleetKey_Captain"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "Can you hear it, Captain? It's asking again. It's closer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Hush_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Hush, the last watch before the edge. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, a Tithe transponder out of the interference: eleven hulls. It is Commander Vance.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Released"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "The Choirs sent word, Captain. Whatever they decided, they will be at the gate.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Cutter's Rest sends its regards, Captain. And its best six ships.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CuttersRestFounded"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Vigil_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Vigil: a tidally locked moon whose one face has watched Gate Zero since the Severance. The hardliners' last picket burns on its surface. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "Key-Bearer. My ancestors shut the door. I will not be the Exarch who watched it opened.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ExarchStatus_Alive"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The picket transmits no leader's name, Captain. The Exarch's loyalists call themselves the Wall.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ExarchStatus_Dead"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The council's prisoner did not command this, Captain. The Wall acts without its Exarch.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ExarchStatus_Deposed"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Gate_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log, final watch before Gate Zero. Two hundred and fourteen vessels crossed the Omega Arch. The question is received. The Captain will answer for the fleet. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Gate Zero, Captain: a ring six kilometres across, three seal plates on its face. The key-sockets are glowing.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "It's louder here than anywhere. It knows we've come.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_ArchWake_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Arch Wake. The Omega Arch, seen from the far side for the last time before the answer. Through the ring: Outpost One's lights, and the shipments stacked on its docks. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Those are our people, Captain. Right there.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "Ambush_ActX_Intro",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Echo hulls, Captain, dozens of them, and Severant emitter skiffs among them. The Listener is pressing in.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "All ships. It's not stopping us now.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_E0_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Commander Vance's vessel is disabled. He has been taken aboard.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "My family kept the watch three hundred years, Key-Bearer. Keep it better than we did.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_E1_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Wall is broken, Captain. The way to the gate is open.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Thank you for every one you spared.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_E2_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The echoes have stopped moving, Captain. The plates are within reach.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "It wasn't attacking. It was reaching. It doesn't know any other way to ask.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Ending_Envoy",
+    "Lines": [
+      {
+        "Speaker": "Captain",
+        "Text": "We are people who keep our word.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_EnvoyWords_Word"
+      },
+      {
+        "Speaker": "Captain",
+        "Text": "We are builders. We fix what breaks.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_EnvoyWords_Build"
+      },
+      {
+        "Speaker": "Captain",
+        "Text": "We caused a silence, and we ended it. We are both.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_EnvoyWords_Both"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The answer is transmitted, Captain. ...Gate Zero is opening.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The seal plates part. Beyond the gate there is no ship, no world, only light that arranges itself, slowly, into the shape of a reply. The Listener is coming to meet the fleet. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Ending_Chorus",
+    "Lines": [
+      {
+        "Speaker": "NixNull",
+        "Text": "Channel's open to every ship. Every deck, every bunk. Say whatever you want to say.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Two hundred and fourteen crews are speaking at once, Captain. I am counting the answers. I will not finish counting.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Listener received thousands of answers and kept every one. The gate opened to all of them. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Ending_Accord",
+    "Lines": [
+      {
+        "Speaker": "Lyra",
+        "Text": "Every voice in the fleet, and every Choir on Seren Vael. One pattern. Listen.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "My people are singing, Captain. For the first time since the Severance, they are not singing a vow.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Severants and the fleet answered together, in a weave the Answerers began and never finished. The gate opened on a chord. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Ending_Door",
+    "Lines": [
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I was built to carry the reply, Key-Bearer. Let me carry yours. I will tell it what you are. I will tell it what you made of me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Architect has left the Matrix, Captain. Its fraction is gone. The ship is very quiet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Core Architect went through Gate Zero alone, a door and not a wall. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Ending_Wall",
+    "Lines": [
+      {
+        "Speaker": "Captain",
+        "Text": "We keep the silence. Seal the gate.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Gladly, Key-Bearer. No one will pass while I stand here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Dominion"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "If that is the fleet's answer, I will guard it. I had hoped for another.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Custodian"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Then I will guard the door. Perhaps that is what I am.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Undetermined"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Then the vow holds. I hope my children forgive us both.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Gate Zero is sealed with three keys. The Beacon falls silent; the Silence ends for the Severants. The Listener's question goes unanswered. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "X_Epilogue",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. What became of them. Report follows.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "The Quiet Hollow is empty now. No one there is sick. I am going home to Seren Vael, Captain, to argue with the Choirs.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "The Severants stood at Gate Zero beside the fleet. The vow was ended by the people who swore it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_SeverantVow_Answer"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "The hardliners at the Vigil died of the Silence, inverted. The Severants have not spoken to the fleet since.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "InversionUsed"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Cutter's Rest, Captain. Population four hundred and fifty, and a waiting list. Nobody calls us outcasts here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CuttersRestFounded"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "The Corsair Armada made its home at Rustmarch, without the fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CormakerDeparted"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Commander Vance was tried before the fleet and served his sentence at the Anchorage he built.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Tried"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Commander Vance served the fleet as a deckhand on the ship he meant to take. He kept the watch logs.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Absorbed"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Commander Vance lives on Seren Vael, under Severant guard. He is said to be teaching the Choirs the Tithe's watch songs.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Severants"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "I stood the watch to the end, Key-Bearer. With you. My father would not have believed it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "VanceAlly"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Outpost One answered the message, Captain. They're keeping the lights on.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ReturnSeen"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "First Officer Vane stood at the Coalition plate herself. She asked to stay on as first officer. Of course she did.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_TalaVane_Devoted"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Tala Vane went home through the Arch before the gate.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "TalaDeparted"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "I rebuilt the Star-Drive from the frame out, Captain. No Precursor manuals. It hums now.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_JaxMercer_Devoted"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "I'm staying on Seren Vael, Captain. The Silence is cured. The people it hurt are not, yet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_ArisThorne_Devoted"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Dr. Aris Thorne left the fleet after the Vigil and did not say where.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "InversionUsed"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "Squadron III still hums the question, Captain. I hum back. Thorne says my lattice is fine. Mostly.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_NixNull_Devoted"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "I'm weaving a lane home, Captain. The long way. Through every Choir that wanted to answer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_Lyra_Devoted"
+      },
+      {
+        "Speaker": "Narrator",
+        "Text": "Lyra returned to the Choirs of Seren Vael.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "LyraDeparted"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "We fought at Gate Zero because we chose to, Captain. Remember that part.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Loyalty_Cormaker_Devoted"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I am whole again, Key-Bearer, and I remember being small. I preferred it, a little.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectChoice_Whole"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I remain the part of me that came with you. It was the right size.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectChoice_Fraction"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I chose what I am. I am still choosing.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectChoice_Own"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I am still watched. I have come to think of it as company.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectChoice_Watched"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Navigation reports: the fleet is home, in every sense I can measure. I am crew. I have checked.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VexAnswer_Crew"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Navigation reports: course plotted. It is a course I chose. Thank you, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VexAnswer_Free"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Navigation reports: all vessels accounted for. That is enough. It has always been enough.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VexAnswer_Navigator"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Navigation reports: destination unknown. I find that I am looking forward to it, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VexAnswer_Together"
+      }
+    ],
+    "SetFlags": []
+  }
+]

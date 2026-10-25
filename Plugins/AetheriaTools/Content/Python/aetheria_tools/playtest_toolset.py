@@ -59,7 +59,8 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def start_act(act: int, captain_name: str = "Rook", background: str = "SynodEnvoy") -> str:
-        """Carries the running PIE campaign into a data-driven act (7 = The Cinder Archive, 8 = The Iron Tithe)
+        """Carries the running PIE campaign into a data-driven act (7 = The Cinder Archive, 8 = The Iron Tithe,
+        9 = The Threshold, 10 = Gate Zero)
         at its start node. Earlier acts' choices are not replayed: set any carried flags or states with
         set_campaign_values afterwards.
 
@@ -96,21 +97,29 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
         gi = _game_instance()
         flags = sorted(str(f) for f in gi.get_editor_property("story_flags"))
         states = {str(k): str(v) for k, v in gi.get_editor_property("states").items()}
+        loyalty = {str(k).split(".")[-1].split(":")[0]: v for k, v in gi.get_editor_property("crew_loyalty").items()}
         return (f"act={gi.get_editor_property('current_act')} background={gi.get_editor_property('background')} node={gi.get_editor_property('current_node')} "
                 f"next={gi.get_editor_property('next_screen')} battle={gi.get_editor_property('pending_battle')} "
                 f"standing={gi.get_editor_property('severant_standing')} leaning={gi.get_editor_property('architect_leaning')} "
                 f"instability={gi.get_editor_property('instability'):.0f} pursuit={gi.get_editor_property('pursuit_clock')} "
-                f"hull={gi.get_editor_property('flagship_hull_pct'):.2f} states={states} flags={flags}")
+                f"hull={gi.get_editor_property('flagship_hull_pct'):.2f} phantoms={gi.get_editor_property('phantom_ships_active')} "
+                f"destroyed={gi.get_editor_property('phantom_ships_destroyed')} loyalty={loyalty} states={states} flags={flags}")
 
     @toolset_registry.tool_call
     @staticmethod
-    def set_campaign_values(standing: int = -1000, add_flags: list[str] = [], instability: float = -1.0) -> str:
+    def set_campaign_values(standing: int = -1000, add_flags: list[str] = [], instability: float = -1.0,
+                            set_states: list[str] = [], loyalty: list[str] = [], leaning: int = -1000,
+                            phantoms: int = -1) -> str:
         """Adjusts the running campaign for a test (only the arguments given are changed).
 
         Args:
             standing: Severant standing to set (-1000 leaves it)
             add_flags: Story flags to add
             instability: Star-Drive instability to set (-1 leaves it)
+            set_states: Campaign states as Key=Value, e.g. ExarchStatus=Alive, VanceFate=Released
+            loyalty: Officer loyalty as Officer=Value, e.g. TalaVane=80, NixNull=-10
+            leaning: Architect leaning to set, -100 (Dominion) to 100 (Custodian) (-1000 leaves it)
+            phantoms: Phantom Fleet vessels active, e.g. 180 after Squadron III was alienated (-1 leaves it)
 
         Returns:
             The new state summary.
@@ -125,6 +134,24 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             gi.set_editor_property("story_flags", flags)
         if instability >= 0.0:
             gi.set_editor_property("instability", instability)
+        if set_states:
+            states = gi.get_editor_property("states")
+            for entry in set_states:
+                key, _, value = entry.partition("=")
+                states[key] = value
+            gi.set_editor_property("states", states)
+        if loyalty:
+            crew = gi.get_editor_property("crew_loyalty")
+            for entry in loyalty:
+                officer, _, value = entry.partition("=")
+                # TalaVane -> TALA_VANE in Python
+                member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(officer)).upper()
+                crew[getattr(unreal.E_Speaker, member)] = int(value)
+            gi.set_editor_property("crew_loyalty", crew)
+        if leaning > -1000:
+            gi.set_editor_property("architect_leaning", leaning)
+        if phantoms >= 0:
+            gi.set_editor_property("phantom_ships_active", phantoms)
         return AetheriaPlaytestToolset.get_campaign_state()
 
     @toolset_registry.tool_call

@@ -140,7 +140,7 @@ void AAetheriaFlagship::DischargeBeam()
 	int32 Kills = 0;
 	for (AAetheriaShipBase* Victim : Victims)
 	{
-		UGameplayStatics::ApplyDamage(Victim, BeamDamage * DamageMultiplier * ArchitectBoost, nullptr, this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(Victim, BeamDamage * DamageMultiplier * ArchitectBoost, nullptr, this, UAetheriaBeamDamage::StaticClass());
 		AAetheriaImpactFlash::Spawn(GetWorld(), Victim->GetActorLocation(), FLinearColor(0.85f, 0.95f, 1.0f), 500.0f, 0.6f, 600.0f);
 		if (!Victim->IsAlive())
 		{

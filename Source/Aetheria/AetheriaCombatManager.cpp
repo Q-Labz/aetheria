@@ -8,6 +8,7 @@
 #include "AetheriaPhantomSquadron.h"
 #include "AetheriaShipBase.h"
 #include "AetheriaTacticalController.h"
+#include "AetheriaThresholdShips.h"
 #include "Aetheria.h"
 #include "Engine/DataTable.h"
 #include "Engine/TargetPoint.h"
@@ -152,7 +153,17 @@ void AAetheriaCombatManager::BeginPlay()
 	{
 		for (const FS_Line& Line : Battle.OpeningComms)
 		{
-			Log(Line.Speaker, Line.Text.ToString());
+			// lines gated by the campaign (Remnant cruisers only if Vance's crews were absorbed) and background
+			FText Text;
+			bool bShow = true;
+			if (GI)
+			{
+				GI->ResolveLine(Line, Text, bShow);
+			}
+			if (bShow)
+			{
+				Log(Line.Speaker, GI ? Text.ToString() : Line.Text.ToString());
+			}
 		}
 		if (Battle.HoldSeconds > 0.0f)
 		{
@@ -313,8 +324,7 @@ bool AAetheriaCombatManager::SpawnBattle(UAetheriaGameInstance* GI, TArray<AAeth
 	for (const FS_BattleGroup& Group : Battle.Groups)
 	{
 		// groups that depend on the campaign: Ithane's flagship, loyalist frigates, Severant allies
-		if ((!Group.RequiredFlag.IsNone() && !GI->StoryFlags.Contains(Group.RequiredFlag))
-			|| (!Group.ForbiddenFlag.IsNone() && GI->StoryFlags.Contains(Group.ForbiddenFlag)))
+		if (!GI->HasFlag(Group.RequiredFlag) || (!Group.ForbiddenFlag.IsNone() && GI->HasFlag(Group.ForbiddenFlag)))
 		{
 			continue;
 		}
@@ -370,6 +380,11 @@ bool AAetheriaCombatManager::SpawnBattle(UAetheriaGameInstance* GI, TArray<AAeth
 				Ship->AggroRange = FMath::Min(Ship->AggroRange, AllyEscortRange);
 				PlayerShips.AddUnique(Ship);
 				Ship->OnShipDestroyed.AddDynamic(this, &AAetheriaCombatManager::OnPlayerLost);
+				// a reclaimed Phantom squadron flying with the fleet: its losses count against the Phantom Fleet
+				if (AAetheriaPhantomSquadron* Squadron = Cast<AAetheriaPhantomSquadron>(Ship))
+				{
+					Squadrons.AddUnique(Squadron);
+				}
 				continue;
 			}
 			if (Group.bObjective)
@@ -519,11 +534,35 @@ void AAetheriaCombatManager::Victory()
 
 	const int32 Losses = GetPhantomLosses();
 	const float HullPct = (Flagship && Flagship->MaxHull > 0.0f) ? Flagship->Hull / Flagship->MaxHull : 0.0f;
+	int32 Reclaimed = 0;
+	int32 SyncedLost = 0;
 
 	if (UAetheriaGameInstance* GI = GetAetheriaGameInstance())
 	{
 		GI->FlagshipHullPct = HullPct;
 		GI->PhantomShipsActive -= Losses;
+		GI->PhantomShipsDestroyed += Losses;
+
+		// Phantom squadrons fought in the Listener's sync or the Architect's hold (Act IX): what the beam
+		// destroyed is gone; what was disabled comes back to the Key
+		for (const AAetheriaShipBase* Enemy : EnemyShips)
+		{
+			const AAetheriaSyncedSquadron* Synced = Cast<AAetheriaSyncedSquadron>(Enemy);
+			if (!Synced)
+			{
+				continue;
+			}
+			SyncedLost += Synced->ShipsLost;
+			GI->PhantomShipsDestroyed += Synced->ShipsLost;
+			if (Synced->bReclaimAddsToFleet)
+			{
+				Reclaimed += GI->ResyncPhantoms(Synced->GetReclaimedShips());
+			}
+			else
+			{
+				GI->PhantomShipsActive -= Synced->ShipsLost;
+			}
+		}
 		if (BattleId.IsNone())
 		{
 			GI->StoryFlags.Add(TEXT("LanternCleared"));
@@ -550,9 +589,12 @@ void AAetheriaCombatManager::Victory()
 		: AliveObjectives == 0 && Battle.Groups.ContainsByPredicate([](const FS_BattleGroup& Group) { return Group.bObjective; })
 			? FString(TEXT("Objective destroyed."))
 			: FString(TEXT("Hostile picket destroyed."));
+	const FString SyncNote = Reclaimed > 0 || SyncedLost > 0
+		? FString::Printf(TEXT("\nPhantom vessels reclaimed from the sync: %d. Destroyed under the sync: %d."), Reclaimed, SyncedLost)
+		: FString();
 	const FString Body = FString::Printf(
-		TEXT("Result: %s\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
-		*Result, FMath::RoundToInt(HullPct * 100.0f), Losses, FleetStrength,
+		TEXT("Result: %s\nCrystal Dreadnought hull integrity: %d%%.\nPhantom Fleet losses: %d vessels. Fleet strength: %d of 200.%s\nPrismatic Stellar Beam discharges: %d. Hostiles destroyed by beam: %d.\nReport ends."),
+		*Result, FMath::RoundToInt(HullPct * 100.0f), Losses + SyncedLost, FleetStrength, *SyncNote,
 		Flagship ? Flagship->BeamShots : 0, Flagship ? Flagship->BeamKills : 0);
 
 	const FText Title = BattleId.IsNone() || Battle.Title.IsEmpty()

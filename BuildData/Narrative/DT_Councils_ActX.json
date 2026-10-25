@@ -1,0 +1,385 @@
+[
+  {
+    "Name": "VanceReturns",
+    "Title": "COUNCIL OF COMMAND — THE WATCH",
+    "SituationSpeaker": "CommanderVance",
+    "Situation": "Key-Bearer. You let me go unarmed. I armed myself. I have come to the edge because my family kept a watch on that gate for three hundred years, and I will not miss the end of it. I can stand with you, against you, or out of your way. You choose. You always do.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "He held Sector 7 with conscripts. Don't give him a place in the line.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "You released him because he deserved a chance. This is it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "His logs were right about everything so far.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "VanceHeard",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "If he flies with us, he flies in front.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_VanceReturns.DT_Council_VanceReturns",
+    "RequiredFlags": [
+      "State_VanceFate_Released"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "LastStand",
+    "Title": "COUNCIL OF COMMAND — THE WALL",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Severant hardliners have massed against the fleet, Captain: emitter frigates and choir-skiffs, enough to break the gate's plates if they reach them. They will not stand down.",
+    "Counsel": [
+      {
+        "Officer": "WardenKesh",
+        "Advice": "They are my people. They are wrong. As few as you can, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Break them here, before the gate.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Captain. I know what is in the sealed file. Don't.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_CureInversion_Kept",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_LastStand.DT_Council_LastStand",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "GateApproach",
+    "Title": "COUNCIL OF COMMAND — THE ECHOES",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The drifting hulls at the gate are moving, Captain. Every vessel that ever answered the Beacon left its hull here, and the Listener is moving them. They are closing on the plates.",
+    "Counsel": [
+      {
+        "Officer": "Lyra",
+        "Advice": "My lane runs straight through them. They'll part for it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "HushLane",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "I can quiet them, Key-Bearer, if you ask.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Custodian",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Hold the plates. Nothing touches them but us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_GateApproach.DT_Council_GateApproach",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "PlateSynod",
+    "Title": "GATE ZERO — THE SYNOD PLATE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The first plate bears the Synod's sigil, Captain. Its socket accepts a Synod key, the Rite of Accord spoken by a Warden, or the Architect's override. Or the beam.",
+    "Counsel": [
+      {
+        "Officer": "WardenKesh",
+        "Advice": "I know the Rite, Captain. My people wrote it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_PlateSynod.DT_Council_PlateSynod",
+    "RequiredFlags": [
+      "GateHeld"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "PlateGuild",
+    "Title": "GATE ZERO — THE GUILD PLATE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The second plate bears the Guild's sigil, Captain. Its socket accepts a Guild key, a Guild master's seal, or the Architect's override. Or the beam.",
+    "Counsel": [
+      {
+        "Officer": "JaxMercer",
+        "Advice": "That's a master's lock. I've carried the seal for twenty years waiting for something worth opening.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "JaxDeparted"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_PlateGuild.DT_Council_PlateGuild",
+    "RequiredFlags": [
+      "GateHeld"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "PlateCoalition",
+    "Title": "GATE ZERO — THE COALITION PLATE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The third plate bears the Coalition's sigil, Captain. Its socket accepts a Coalition key, a Coalition officer's command codes, or the Architect's override. Or the beam.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "My command codes still work, Captain. I checked. Twice.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "TalaDeparted"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_PlateCoalition.DT_Council_PlateCoalition",
+    "RequiredFlags": [
+      "GateHeld"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "VexQuestion",
+    "Title": "A QUESTION FROM NAVIGATION",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Captain. The plates are open. Before the answer, may I ask a question of my own? I have never asked one. When this is over, and there is nothing left to navigate, what am I?",
+    "Counsel": [
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "I asked a question like that at Meridian. Answer it honestly, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Vex, mate. You didn't have to wait for the edge of the galaxy to ask.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Answer it, Captain. It's earned that.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_VexQuestion.DT_Council_VexQuestion",
+    "RequiredFlags": [
+      "PlateSynod",
+      "PlateGuild",
+      "PlateCoalition"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Answer",
+    "Title": "THE ANSWER",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Captain. The Listener's question is resolved. Translation confidence is high. It asks: 'What are you?' It has asked every voice that answered the Beacon. The Precursors never agreed on a reply. The answer is yours to give, for all of us.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Tell it we're people who keep our word. Then make sure we do.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "TalaDeparted"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Tell it the truth. We're builders. We fix what breaks.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "JaxDeparted"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "We caused the Silence and we cured it. That's what we are, Captain. Both.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ThorneDeparted"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Don't answer for everyone. Let everyone answer. I can open the channel to the whole fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "NixDeparted"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "I can weave it. Every voice in the fleet, into one pattern. It will understand that.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "LyraDeparted"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "Tell it nobody gets left behind. If it can't live with that, close the door.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CormakerDeparted"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My people kept silent for an age because we feared the answer. Don't let fear answer for you.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "I was built to carry the reply. Let me carry yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Custodian",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "Say nothing, and the door stays mine to hold.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Dominion",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "I still do not know what I am. Perhaps the answer will tell me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Undetermined",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Answer.DT_Council_Answer",
+    "RequiredFlags": [
+      "Council_VexQuestion"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "EnvoyWords",
+    "Title": "THE ANSWER — FOR THE FLEET",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Listener is waiting, Captain. Whatever you say, it will hear as the fleet's answer.",
+    "Counsel": [
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_EnvoyWords.DT_Council_EnvoyWords",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Return",
+    "Title": "COUNCIL OF COMMAND — THE RETURN",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Outpost One is hailing, Captain. The channel through the Arch will hold for one message before the fleet turns for the gate.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Tell them we're coming home. Even if we're not sure.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Send the roll. Every name. The families deserve to know.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "This is a matter of command. The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Return.DT_Council_Return",
+    "RequiredFlags": [],
+    "Intro": "None"
+  }
+]

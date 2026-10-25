@@ -128,7 +128,8 @@
     "ExposureDelta": 0,
     "HullDelta": 0.0,
     "SetFlags": [
-      "CorsairsDeparted"
+      "CorsairsDeparted",
+      "CorsairsReduced"
     ],
     "SetStates": {
       "CorsairsSettled": "Departed"

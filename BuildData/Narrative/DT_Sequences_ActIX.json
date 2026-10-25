@@ -1,0 +1,386 @@
+[
+  {
+    "Name": "ActIX_Opening",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Act IX: The Threshold. Tithe Anchorage is quiet. For the first time since the Omega Arch, no fleet pursues this one. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Captain, the Automated Fleet Key reports a second signal beneath its own on every Phantom channel. Its source lies coreward, toward Meridian. I have not identified it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "It isn't hiding, Captain. It wants us to know it's there.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Meridian is where the ships were made, Key-Bearer. The root of the Key is there. I would like you to see it before anything else does.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectRevelation2_Guardian"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Meridian holds the root of the Key. Go there, Key-Bearer. I would rather you held it than anything else out here.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectRevelation2_Warden"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "The ships were made at Meridian. I do not know what I will be when we arrive.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ArchitectRevelation2_Unresolved"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Whose fleet is this, Captain? Ours, or whatever is on that channel? I'd like to settle it before Gate Zero.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_Grieve_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Tithe Anchorage, the morning after. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "The tribunal sits in the Anchorage's own wardroom, Captain. Vance asked for no counsel. He said the record would speak for him.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Tried"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Remnant engineers are on my decks. Half of them know the Dreadnought's frame better than I'd like. All of them are working.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Absorbed"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Severant council's vessel departed at the first watch with Commander Vance aboard. Its captain transmitted one word: received.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Severants"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Vance's crews took eleven unarmed hulls out of the ring gap at dawn. He didn't look back, Captain. I did.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Released"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "The logs Vance handed over go back three hundred years. The Tithe heard the same signal we hear now. They wrote down every time it changed.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "VanceHeard"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "The Coalition prisoners have asked to serve aboard. I said the Captain would decide. I'd say yes.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "PrisonersFreed"
+      },
+      {
+        "Speaker": "ArisThorne",
+        "Text": "The grafted crews are stable. Three asked to keep their spikes. I told them that is their decision, not mine.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "GraftedTreated"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The fleet is ready to depart on the Captain's order.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_Rustmarch_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Rustmarch. The belt's small orange star throws long shadows across ten thousand fragments. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "There she is. Rustmarch Major. My people have been drawing station plans on mess tables for a month, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "RustmarchPromised"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Captain. I didn't expect to see the Dreadnought again. I'm glad I was wrong.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CorsairsDeparted"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Sensors read Tithe transponders at the belt's far edge: holdout captains who did not surrender at Grieve.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_SerenVael_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Seren Vael. The harmonic ring is steady. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The settlements on the night side burn ochre, Captain. Moderate colours, in the majority.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Standing_Trusted"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The night side is divided between Silence blue and ochre lamps, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Standing_Wary"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The settlements burn Silence blue, Captain. The council has not answered our hail.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Standing_Hostile"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Welcome back, Captain. The Choirs have argued without pause since you left. Among my people, that is a good sign.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_Yards_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Meridian yards: a ring of half-built hulls two thousand kilometres across. Every berth is cut to a Phantom battle-cruiser's dimensions. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Look at the joins, Captain. No welds. They grew them. Every one of these could have been one of ours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Power is rising along the ring. The yard's defences are waking.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_Meridian_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. Meridian. An entire world built over by the Answerers. Crystal veins run pole to pole and pulse in time with the Phantom Fleet's sync. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The root of the Automated Fleet Key lies at the north pole, Captain. Every Phantom vessel's sync passes through it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "This is where my makers stood when they built the ships, Key-Bearer. I have a question. It is the first I have asked for myself.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_ForgeEcho_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Forge Echo. A black hole with a narrow, burning disc. At its photon ring hangs a twin of the Event Horizon Forge, never opened. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The structure holds empty hulls: four hundred Phantom frames without cores or crews. They cannot join the fleet. It also holds the Key's root record, intact. It is aboard, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "Squadron III is here. Twenty ships, holding station at the ring. They're not answering the Key. They're answering something else.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SquadronIIIAlienated"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_Hush_Arrival",
+    "Lines": [
+      {
+        "Speaker": "Narrator",
+        "Text": "Fleet Log. The Hush. No stars ahead. Behind the fleet, the whole galaxy, turning. The interference is visible to the naked eye. Report ends.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Answerer Listening Array is before us, Captain: twelve kilometres of crystal blades. Every blade is sounding.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "That's the sentence. That's the one it kept saying to me.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ListenerContact"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Squadron III holds station at the Array's focus, transmitting toward the galactic edge. It is not hostile.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SquadronIIIReleased"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "It isn't asking what the Precursors were, Captain. It's asking what we are.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The question is received. I cannot yet translate it with confidence.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "Ambush_ActIX_Intro",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Contacts out of the interference, Captain: empty Answerer hulls under way, and Severant emitter frigates with them. Something is herding the echoes.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "All stations. They waited until we stopped looking behind us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_E1_Debrief",
+    "Lines": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Cutter's Rest stands, Captain. The first thing my people own that nobody gave them. Well. You gave them the time.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The holdout captains have withdrawn from the belt. Their transponders are dark.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_E2_Debrief",
+    "Lines": [
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Sentinels down. The yards are quiet. Let me go and look at them properly now.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The yard ring acknowledges the Key-Bearer's authority. Berths are open to the fleet.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_E3_Debrief",
+    "Lines": [
+      {
+        "Speaker": "NixNull",
+        "Text": "They're back. Squadron III answers to the Key again.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Lyra",
+        "Text": "They're still humming it under the sync, Captain. The question.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Every hull we brought home is one more at Gate Zero.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  },
+  {
+    "Name": "IX_E4_Debrief",
+    "Lines": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The root is held, Captain. The Key can be rewritten.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "I did not resist. I would like that noted.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "SetFlags": []
+  }
+]

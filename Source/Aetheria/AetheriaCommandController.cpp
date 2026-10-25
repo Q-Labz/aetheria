@@ -304,6 +304,11 @@ void AAetheriaCommandController::OnSequenceDone()
 	{
 		PlayActReport();
 	}
+	else if (After == TEXT("AfterEnding"))
+	{
+		// Act X: the ending, then the epilogues (lines gated by state, loyalty band and flags), then the report
+		PlaySequence(TEXT("X_Epilogue"), TEXT("AfterRevelation"));
+	}
 }
 
 bool AAetheriaCommandController::CanHoldCouncil(FName Council) const
@@ -320,7 +325,7 @@ bool AAetheriaCommandController::CanHoldCouncil(FName Council) const
 	}
 	for (const FName& Flag : Def->RequiredFlags)
 	{
-		if (!GI->StoryFlags.Contains(Flag))
+		if (!GI->HasFlag(Flag))
 		{
 			return false;
 		}
@@ -384,7 +389,8 @@ void AAetheriaCommandController::RunNode(FName Node)
 
 	const UDataTable* Events = GI->GetNodeEvents();
 	const FS_NodeEvent* Event = Events ? Events->FindRow<FS_NodeEvent>(Node, TEXT("RunNode"), false) : nullptr;
-	const FName Visited(*(TEXT("Visited_") + Node.ToString()));
+	// nodes recur across acts (TitheMarker, Grieve, SerenVael): from Act VIII on, a visit counts for its own act only
+	const FName Visited(*(TEXT("Visited_") + (bActVII ? FString() : ActTag.Mid(1) + TEXT("_")) + Node.ToString()));
 	if (Event && !GI->StoryFlags.Contains(Visited))
 	{
 		GI->StoryFlags.Add(Visited);
@@ -505,6 +511,11 @@ void AAetheriaCommandController::PlayActEnd()
 	{
 		return;
 	}
+	if (GI->CurrentAct == 10)
+	{
+		PlaySequence(FName(*(TEXT("X_Ending_") + GI->GetState(TEXT("Ending")).ToString())), TEXT("AfterEnding"));
+		return;
+	}
 	if (GI->CurrentAct != 7)
 	{
 		PlayActReport();
@@ -549,6 +560,38 @@ void AAetheriaCommandController::PlayActReport()
 			Allies == TEXT("None") ? TEXT("0") : *Allies.ToString(),
 			GI->StoryFlags.Contains(TEXT("CorsairsDeparted")) ? TEXT("departed for Rustmarch") : TEXT("with the fleet"),
 			GI->PhantomShipsActive);
+	}
+	else if (GI->CurrentAct == 9)
+	{
+		const FName Key = GI->GetState(TEXT("FleetKey"));
+		const TCHAR* KeyText = Key == TEXT("Crew") ? TEXT("re-rooted in the crew's sandbox; the Architect is cut out")
+			: Key == TEXT("Shared") ? TEXT("shared between the Key-Bearer and the Architect")
+			: Key == TEXT("Vex") ? TEXT("held by Vex AI") : Key == TEXT("Captain") ? TEXT("held by the Key-Bearer alone") : TEXT("unresolved");
+		const TCHAR* SquadronText = GI->StoryFlags.Contains(TEXT("SquadronIIIReleased")) ? TEXT("released to answer the Listener")
+			: GI->StoryFlags.Contains(TEXT("SquadronIIIReclaimed")) ? TEXT("reclaimed")
+			: GI->StoryFlags.Contains(TEXT("SquadronIIIAlienated")) ? TEXT("beyond the fleet's reach") : TEXT("with the fleet");
+		const FName Inversion = GI->GetState(TEXT("CureInversion"));
+		const TCHAR* InversionText = Inversion == TEXT("Destroyed") ? TEXT("destroyed")
+			: Inversion == TEXT("Kept") ? TEXT("kept under the Key-Bearer's seal")
+			: Inversion == TEXT("Given") ? TEXT("given to the Severant council") : TEXT("not found");
+		Text = FString::Printf(
+			TEXT("MISSION REPORT — THE THRESHOLD. The root of the Automated Fleet Key is %s. Squadron III: %s. The cure's inversion: %s. The Listener's question: %s. Phantom Fleet strength: %d of 200. Report ends."),
+			KeyText, SquadronText, InversionText,
+			GI->StoryFlags.Contains(TEXT("ListenerQuestionHeard")) ? TEXT("received") : TEXT("not yet received"),
+			GI->PhantomShipsActive);
+	}
+	else if (GI->CurrentAct == 10)
+	{
+		const FName Ending = GI->GetState(TEXT("Ending"));
+		const TCHAR* AnswerText = Ending == TEXT("Envoy") ? TEXT("given by the Key-Bearer, for the fleet")
+			: Ending == TEXT("Chorus") ? TEXT("given by every crew in the fleet")
+			: Ending == TEXT("Accord") ? TEXT("woven by Lyra, for the fleet and the Severants together")
+			: Ending == TEXT("Door") ? TEXT("carried through Gate Zero by the Core Architect")
+			: Ending == TEXT("Wall") ? TEXT("withheld; Gate Zero is sealed again") : TEXT("not given");
+		const int32 Hulls = 2 + GI->PhantomShipsActive + (GI->StoryFlags.Contains(TEXT("CorsairsDeparted")) ? 0 : 12);
+		Text = FString::Printf(
+			TEXT("FINAL REPORT — GATE ZERO. Two hundred and fourteen vessels crossed the Omega Arch. %d report position. The Listener's question was answered: %s. Phantom Fleet strength: %d of 200. Report ends."),
+			Hulls, AnswerText, GI->PhantomShipsActive);
 	}
 	else
 	{

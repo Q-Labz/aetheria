@@ -48,7 +48,11 @@ enum class E_Faction : uint8
 {
 	Player,
 	VanceRemnant,
-	Severant
+	Severant,
+	/** Answerer automata: the Meridian yard defences (Act IX) */
+	Answerer,
+	/** Hulls and squadrons held in the Listener's sync (Acts IX-X) */
+	Listener
 };
 
 /** What happens on arrival at a star node */
@@ -246,6 +250,16 @@ struct FS_CouncilOption : public FTableRowBase
 	/** Named campaign states to set, e.g. SupplyLine=ArchConduit, ArchiveState=Preserved */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
 	TMap<FName, FName> SetStates;
+
+	// ---- Act IX ----
+
+	/** Story flags to clear (the Corsairs rejoin: CorsairsDeparted) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	TArray<FName> ClearFlags;
+
+	/** Phantom vessels brought back into the fleet's sync; never more than the hulls not destroyed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	int32 PhantomDelta = 0;
 
 	/** Council (DT_Councils row) to hold right after the outcome lines */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Flow")

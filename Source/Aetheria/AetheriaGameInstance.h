@@ -55,6 +55,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
 	int32 PhantomShipsActive = 200;
 
+	/** Phantom vessels destroyed in battle (Act IX): gone for good, unlike desynchronised or alienated ships */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
+	int32 PhantomShipsDestroyed = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Campaign")
 	int32 PursuitClock = 0;
 
@@ -90,7 +94,7 @@ public:
 
 	// ---- Act VII (ACT_VII_CINDER_ARCHIVE.md) ----
 
-	/** 6 = the slice (Act VI), 7 = The Cinder Archive, 8 = The Iron Tithe */
+	/** 6 = the slice (Act VI), 7 = The Cinder Archive, 8 = The Iron Tithe, 9 = The Threshold, 10 = Gate Zero */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Act VII")
 	int32 CurrentAct = 6;
 
@@ -220,6 +224,23 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Council")
 	FName GetState(FName Key) const;
+
+	/**
+	 *  Whether a story flag or a campaign condition holds. Besides story flags it reads
+	 *  State_<Key>_<Value> (VanceFate = Tried), Leaning_<Custodian|Dominion|Undetermined>,
+	 *  Loyalty_<Officer>_<Devoted|Trusting|Steady|Strained|Estranged> and Standing_<Hostile|Wary|Trusted>.
+	 *  Every requirement in lines, counsel, options, councils and battle groups goes through here.
+	 */
+	UFUNCTION(BlueprintPure, Category="Council")
+	bool HasFlag(FName Flag) const;
+
+	/** Devoted (>= 75), Trusting (60-74), Steady (20-59), Strained (0-19) or Estranged (< 0) (WORLD_BIBLE.md 6) */
+	UFUNCTION(BlueprintPure, Category="Crew")
+	FName LoyaltyBand(E_Speaker Who) const;
+
+	/** Brings up to Count Phantom vessels back into the fleet's sync, never past 200 minus the destroyed */
+	UFUNCTION(BlueprintCallable, Category="Crew")
+	int32 ResyncPhantoms(int32 Count);
 
 	// ---- Act VII ----
 
