@@ -119,7 +119,8 @@ struct FS_Line
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Line")
 	TMap<E_Background, FText> BackgroundOverride;
 
-	/** Line is skipped unless this story flag is set; None shows it always */
+	/** Line is skipped unless this story flag is set; None shows it always. A line with empty Text is shown only
+	 *  to the backgrounds in BackgroundOverride. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Line")
 	FName RequiredFlag = NAME_None;
 };
@@ -132,6 +133,10 @@ struct FS_Sequence : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sequence")
 	TArray<FS_Line> Lines;
+
+	/** Story flags set when the sequence plays (e.g. CoalitionKeyRecovered) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sequence")
+	TArray<FName> SetFlags;
 };
 
 /** An officer's advice shown in the council screen */
@@ -351,6 +356,10 @@ struct FS_Battle : public FTableRowBase
 	/** Sequence played back on the bridge after a victory */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
 	FName Debrief = NAME_None;
+
+	/** Sequence played after the debrief of a victory, by the Captain's background (e.g. the Anchorage vault) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<E_Background, FName> BackgroundAftermath;
 };
 
 /** A supply shipment on its way from Outpost One */

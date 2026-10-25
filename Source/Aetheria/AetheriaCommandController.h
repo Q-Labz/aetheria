@@ -170,6 +170,9 @@ protected:
 	/** Back on the bridge after a data-act battle */
 	void AfterDataBattle();
 
+	/** After a won battle's debrief: the sequence its BackgroundAftermath names for the Captain's background */
+	FName PendingAftermath;
+
 	/** The act's ending: Act VII plays the second revelation by leaning first; then the report and the end screen */
 	void PlayActEnd();
 

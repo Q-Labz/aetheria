@@ -575,6 +575,7 @@ void UAetheriaGameInstance::ResolveLine(const FS_Line& L, FText& Out, bool& Show
 
 	const FText* Override = L.BackgroundOverride.Find(Background);
 	FString Text = (Override ? *Override : L.Text).ToString();
+	Show = Show && !Text.IsEmpty();
 	Text.ReplaceInline(TEXT("{Captain}"), *CaptainName);
 	Text.ReplaceInline(TEXT("{Background}"), *BackgroundTitle());
 	Out = FText::FromString(Text);
