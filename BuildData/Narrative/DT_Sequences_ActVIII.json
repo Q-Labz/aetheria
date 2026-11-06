@@ -134,7 +134,7 @@
         "Speaker": "VexAI",
         "Text": "The Anchorage's guns are grafted, Captain. We cannot close on it while the Graft Forge supplies them.",
         "BackgroundOverride": {},
-        "RequiredFlag": "None"
+        "RequiredFlag": "Not_ForgeResolved"
       },
       {
         "Speaker": "TalaVane",

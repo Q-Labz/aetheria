@@ -400,4 +400,17 @@ Rustmarch}. Phantom Fleet strength: {X} of 200. Report ends."
   GraftForge 4/3, Grieve 6/6 pieces on the bridge/in combat), and E3 with `ExarchStatus = Alive`, `SeverantAllies = 4`
   and `LyraChoir` fields *The Last Silence* and six Kesh skiffs. `go_to_node` now broadcasts the campaign change,
   as a leap does, so the bridge scenery follows it.
-
+- **Playtest (phase 6).** Three full runs in PIE from the Act VIII start, driven through the real UI flow with the
+  new playtest tools (`screen`, `advance`, `choose`, `leap`: real leaps with costs and ruptures, battles won with
+  `win_battle`):
+  (a) Refuse → E1 → Destroy (E2) → Treat → Siege → Try: `VanceFate = Tried`, forge `Destroyed`, Tala 60, Thorne 65.
+  (b) Ride the signal → Slip the mines → Seize (E2 hold) → refuse treatment → Infiltration (60 s hold) → Hear him out →
+  Sentence: Release: `Released`, `Seized` + `SilenceShielding`, `PrisonersFreed`, `ListenerTraced`, Tala 30, Nix 65.
+  (c) Standing 35, cure delivered, Ithane deposed, both intel flags → silence → Promise Rustmarch → Seren Vael with
+  Kesh (6 allies) → the Exarch's weak point → Sabotage (no battle) → Treat → Siege (graft spike up, no Last Silence) →
+  Hand him to the Severants: `Severants`, standing 55, 6 Severant ships in the report.
+  Each run ends on the Act VIII mission report with `ActVIIIComplete`; no script or Aetheria errors in the log.
+- **Fixed from the playtest.** The Grieve arrival no longer has Vex say the forge still blocks the Anchorage once it is
+  resolved (`RequiredFlag Not_ForgeResolved`).
+- **Balance note (not changed).** The peaceful route Marker → Rustmarch → Seren Vael → Graft Forge ruptures on the last
+  leap from a low start (−37% hull, 8 Phantoms in run c); charting or venting avoids it. Worth a look in tuning.

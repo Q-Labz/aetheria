@@ -31,6 +31,32 @@ def _game_instance():
     return gi
 
 
+def _widgets(cls):
+    """Live widgets of a class in the PIE world (UMG's widget library is not exposed to Python)."""
+    world = _game_world()
+    found = []
+    for w in unreal.ObjectIterator(cls):
+        try:
+            if w.get_world() == world:
+                found.append(w)
+        except Exception:
+            pass
+    return found
+
+
+def _live(widgets):
+    return [w for w in widgets if w.is_in_viewport()]
+
+
+def _options(council):
+    """The council's option buttons (children of the council, so not in the viewport themselves)."""
+    return [b for b in _widgets(unreal.AetheriaOptionButton) if b.get_editor_property("parent_council") == council]
+
+
+def _line_text(line):
+    return f"{str(line.get_editor_property('speaker')).split('.')[-1].split(':')[0]}: {line.get_editor_property('text')}"
+
+
 @unreal.uclass()
 class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
     """Playtest shortcuts for a running PIE session of Aetheria: jump into Act VII or a later act and read the
@@ -305,3 +331,93 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             return f"No living {target_class}."
         flagship.fire_beam(targets[0].get_actor_location())
         return f"Beam charging at {targets[0].get_editor_property('display_name')}."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def screen() -> str:
+        """Says what the command level shows now: the dialogue line, the council and its available options
+        (labels and hints, as the player sees them), or the star map.
+
+        Returns:
+            One line per item on screen.
+        """
+        out = []
+        for d in _live(_widgets(unreal.AetheriaDialogue)):
+            lines = d.get_editor_property("lines")
+            i = d.get_editor_property("index")
+            if 0 <= i < len(lines):
+                out.append(f"dialogue {i + 1}/{len(lines)} " + _line_text(lines[i]))
+        for c in _live(_widgets(unreal.AetheriaCouncil)):
+            out.append(f"council {c.get_editor_property('council_def')}")
+            for b in _options(c):
+                o = b.get_editor_property("option")
+                out.append(f"  option '{o.get_editor_property('label')}' ({o.get_editor_property('approval_hint')})")
+        if _live(_widgets(unreal.AetheriaStarMap)):
+            out.append("star map")
+        return "\n".join(out) or "nothing (between screens)"
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def advance(max_lines: int = 60) -> str:
+        """Continues dialogue line by line, as Enter does, until a council or the star map is up (or nothing is).
+
+        Args:
+            max_lines: Safety limit on lines continued
+
+        Returns:
+            The lines that were shown (raw text, before background overrides), then what is on screen.
+        """
+        shown = []
+        for _ in range(max_lines):
+            dialogues = _live(_widgets(unreal.AetheriaDialogue))
+            if not dialogues:
+                break
+            d = dialogues[0]
+            lines = d.get_editor_property("lines")
+            i = d.get_editor_property("index")
+            if 0 <= i < len(lines):
+                shown.append(_line_text(lines[i]))
+            d.continue_()
+        return "\n".join(shown + ["-- now: " + AetheriaPlaytestToolset.screen()])
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def choose(label: str) -> str:
+        """Picks a council option, as clicking it does.
+
+        Args:
+            label: The option's label, or a unique part of it (case-insensitive)
+
+        Returns:
+            The outcome's first lines and what is on screen after.
+        """
+        councils = _live(_widgets(unreal.AetheriaCouncil))
+        if not councils:
+            raise RuntimeError("No council is on screen. " + AetheriaPlaytestToolset.screen())
+        options = [b.get_editor_property("option") for b in _options(councils[0])]
+        matches = [o for o in options if label.lower() in str(o.get_editor_property("label")).lower()]
+        if len(matches) != 1:
+            raise RuntimeError(f"'{label}' matches {len(matches)} options: " +
+                               "; ".join(str(o.get_editor_property("label")) for o in options))
+        councils[0].choose_option(matches[0])
+        return f"Chose '{matches[0].get_editor_property('label')}'.\n" + AetheriaPlaytestToolset.screen()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def leap(node: str) -> str:
+        """Leaps to a node as the star map's Leap does: leap cost, instability, ruptures, then the arrival.
+
+        Args:
+            node: Node to leap to; it must have a lane from the current node
+
+        Returns:
+            The leap report and the campaign state.
+        """
+        gi = _game_instance()
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "on_arrive"):
+            raise RuntimeError("The PIE player controller is not PC_Command.")
+        encounter = gi.execute_leap(node)
+        report = str(gi.get_editor_property("last_report"))
+        pc.on_arrive(encounter)
+        return report + "\n" + AetheriaPlaytestToolset.get_campaign_state()
