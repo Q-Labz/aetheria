@@ -48,7 +48,11 @@ enum class E_Faction : uint8
 {
 	Player,
 	VanceRemnant,
-	Severant
+	Severant,
+	/** Answerer automata: the Meridian yard defences (Act IX) */
+	Answerer,
+	/** Hulls and squadrons held in the Listener's sync (Acts IX-X) */
+	Listener
 };
 
 /** What happens on arrival at a star node */
@@ -119,7 +123,8 @@ struct FS_Line
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Line")
 	TMap<E_Background, FText> BackgroundOverride;
 
-	/** Line is skipped unless this story flag is set; None shows it always */
+	/** Line is skipped unless this story flag is set; None shows it always. A line with empty Text is shown only
+	 *  to the backgrounds in BackgroundOverride. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Line")
 	FName RequiredFlag = NAME_None;
 };
@@ -132,6 +137,10 @@ struct FS_Sequence : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sequence")
 	TArray<FS_Line> Lines;
+
+	/** Story flags set when the sequence plays (e.g. CoalitionKeyRecovered) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sequence")
+	TArray<FName> SetFlags;
 };
 
 /** An officer's advice shown in the council screen */
@@ -242,6 +251,16 @@ struct FS_CouncilOption : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
 	TMap<FName, FName> SetStates;
 
+	// ---- Act IX ----
+
+	/** Story flags to clear (the Corsairs rejoin: CorsairsDeparted) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	TArray<FName> ClearFlags;
+
+	/** Phantom vessels brought back into the fleet's sync; never more than the hulls not destroyed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Effects")
+	int32 PhantomDelta = 0;
+
 	/** Council (DT_Councils row) to hold right after the outcome lines */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Council Option|Flow")
 	FName NextCouncil = NAME_None;
@@ -320,6 +339,22 @@ struct FS_BattleGroup
 	/** Battle is won when every ship of this group is destroyed (empty objective: all enemies) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
 	bool bObjective = false;
+
+	/** The group is fielded only if this story flag is set (None: always) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName RequiredFlag = NAME_None;
+
+	/** The group is left out if this story flag is set */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName ForbiddenFlag = NAME_None;
+
+	/** The group is fielded only if every one of these campaign states has this value (ExarchStatus = Alive) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<FName, FName> RequiredStates;
+
+	/** Read the ship count from this campaign state instead of Count (SeverantAllies); missing or not a number: 0 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	FName CountFromState = NAME_None;
 };
 
 /** A battle definition (DT_Battles) */
@@ -348,9 +383,21 @@ struct FS_Battle : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
 	TArray<FName> WinFlags;
 
+	/** Campaign states set on victory (GraftForgeState = Destroyed) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<FName, FName> WinStates;
+
+	/** Defend battles: a shorter (or longer) hold when a story flag is set (AnchorageMapped -> 60 s) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<FName, float> HoldSecondsByFlag;
+
 	/** Sequence played back on the bridge after a victory */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
 	FName Debrief = NAME_None;
+
+	/** Sequence played after the debrief of a victory, by the Captain's background (e.g. the Anchorage vault) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Battle")
+	TMap<E_Background, FName> BackgroundAftermath;
 };
 
 /** A supply shipment on its way from Outpost One */

@@ -1,0 +1,456 @@
+[
+  {
+    "Name": "E1_CuttersRest",
+    "Title": "Cutter's Rest",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCarrack.BP_TitheCarrack_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "State_AnchorageHeld_Sealed",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCollector.BP_TitheCollector_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 8,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_CorsairGunship.BP_CorsairGunship_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_CorsairGunship.BP_CorsairGunship_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsReduced",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 1,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "SeverantAllies"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "VanceFate": "Absorbed"
+        },
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 90.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Holdout hulls on approach. They intend to stop the station before its first beam is welded.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Hold them off my builders for ninety seconds, Captain. That's all I ask.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Remnant cruisers are flying with us. Strange times.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_VanceFate_Absorbed"
+      }
+    ],
+    "WinFlags": [
+      "CuttersRestFounded"
+    ],
+    "Debrief": "IX_E1_Debrief",
+    "WinStates": {
+      "CorsairsSettled": "CuttersRest"
+    },
+    "HoldSecondsByFlag": {},
+    "BackgroundAftermath": {}
+  },
+  {
+    "Name": "E2_YardWake",
+    "Title": "The Meridian Yards",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_YardSentinel.BP_YardSentinel_C",
+        "Count": 3,
+        "bAllied": false,
+        "bObjective": true,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_SentinelDrone.BP_SentinelDrone_C",
+        "Count": 10,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Three sentinel lances on the ring. Each locks a firing line before it fires. Use the pause to move off the line.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Try not to break the berths, Captain. I want them in one piece.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "YardsSecured"
+    ],
+    "Debrief": "IX_E2_Debrief",
+    "WinStates": {},
+    "HoldSecondsByFlag": {},
+    "BackgroundAftermath": {}
+  },
+  {
+    "Name": "E3_Sync",
+    "Title": "The Forge Echo",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_SyncedSquadron.BP_SyncedSquadron_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": true,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EchoHull.BP_EchoHull_C",
+        "Count": 10,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "NixNull",
+        "Text": "Wear the sync down with the guns. Don't put the beam through them: the beam kills hulls, and those hulls are ours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Empty hulls are moving toward the fleet. Their drive cores will burst on contact. Keep them at range.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "SquadronIIIReclaimed",
+      "SquadronIIIResolved"
+    ],
+    "Debrief": "IX_E3_Debrief",
+    "WinStates": {},
+    "HoldSecondsByFlag": {},
+    "BackgroundAftermath": {}
+  },
+  {
+    "Name": "E4_Root",
+    "Title": "The Root of the Key",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_SentinelDrone.BP_SentinelDrone_C",
+        "Count": 8,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_LastSilence.BP_LastSilence_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Alive"
+        },
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Alive"
+        },
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiff.BP_ChoirSkiff_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Alive"
+        },
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "State_ExarchStatus_Alive",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ChoirSkiffEmitter.BP_ChoirSkiffEmitter_C",
+        "Count": 3,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "State_ExarchStatus_Alive",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_HeldSquadron.BP_HeldSquadron_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "Leaning_Dominion",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_SyncedSquadron.BP_SyncedSquadron_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "SquadronIIIQuarantined",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_CorsairGunship.BP_CorsairGunship_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_CorsairGunship.BP_CorsairGunship_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsReduced",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 1,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "SeverantAllies"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "VanceFate": "Absorbed"
+        },
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_PhantomSquadron.BP_PhantomSquadron_C",
+        "Count": 1,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "SquadronIIIReclaimed",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 120.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Hold the root for two minutes while the Key is rewritten, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "ExarchIthane",
+        "Text": "The Severance locked these ships away from this choice, Key-Bearer. I will not let you make it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "State_ExarchStatus_Alive"
+      },
+      {
+        "Speaker": "CoreArchitect",
+        "Text": "Two squadrons answer to me in this, Key-Bearer. Disable them and they answer to you. Destroy them and they answer to no one.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "Leaning_Dominion"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "Squadron III is still synced, Captain. Guns, not the beam.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SquadronIIIQuarantined"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "Squadron III is flying with us. It's good to have them back.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SquadronIIIReclaimed"
+      }
+    ],
+    "WinFlags": [
+      "RootHeld"
+    ],
+    "Debrief": "IX_E4_Debrief",
+    "WinStates": {},
+    "HoldSecondsByFlag": {},
+    "BackgroundAftermath": {}
+  },
+  {
+    "Name": "Ambush_ActIX",
+    "Title": "Echoes in the Dark",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EchoHull.BP_EchoHull_C",
+        "Count": 8,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_SentinelDrone.BP_SentinelDrone_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Echo hulls burst on contact. The frigates carry Silence emitters. Watch for the rings.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [],
+    "Debrief": "None",
+    "WinStates": {},
+    "HoldSecondsByFlag": {},
+    "BackgroundAftermath": {}
+  }
+]

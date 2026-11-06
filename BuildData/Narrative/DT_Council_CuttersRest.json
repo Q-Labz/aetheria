@@ -1,0 +1,236 @@
+[
+  {
+    "Name": "Found",
+    "Label": "Found Cutter's Rest. The fleet holds the belt while it is built.",
+    "ApprovalHint": "Cormaker will approve. Battle: hold the belt for 90 seconds.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Captain",
+        "Text": "All ships, hold the belt. Commander, build your home.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "Cormaker",
+        "Text": "Beams up, everyone. We're home.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "RustmarchPromised"
+    ],
+    "ForbiddenFlags": [
+      "CorsairsDeparted"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "E1_CuttersRest",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "FoundGuarded",
+    "Label": "Found it, and leave half the Armada to guard it.",
+    "ApprovalHint": "Cormaker will strongly approve. Tala will not. Fewer Corsair guns fly with the fleet.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 15,
+      "TalaVane": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Six ships stay, six fly with you. Fair shares, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Six fewer guns at Meridian.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "RustmarchPromised"
+    ],
+    "ForbiddenFlags": [
+      "CorsairsDeparted"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "CuttersRestFounded",
+      "CorsairsReduced"
+    ],
+    "SetStates": {
+      "CorsairsSettled": "CuttersRest"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Rejoin",
+    "Label": "Ask the Corsairs to rejoin the fleet.",
+    "ApprovalHint": "Cormaker will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "You came back for us. My people don't forget a thing like that. Twelve ships, Captain. Where do you want them?",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [
+      "CorsairsDeparted"
+    ],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "CorsairsReturned"
+    ],
+    "SetStates": {
+      "CorsairsSettled": "Returned"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [
+      "CorsairsDeparted",
+      "CorsairsReduced"
+    ],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Promise",
+    "Label": "Promise Rustmarch to the Corsairs when the war is over.",
+    "ApprovalHint": "Cormaker will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": 10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "A promise from you is worth more than a deed from Vance. We'll hold you to it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "RustmarchPromised",
+      "CorsairsDeparted"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "RustmarchPromised"
+    ],
+    "SetStates": {
+      "CorsairsSettled": "Promised"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  },
+  {
+    "Name": "Decline",
+    "Label": "The fleet cannot stop here.",
+    "ApprovalHint": "Cormaker will not approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "Cormaker": -10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Understood, Captain. My people have waited this long.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [
+      "CorsairsDeparted"
+    ],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [],
+    "SetStates": {},
+    "NextCouncil": "None",
+    "StartBattle": "None",
+    "ClearFlags": [],
+    "PhantomDelta": 0
+  }
+]

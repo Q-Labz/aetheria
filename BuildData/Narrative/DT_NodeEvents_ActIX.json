@@ -1,0 +1,75 @@
+[
+  {
+    "Name": "Grieve",
+    "ArrivalSequence": "IX_Grieve_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Anchorage"
+    ]
+  },
+  {
+    "Name": "Rustmarch",
+    "ArrivalSequence": "IX_Rustmarch_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "CuttersRest"
+    ]
+  },
+  {
+    "Name": "SerenVael",
+    "ArrivalSequence": "IX_SerenVael_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "LastWarden",
+      "SerenVaelEnvoy",
+      "Inversion"
+    ]
+  },
+  {
+    "Name": "MeridianYards",
+    "ArrivalSequence": "IX_Yards_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "YardWake",
+      "Yards"
+    ]
+  },
+  {
+    "Name": "Meridian",
+    "ArrivalSequence": "IX_Meridian_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Threshold",
+      "TalaProposal",
+      "RootContest",
+      "FleetKey",
+      "Farewell_Tala",
+      "Farewell_Jax",
+      "Farewell_Thorne",
+      "Farewell_Nix",
+      "Farewell_Lyra",
+      "Farewell_Cormaker"
+    ]
+  },
+  {
+    "Name": "ForgeEcho",
+    "ArrivalSequence": "IX_ForgeEcho_Arrival",
+    "ArrivalFlags": [
+      "RootRecord"
+    ],
+    "Councils": [
+      "SquadronIII",
+      "EchoVoice"
+    ]
+  },
+  {
+    "Name": "TheHush",
+    "ArrivalSequence": "IX_Hush_Arrival",
+    "ArrivalFlags": [
+      "ListenerQuestionHeard"
+    ],
+    "Councils": [
+      "Array"
+    ]
+  }
+]

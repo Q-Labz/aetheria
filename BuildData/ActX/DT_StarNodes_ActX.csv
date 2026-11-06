@@ -1,0 +1,5 @@
+---,NodeID,DisplayName,Description,MapPos,Encounter,HazardSurcharge
+TheHush,TheHush,"The Hush","Starless dark at the galaxy's edge; the last watch before the gate.","(X=140.000000,Y=420.000000)",Event,10.0
+Vigil,Vigil,"The Vigil","A tidally locked moon that has watched Gate Zero since the Severance; the hardliners' last picket.","(X=520.000000,Y=640.000000)",Combat,0.0
+GateZero,GateZero,"Gate Zero","The sealed gate at the galaxy's edge: three seal plates, three sigils.","(X=980.000000,Y=420.000000)",Council,0.0
+ArchWake,ArchWake,"Arch Wake","The Omega Arch from the far side, and Outpost One's lights through it.","(X=520.000000,Y=160.000000)",Event,0.0

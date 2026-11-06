@@ -134,6 +134,13 @@ public:
 	UFUNCTION(BlueprintPure, Category="Bastion")
 	int32 GetLivePylons() const;
 
+	/** Vex's lines when the shielded core is hit, and when the last pylon falls */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bastion")
+	FString ShieldedNote = TEXT("The Bastion core is shielded while its pylons stand. Bring down the pylons first.");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bastion")
+	FString ExposedNote = TEXT("Pylons down. The core is exposed, Captain.");
+
 protected:
 
 	bool bShieldNoted = false;

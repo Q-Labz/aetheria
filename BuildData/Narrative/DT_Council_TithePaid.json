@@ -1,0 +1,243 @@
+[
+  {
+    "Name": "Try",
+    "Label": "Try Vance before the fleet.",
+    "ApprovalHint": "Tala will approve.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "TalaVane": 10,
+      "Cormaker": 5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "TalaVane",
+        "Text": "Thank you, Captain. He will face the people he held.",
+        "BackgroundOverride": {
+          "CoalitionVanguard": "Thank you, Captain. You held the line against those codes once. Now you get to close the file."
+        },
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Remnant crews will be interned at the Anchorage.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "VanceTried",
+      "ActVIIIFinaleWon"
+    ],
+    "SetStates": {
+      "VanceFate": "Tried"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Absorb",
+    "Label": "Take the Remnant into the fleet. Vance commands nothing.",
+    "ApprovalHint": "Jax will approve. Tala and Cormaker will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 5,
+    "LoyaltyDeltas": {
+      "JaxMercer": 5,
+      "TalaVane": -10,
+      "Cormaker": -10
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Six hundred trained crew and the best dock this side of the Arch. I'll take it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "You are putting Sector 7 inside our own hulls, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "RemnantAbsorbed",
+      "AnchorageDock",
+      "ActVIIIFinaleWon"
+    ],
+    "SetStates": {
+      "VanceFate": "Absorbed"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Hear",
+    "Label": "Hear him out first.",
+    "ApprovalHint": "Nix will approve. Tala will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 0,
+    "LoyaltyDeltas": {
+      "NixNull": 5,
+      "TalaVane": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "You think I kept the door shut because I was told to. I kept it shut because I heard what was on the other side, Key-Bearer. So did my father, and his. The Tithe was never a toll. It was a watch.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "NixNull",
+        "Text": "His logs go back further than the Tithe does, Captain. The Listener's signal, at the Arch, before anyone opened it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "VanceHeard",
+      "ListenerTraced"
+    ],
+    "SetStates": {},
+    "NextCouncil": "Sentence",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Severants",
+    "Label": "Hand him to the Severant council.",
+    "ApprovalHint": "Kesh will approve. Thorne will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 5,
+    "LoyaltyDeltas": {
+      "ArisThorne": -5
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "WardenKesh",
+        "Text": "He will be judged by the people he bought the grafts from. That is fitting.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "Commander Vance will be transferred to Seren Vael.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": 30,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 15,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "ActVIIIFinaleWon"
+    ],
+    "SetStates": {
+      "VanceFate": "Severants"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  },
+  {
+    "Name": "Release",
+    "Label": "Release him with his crews, unarmed.",
+    "ApprovalHint": "Thorne will approve. Tala and Cormaker will not.",
+    "RequiresBackground": false,
+    "RequiredBackground": "SynodEnvoy",
+    "LeaningDelta": 10,
+    "LoyaltyDeltas": {
+      "ArisThorne": 5,
+      "TalaVane": -15,
+      "Cormaker": -15
+    },
+    "InstabilityDelta": 0.0,
+    "ChronoDelta": 0.0,
+    "SetFlag": "None",
+    "Outcome": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Unarmed. In the dark. You are either very merciful or very sure of yourself, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "We will see him again, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "RequiredFlags": [],
+    "ForbiddenFlags": [],
+    "MinStanding": -1000,
+    "MaxStanding": 1000,
+    "MinLoyaltyAny": {},
+    "RequiredStates": {},
+    "StandingDelta": 0,
+    "PursuitDelta": 0,
+    "ExposureDelta": 0,
+    "HullDelta": 0.0,
+    "SetFlags": [
+      "VanceReleased",
+      "ActVIIIFinaleWon"
+    ],
+    "SetStates": {
+      "VanceFate": "Released"
+    },
+    "NextCouncil": "None",
+    "StartBattle": "None"
+  }
+]

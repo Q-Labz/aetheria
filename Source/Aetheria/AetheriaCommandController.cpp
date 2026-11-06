@@ -69,7 +69,7 @@ void AAetheriaCommandController::BeginPlay()
 	if (GI->CurrentAct >= 7 && GI->NextScreen == TEXT("ActStart"))
 	{
 		GI->NextScreen = StarMap;
-		PlaySequence(TEXT("ActVII_Opening"), TEXT("ToNode"));
+		PlaySequence(FName(*FString::Printf(TEXT("Act%s_Opening"), *UAetheriaGameInstance::ActNumeral(GI->CurrentAct))), TEXT("ToNode"));
 	}
 	else if (GI->CurrentAct >= 7 && GI->NextScreen == PostCombat)
 	{
@@ -82,6 +82,12 @@ void AAetheriaCommandController::BeginPlay()
 	else if (GI->NextScreen == StarMap)
 	{
 		ShowStarMap();
+	}
+	else if (GI->NextScreen == TEXT("NodeCouncils"))
+	{
+		// back from a lost council battle: the council is open again at this node
+		GI->NextScreen = StarMap;
+		ContinueNode();
 	}
 	else
 	{
@@ -165,6 +171,10 @@ void AAetheriaCommandController::PlaySequence(FName Row, FName AfterKey)
 		return;
 	}
 
+	if (GI)
+	{
+		GI->StoryFlags.Append(Sequence->SetFlags);
+	}
 	PlayLines(Sequence->Lines, AfterKey);
 }
 
@@ -275,7 +285,13 @@ void AAetheriaCommandController::OnSequenceDone()
 	}
 	else if (After == TEXT("AfterDebrief"))
 	{
-		if (GI && GI->StoryFlags.Contains(TEXT("ActVIIFinaleWon")) && !GI->StoryFlags.Contains(TEXT("ActVIIComplete")))
+		if (!PendingAftermath.IsNone())
+		{
+			const FName Aftermath = PendingAftermath;
+			PendingAftermath = NAME_None;
+			PlaySequence(Aftermath, TEXT("AfterDebrief"));
+		}
+		else if (GI && GI->StoryFlags.Contains(GI->ActFlag(TEXT("FinaleWon"))) && !GI->StoryFlags.Contains(GI->ActFlag(TEXT("Complete"))))
 		{
 			PlayActEnd();
 		}
@@ -284,20 +300,14 @@ void AAetheriaCommandController::OnSequenceDone()
 			ContinueNode();
 		}
 	}
-	else if (After == TEXT("AfterRevelation") && GI)
+	else if (After == TEXT("AfterRevelation"))
 	{
-		// the act-end mission report, built from the campaign state
-		TArray<FS_Line> Report;
-		FS_Line Line;
-		Line.Speaker = E_Speaker::Narrator;
-		Line.Text = FText::FromString(FString::Printf(
-			TEXT("MISSION REPORT — THE CINDER ARCHIVE. The Vault of Records is %s. Severant standing: %s. The Silence: %s. Supply line: %s. Phantom Fleet strength: %d of 200. Commander Vance's fleet withdrew toward Tithe Anchorage. Report ends."),
-			*GI->GetState(TEXT("ArchiveState")).ToString(), *GI->StandingBand().ToString(),
-			GI->StoryFlags.Contains(TEXT("CureDelivered")) ? TEXT("cured") : TEXT("untreated"),
-			*GI->GetState(TEXT("SupplyLine")).ToString(), GI->PhantomShipsActive));
-		Report.Add(Line);
-		GI->StoryFlags.Add(TEXT("ActVIIComplete"));
-		PlayLines(Report, End);
+		PlayActReport();
+	}
+	else if (After == TEXT("AfterEnding"))
+	{
+		// Act X: the ending, then the epilogues (lines gated by state, loyalty band and flags), then the report
+		PlaySequence(TEXT("X_Epilogue"), TEXT("AfterRevelation"));
 	}
 }
 
@@ -315,7 +325,7 @@ bool AAetheriaCommandController::CanHoldCouncil(FName Council) const
 	}
 	for (const FName& Flag : Def->RequiredFlags)
 	{
-		if (!GI->StoryFlags.Contains(Flag))
+		if (!GI->HasFlag(Flag))
 		{
 			return false;
 		}
@@ -334,11 +344,26 @@ bool AAetheriaCommandController::CanHoldCouncil(FName Council) const
 
 void AAetheriaCommandController::StartActVII()
 {
+	StartAct(7);
+}
+
+void AAetheriaCommandController::StartAct(int32 Act)
+{
+	if (!GI || !GI->HasActData(Act))
+	{
+		UE_LOG(LogAetheria, Error, TEXT("StartAct(%d): the act has no chart yet."), Act);
+		return;
+	}
+	GI->StartAct(Act);
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, CommandLevel);
+}
+
+void AAetheriaCommandController::StartNextAct()
+{
 	if (GI)
 	{
-		GI->StartActVII();
+		StartAct(GI->CurrentAct < 7 ? 7 : GI->CurrentAct + 1);
 	}
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, CommandLevel);
 }
 
 void AAetheriaCommandController::RunNode(FName Node)
@@ -349,19 +374,23 @@ void AAetheriaCommandController::RunNode(FName Node)
 	}
 	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 
-	// Iron Tithe ambush: the pursuit caught up
-	if (GI->PursuitClock >= 5 && !GI->StoryFlags.Contains(TEXT("AmbushSprung")))
+	// Iron Tithe ambush: the pursuit caught up (Act VII keeps its original names: AmbushSprung, Ambush, Ambush_Intro)
+	const bool bActVII = GI->CurrentAct == 7;
+	const FString ActTag = TEXT("_Act") + UAetheriaGameInstance::ActNumeral(GI->CurrentAct);
+	const FName AmbushFlag(*(TEXT("AmbushSprung") + (bActVII ? FString() : ActTag)));
+	if (GI->PursuitClock >= 5 && !GI->StoryFlags.Contains(AmbushFlag))
 	{
-		GI->StoryFlags.Add(TEXT("AmbushSprung"));
+		GI->StoryFlags.Add(AmbushFlag);
 		GI->PursuitClock = 0;
-		PendingStartBattle = TEXT("Ambush");
-		PlaySequence(TEXT("Ambush_Intro"), TEXT("ToBattle"));
+		PendingStartBattle = FName(*(TEXT("Ambush") + (bActVII ? FString() : ActTag)));
+		PlaySequence(FName(*(TEXT("Ambush") + (bActVII ? FString() : ActTag) + TEXT("_Intro"))), TEXT("ToBattle"));
 		return;
 	}
 
-	const UDataTable* Events = GI->ActVIINodeEventsTable.LoadSynchronous();
+	const UDataTable* Events = GI->GetNodeEvents();
 	const FS_NodeEvent* Event = Events ? Events->FindRow<FS_NodeEvent>(Node, TEXT("RunNode"), false) : nullptr;
-	const FName Visited(*(TEXT("Visited_") + Node.ToString()));
+	// nodes recur across acts (TitheMarker, Grieve, SerenVael): from Act VIII on, a visit counts for its own act only
+	const FName Visited(*(TEXT("Visited_") + (bActVII ? FString() : ActTag.Mid(1) + TEXT("_")) + Node.ToString()));
 	if (Event && !GI->StoryFlags.Contains(Visited))
 	{
 		GI->StoryFlags.Add(Visited);
@@ -384,7 +413,7 @@ void AAetheriaCommandController::ContinueNode()
 	{
 		return;
 	}
-	const UDataTable* Events = GI->ActVIINodeEventsTable.LoadSynchronous();
+	const UDataTable* Events = GI->GetNodeEvents();
 	if (const FS_NodeEvent* Event = Events ? Events->FindRow<FS_NodeEvent>(GI->CurrentNode, TEXT("ContinueNode"), false) : nullptr)
 	{
 		for (const FName& Council : Event->Councils)
@@ -405,6 +434,12 @@ void AAetheriaCommandController::ContinueNode()
 				return;
 			}
 		}
+	}
+	// an act whose finale is decided in a council after its last battle (Act VIII) ends once no council is left
+	if (GI->StoryFlags.Contains(GI->ActFlag(TEXT("FinaleWon"))) && !GI->StoryFlags.Contains(GI->ActFlag(TEXT("Complete"))))
+	{
+		PlayActEnd();
+		return;
 	}
 	ShowStarMap();
 }
@@ -430,6 +465,7 @@ void AAetheriaCommandController::OnCouncilChosen(FName Council, const FS_Council
 	if (GI)
 	{
 		GI->StoryFlags.Add(FName(*(TEXT("Council_") + Council.ToString())));
+		GI->PendingBattleCouncil = Opt.StartBattle.IsNone() ? NAME_None : Council;
 	}
 	PendingNextCouncil = Opt.NextCouncil;
 	PendingStartBattle = Opt.StartBattle;
@@ -456,6 +492,8 @@ void AAetheriaCommandController::AfterDataBattle()
 	}
 	const UDataTable* Battles = GI ? GI->BattlesTable.LoadSynchronous() : nullptr;
 	const FS_Battle* Row = Battles ? Battles->FindRow<FS_Battle>(Battle, TEXT("AfterDataBattle"), false) : nullptr;
+	const FName* Aftermath = Row && GI ? Row->BackgroundAftermath.Find(GI->Background) : nullptr;
+	PendingAftermath = Aftermath && GI->StoryFlags.Contains(FName(*(TEXT("Won_") + Battle.ToString()))) ? *Aftermath : NAME_None;
 	if (Row && !Row->Debrief.IsNone())
 	{
 		PlaySequence(Row->Debrief, TEXT("AfterDebrief"));
@@ -473,11 +511,101 @@ void AAetheriaCommandController::PlayActEnd()
 	{
 		return;
 	}
+	if (GI->CurrentAct == 10)
+	{
+		PlaySequence(FName(*(TEXT("X_Ending_") + GI->GetState(TEXT("Ending")).ToString())), TEXT("AfterEnding"));
+		return;
+	}
+	if (GI->CurrentAct != 7)
+	{
+		PlayActReport();
+		return;
+	}
 	const FName State = GI->LeaningState();
 	const FName Revelation = State == TEXT("Custodian") ? FName(TEXT("Guardian"))
 		: State == TEXT("Dominion") ? FName(TEXT("Warden")) : FName(TEXT("Unresolved"));
 	GI->States.Add(TEXT("ArchitectRevelation2"), Revelation);
 	PlaySequence(FName(*(TEXT("Revelation_") + Revelation.ToString())), TEXT("AfterRevelation"));
+}
+
+void AAetheriaCommandController::PlayActReport()
+{
+	using namespace AetheriaFlow;
+
+	if (!GI)
+	{
+		return;
+	}
+	FString Text;
+	if (GI->CurrentAct == 7)
+	{
+		Text = FString::Printf(
+			TEXT("MISSION REPORT — THE CINDER ARCHIVE. The Vault of Records is %s. Severant standing: %s. The Silence: %s. Supply line: %s. Phantom Fleet strength: %d of 200. Commander Vance's fleet withdrew toward Tithe Anchorage. Report ends."),
+			*GI->GetState(TEXT("ArchiveState")).ToString(), *GI->StandingBand().ToString(),
+			GI->StoryFlags.Contains(TEXT("CureDelivered")) ? TEXT("cured") : TEXT("untreated"),
+			*GI->GetState(TEXT("SupplyLine")).ToString(), GI->PhantomShipsActive);
+	}
+	else if (GI->CurrentAct == 8)
+	{
+		const FName Fate = GI->GetState(TEXT("VanceFate"));
+		const TCHAR* FateText = Fate == TEXT("Tried") ? TEXT("tried before the fleet")
+			: Fate == TEXT("Absorbed") ? TEXT("held; the Remnant absorbed into the fleet")
+			: Fate == TEXT("Severants") ? TEXT("handed to the Severant council")
+			: Fate == TEXT("Released") ? TEXT("released with his crews, unarmed") : TEXT("unresolved");
+		const FName Forge = GI->GetState(TEXT("GraftForgeState"));
+		const FName Allies = GI->GetState(TEXT("SeverantAllies"));
+		Text = FString::Printf(
+			TEXT("MISSION REPORT — THE IRON TITHE. Tithe Anchorage is in fleet hands. Commander Vance: %s. The Graft Forge: %s. Severant vessels standing with the fleet: %s. The Corsair Armada: %s. Phantom Fleet strength: %d of 200. Report ends."),
+			FateText, Forge == TEXT("None") ? TEXT("intact") : *Forge.ToString().ToLower(),
+			Allies == TEXT("None") ? TEXT("0") : *Allies.ToString(),
+			GI->StoryFlags.Contains(TEXT("CorsairsDeparted")) ? TEXT("departed for Rustmarch") : TEXT("with the fleet"),
+			GI->PhantomShipsActive);
+	}
+	else if (GI->CurrentAct == 9)
+	{
+		const FName Key = GI->GetState(TEXT("FleetKey"));
+		const TCHAR* KeyText = Key == TEXT("Crew") ? TEXT("re-rooted in the crew's sandbox; the Architect is cut out")
+			: Key == TEXT("Shared") ? TEXT("shared between the Key-Bearer and the Architect")
+			: Key == TEXT("Vex") ? TEXT("held by Vex AI") : Key == TEXT("Captain") ? TEXT("held by the Key-Bearer alone") : TEXT("unresolved");
+		const TCHAR* SquadronText = GI->StoryFlags.Contains(TEXT("SquadronIIIReleased")) ? TEXT("released to answer the Listener")
+			: GI->StoryFlags.Contains(TEXT("SquadronIIIReclaimed")) ? TEXT("reclaimed")
+			: GI->StoryFlags.Contains(TEXT("SquadronIIIAlienated")) ? TEXT("beyond the fleet's reach") : TEXT("with the fleet");
+		const FName Inversion = GI->GetState(TEXT("CureInversion"));
+		const TCHAR* InversionText = Inversion == TEXT("Destroyed") ? TEXT("destroyed")
+			: Inversion == TEXT("Kept") ? TEXT("kept under the Key-Bearer's seal")
+			: Inversion == TEXT("Given") ? TEXT("given to the Severant council") : TEXT("not found");
+		Text = FString::Printf(
+			TEXT("MISSION REPORT — THE THRESHOLD. The root of the Automated Fleet Key is %s. Squadron III: %s. The cure's inversion: %s. The Listener's question: %s. Phantom Fleet strength: %d of 200. Report ends."),
+			KeyText, SquadronText, InversionText,
+			GI->StoryFlags.Contains(TEXT("ListenerQuestionHeard")) ? TEXT("received") : TEXT("not yet received"),
+			GI->PhantomShipsActive);
+	}
+	else if (GI->CurrentAct == 10)
+	{
+		const FName Ending = GI->GetState(TEXT("Ending"));
+		const TCHAR* AnswerText = Ending == TEXT("Envoy") ? TEXT("given by the Key-Bearer, for the fleet")
+			: Ending == TEXT("Chorus") ? TEXT("given by every crew in the fleet")
+			: Ending == TEXT("Accord") ? TEXT("woven by Lyra, for the fleet and the Severants together")
+			: Ending == TEXT("Door") ? TEXT("carried through Gate Zero by the Core Architect")
+			: Ending == TEXT("Wall") ? TEXT("withheld; Gate Zero is sealed again") : TEXT("not given");
+		const int32 Hulls = 2 + GI->PhantomShipsActive + (GI->StoryFlags.Contains(TEXT("CorsairsDeparted")) ? 0 : 12);
+		Text = FString::Printf(
+			TEXT("FINAL REPORT — GATE ZERO. Two hundred and fourteen vessels crossed the Omega Arch. %d report position. The Listener's question was answered: %s. Phantom Fleet strength: %d of 200. Report ends."),
+			Hulls, AnswerText, GI->PhantomShipsActive);
+	}
+	else
+	{
+		Text = FString::Printf(TEXT("MISSION REPORT — %s. Phantom Fleet strength: %d of 200. Report ends."),
+			*UAetheriaGameInstance::ActTitle(GI->CurrentAct).ToUpper(), GI->PhantomShipsActive);
+	}
+
+	TArray<FS_Line> Report;
+	FS_Line Line;
+	Line.Speaker = E_Speaker::Narrator;
+	Line.Text = FText::FromString(Text);
+	Report.Add(Line);
+	GI->StoryFlags.Add(GI->ActFlag(TEXT("Complete")));
+	PlayLines(Report, End);
 }
 
 void AAetheriaCommandController::OnArrive(E_Encounter Encounter)

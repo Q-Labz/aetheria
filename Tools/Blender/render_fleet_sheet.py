@@ -36,6 +36,14 @@ LABELS = [  # (asset, label); assets missing from the folder are skipped
     ("SM_BastionPylon", "Bastion Shield Pylon"),
     ("SM_VaultOfRecords", "The Vault of Records"),
     ("SM_GlassShardField", "Glass Sea Shards"),
+    ("SM_TitheCarrack", "Tithe Carrack"),
+    ("SM_TitheCollector", "Tithe Collector"),
+    ("SM_WritOfSector7", "Writ of Sector 7 (Vance)"),
+    ("SM_TitheAnchorage", "Tithe Anchorage · 3.5 km"),
+    ("SM_GraftForge", "The Graft Forge"),
+    ("SM_ForgePylon", "Forge Cable Pylon"),
+    ("SM_TollPlatform", "Toll Line Platform"),
+    ("SM_TollMine", "Toll Line Mine"),
 ]
 COLUMNS, CELL_W, CELL_H = 4, 140.0, 110.0
 FIT_W, FIT_H = 110.0, 70.0  # on-screen box each asset is scaled into

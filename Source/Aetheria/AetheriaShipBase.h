@@ -7,6 +7,7 @@
 #include "AetheriaTypes.h"
 #include "AetheriaShipBase.generated.h"
 
+class UAudioComponent;
 class USceneComponent;
 class USphereComponent;
 class UStaticMeshComponent;
@@ -247,4 +248,8 @@ protected:
 	FTimerHandle FireTimer;
 	FTimerHandle RegenTimer;
 	FTimerHandle AITimer;
+
+	/** The drive's looping rumble (pitched by hull size) */
+	UPROPERTY(Transient)
+	TObjectPtr<UAudioComponent> EngineAudio;
 };

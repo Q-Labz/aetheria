@@ -55,6 +55,20 @@ SHIPS = {
         "canon": {"DisplayName": "Picket Cruiser 'Tithe of Sector 7'", "bTargetsFlagship": True},
         "meshes": {"HullMesh": "SM_TitheCruiser"},
     },
+    # Acts IX-X (ACT_IX_THRESHOLD.md 8): synced and held squadrons are twenty of the fleet's own 200
+    "BP_SyncedSquadron": {
+        "required": ("BeamShipLoss", "ShipsLost"),
+        "canon": {"ShipsInSquadron": PHANTOM_SQUADRON_SIZE, "bReclaimAddsToFleet": True},
+        "meshes": {"Formation": "SM_PhantomCruiser"},
+    },
+    "BP_HeldSquadron": {
+        "required": ("BeamShipLoss", "ShipsLost"),
+        "canon": {"ShipsInSquadron": PHANTOM_SQUADRON_SIZE, "bReclaimAddsToFleet": False},
+        "meshes": {"Formation": "SM_PhantomCruiser"},
+    },
+    "BP_EchoHull": {"required": ("BurstDamage", "BurstRadius")},
+    "BP_YardSentinel": {"required": ("LanceDamage", "LanceInterval", "TelegraphTime")},
+    "BP_SentinelDrone": {},
 }
 GAME_INSTANCE_CANON = {"PhantomShipsActive": PHANTOM_FLEET}
 

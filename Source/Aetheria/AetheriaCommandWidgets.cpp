@@ -17,12 +17,14 @@
 #include "Components/ProgressBar.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
+#include "Components/ScrollBox.h"
 #include "Components/VerticalBox.h"
 #include "Engine/DataTable.h"
 #include "Engine/World.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Rendering/DrawElements.h"
 #include "TimerManager.h"
+#include "AetheriaAudio.h"
 #include "Widgets/Layout/Anchors.h"
 
 using namespace AetheriaUI;
@@ -309,6 +311,7 @@ FReply UAetheriaDialogue::NativeOnKeyDown(const FGeometry& InGeometry, const FKe
 
 void UAetheriaDialogue::HandleContinue()
 {
+	AetheriaAudio::PlayUI(this, TEXT("S_UI_Click"), 0.5f);
 	Continue();
 }
 
@@ -422,6 +425,7 @@ void UAetheriaNodeButton::SetState(bool bIsCurrent, bool bIsSelected)
 
 void UAetheriaNodeButton::HandleClicked()
 {
+	AetheriaAudio::PlayUI(this, TEXT("S_UI_Click"), 0.5f);
 	if (ParentMap)
 	{
 		ParentMap->SelectNode(NodeID);
@@ -866,6 +870,7 @@ void UAetheriaStarMap::HandleLeap()
 
 	SetBusy(true);
 	SetShown(FlashOverlay, true);
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_Leap"), 0.8f);
 	FTimerManager& Timers = GetWorld()->GetTimerManager();
 	Timers.SetTimer(FlashTimer, FTimerDelegate::CreateWeakLambda(this, [this]() { SetShown(FlashOverlay, false); }), 0.6f, false);
 
@@ -985,6 +990,7 @@ void UAetheriaOptionButton::Setup(const FS_CouncilOption& InOption, UAetheriaCou
 
 void UAetheriaOptionButton::HandleClicked()
 {
+	AetheriaAudio::PlayUI(this, TEXT("S_UI_Click"), 0.6f);
 	if (ParentCouncil)
 	{
 		ParentCouncil->ChooseOption(Option);
@@ -1077,6 +1083,7 @@ void UAetheriaCouncil::SetupDef(FName InCouncilDef)
 void UAetheriaCouncil::NativeConstruct()
 {
 	Super::NativeConstruct();
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_Council"), 0.7f);
 
 	if (OptionButtonClass.IsNull())
 	{
@@ -1100,8 +1107,7 @@ void UAetheriaCouncil::Populate()
 		Situation = Def->Situation.ToString();
 		for (const FS_Counsel& Entry : Def->Counsel)
 		{
-			if ((!Entry.RequiredFlag.IsNone() && !GI->StoryFlags.Contains(Entry.RequiredFlag))
-				|| (!Entry.ForbiddenFlag.IsNone() && GI->StoryFlags.Contains(Entry.ForbiddenFlag)))
+			if (!GI->HasFlag(Entry.RequiredFlag) || (!Entry.ForbiddenFlag.IsNone() && GI->HasFlag(Entry.ForbiddenFlag)))
 			{
 				continue;
 			}
@@ -1190,8 +1196,11 @@ void UAetheriaSliceEnd::BuildDefaultLayout()
 
 	TitleText = MakeText(WidgetTree, TEXT("TitleText"), TEXT("END OF VERTICAL SLICE — ACT VI: THE FAR SHORE"), 22, Cyan, true);
 	AddToBox(Box, TitleText, FMargin(0.0f, 0.0f, 0.0f, 16.0f));
+	// the summary grows with every act: it scrolls, so the buttons below always stay inside the panel
+	UScrollBox* SummaryScroll = WidgetTree->ConstructWidget<UScrollBox>(UScrollBox::StaticClass(), TEXT("SummaryScroll"));
 	SummaryText = MakeText(WidgetTree, TEXT("SummaryText"), FString(), 15, TextColor, true);
-	AddToBox(Box, SummaryText, FMargin(0.0f), true);
+	SummaryScroll->AddChild(SummaryText);
+	AddToBox(Box, SummaryScroll, FMargin(0.0f), true);
 
 	UHorizontalBox* Row = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("Buttons"));
 	ContinueButton = MakeButton(WidgetTree, TEXT("ContinueButton"), TEXT("CONTINUE: ACT VII — THE CINDER ARCHIVE"), 15);
@@ -1206,20 +1215,28 @@ void UAetheriaSliceEnd::BuildDefaultLayout()
 void UAetheriaSliceEnd::NativeConstruct()
 {
 	Super::NativeConstruct();
+	AetheriaAudio::PlayUI(this, TEXT("M_Sting_ActEnd"), 0.8f);
 
 	if (NewCommandButton) { NewCommandButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleNewCommand); }
 	if (QuitButton) { QuitButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleQuit); }
 	if (ContinueButton) { ContinueButton->OnClicked.AddUniqueDynamic(this, &UAetheriaSliceEnd::HandleContinue); }
 
 	const UAetheriaGameInstance* GI = GetAetheriaGameInstance();
-	SetShown(ContinueButton, GI && GI->CurrentAct < 7);
+	const int32 NextAct = GI ? (GI->CurrentAct < 7 ? 7 : GI->CurrentAct + 1) : 7;
+	SetShown(ContinueButton, GI && GI->HasActData(NextAct));
+	if (UTextBlock* ContinueLabel = ContinueButton ? Cast<UTextBlock>(ContinueButton->GetContent()) : nullptr)
+	{
+		ContinueLabel->SetText(FText::FromString(FString::Printf(TEXT("CONTINUE: ACT %s — %s"),
+			*UAetheriaGameInstance::ActNumeral(NextAct), *UAetheriaGameInstance::ActTitle(NextAct).ToUpper())));
+	}
 	if (!GI || !SummaryText)
 	{
 		return;
 	}
 	if (GI->CurrentAct >= 7 && TitleText)
 	{
-		TitleText->SetText(FText::FromString(TEXT("END OF ACT VII — THE CINDER ARCHIVE")));
+		TitleText->SetText(FText::FromString(FString::Printf(TEXT("END OF ACT %s — %s"),
+			*UAetheriaGameInstance::ActNumeral(GI->CurrentAct), *UAetheriaGameInstance::ActTitle(GI->CurrentAct).ToUpper())));
 	}
 
 	TArray<FString> Lines;
@@ -1244,6 +1261,24 @@ void UAetheriaSliceEnd::NativeConstruct()
 			*GI->GetState(TEXT("SupplyLine")).ToString(), *GI->GetState(TEXT("ArchiveState")).ToString(),
 			*GI->GetState(TEXT("ExarchStatus")).ToString(), *GI->GetState(TEXT("ArchitectRevelation2")).ToString()));
 	}
+	if (GI->CurrentAct >= 8)
+	{
+		Lines.Add(FString::Printf(TEXT("COMMANDER VANCE: %s · THE GRAFT FORGE: %s · SEVERANT ALLIES: %s · CORSAIRS: %s"),
+			*GI->GetState(TEXT("VanceFate")).ToString(), *GI->GetState(TEXT("GraftForgeState")).ToString(),
+			*GI->GetState(TEXT("SeverantAllies")).ToString(),
+			GI->StoryFlags.Contains(TEXT("CorsairsDeparted")) ? TEXT("departed") : TEXT("with the fleet")));
+	}
+	if (GI->CurrentAct >= 9)
+	{
+		Lines.Add(FString::Printf(TEXT("THE FLEET KEY: %s · THE ARCHITECT: %s · CURE INVERSION: %s · THE ARRAY: %s"),
+			*GI->GetState(TEXT("FleetKey")).ToString(), *GI->GetState(TEXT("ArchitectChoice")).ToString(),
+			*GI->GetState(TEXT("CureInversion")).ToString(), *GI->GetState(TEXT("ArrayState")).ToString()));
+	}
+	if (GI->CurrentAct >= 10)
+	{
+		Lines.Add(FString::Printf(TEXT("THE ANSWER: %s · VEX AI: %s"),
+			*GI->GetState(TEXT("Ending")).ToString(), *GI->GetState(TEXT("VexAnswer")).ToString()));
+	}
 
 	SummaryText->SetText(FText::FromString(FString::Join(Lines, TEXT("\n"))));
 }
@@ -1260,7 +1295,7 @@ void UAetheriaSliceEnd::HandleContinue()
 {
 	if (AAetheriaCommandController* PC = GetCommandController())
 	{
-		PC->StartActVII();
+		PC->StartNextAct();
 	}
 }
 

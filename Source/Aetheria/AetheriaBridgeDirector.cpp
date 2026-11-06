@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaBridgeDirector.h"
+#include "AetheriaAudio.h"
+#include "Engine/StaticMeshActor.h"
+#include "TimerManager.h"
 #include "Aetheria.h"
 #include "Camera/CameraActor.h"
 #include "Components/LightComponent.h"
@@ -43,6 +46,31 @@ void AAetheriaBridgeDirector::BeginPlay()
 {
 	Super::BeginPlay();
 	InitializeBridge();
+
+	// the ship's machinery under everything, and the consoles talking to themselves
+	AetheriaAudio::Loop(this, TEXT("A_Bridge_Hum"), nullptr, AetheriaAudio::ERange::Bridge, 0.5f);
+	for (TActorIterator<AStaticMeshActor> It(GetWorld()); It; ++It)
+	{
+		const UStaticMeshComponent* Mesh = It->GetStaticMeshComponent();
+		const FString Name = Mesh && Mesh->GetStaticMesh() ? Mesh->GetStaticMesh()->GetName() : FString();
+		if (Name.Contains(TEXT("WallBank")) || Name.Contains(TEXT("Console")) || Name.Contains(TEXT("OverheadMonitor")))
+		{
+			ChirpSources.Add(It->GetActorLocation() + FVector(0.0f, 0.0f, 150.0f));
+		}
+	}
+	GetWorldTimerManager().SetTimer(ChirpTimer, this, &AAetheriaBridgeDirector::PlayConsoleChirp, 1.5f, false);
+}
+
+void AAetheriaBridgeDirector::PlayConsoleChirp()
+{
+	if (ChirpSources.Num() > 0)
+	{
+		const FVector Where = ChirpSources[FMath::RandRange(0, ChirpSources.Num() - 1)];
+		const bool bRelay = FMath::FRand() < 0.15f;
+		AetheriaAudio::PlayAt(this, bRelay ? FString(TEXT("S_Relay_Click")) : AetheriaAudio::Variant(TEXT("S_Console_Chirp"), 8),
+			Where, AetheriaAudio::ERange::Bridge, bRelay ? 0.5f : 0.35f, FMath::FRandRange(0.92f, 1.08f));
+	}
+	GetWorldTimerManager().SetTimer(ChirpTimer, this, &AAetheriaBridgeDirector::PlayConsoleChirp, FMath::FRandRange(0.7f, 2.6f), false);
 }
 
 void AAetheriaBridgeDirector::InitializeBridge()

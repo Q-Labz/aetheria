@@ -1,0 +1,54 @@
+[
+  {
+    "Name": "TitheMarker",
+    "ArrivalSequence": "VIII_TitheMarker_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Terms"
+    ]
+  },
+  {
+    "Name": "Rustmarch",
+    "ArrivalSequence": "VIII_Rustmarch_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "FairShares"
+    ]
+  },
+  {
+    "Name": "TollLine",
+    "ArrivalSequence": "VIII_TollLine_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "TollLine"
+    ]
+  },
+  {
+    "Name": "SerenVael",
+    "ArrivalSequence": "VIII_SerenVael_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "ChoirCalls",
+      "ExarchCell",
+      "Choir"
+    ]
+  },
+  {
+    "Name": "GraftForge",
+    "ArrivalSequence": "VIII_GraftForge_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Crucible",
+      "GraftedWounded"
+    ]
+  },
+  {
+    "Name": "Grieve",
+    "ArrivalSequence": "VIII_Grieve_Arrival",
+    "ArrivalFlags": [],
+    "Councils": [
+      "Approach",
+      "TithePaid"
+    ]
+  }
+]

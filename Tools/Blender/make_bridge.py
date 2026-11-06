@@ -17,11 +17,18 @@ import bpy  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
 # bridge material slots (Unreal maps them by name)
-CERAMIC, TRIM, INLAY, STRIP, CRYSTAL, GLASS = range(6)
-aetheria_hd.SLOT_NAMES = ("M_Ceramic", "M_DarkTrim", "M_Inlay", "M_LightStrip", "M_Crystal", "M_Glass")
+CERAMIC, TRIM, INLAY, STRIP, CRYSTAL, GLASS, FLOOR, SCREEN = range(8)
+aetheria_hd.SLOT_NAMES = ("M_Ceramic", "M_DarkTrim", "M_Inlay", "M_LightStrip", "M_Crystal", "M_Glass",
+                          "M_Floor", "M_Screen")
 aetheria_hd.SLOT_PREVIEW = (
     ((0.89, 0.91, 0.92), 0.0), ((0.08, 0.11, 0.13), 0.0), ((0.22, 0.88, 1.0), 20.0),
-    ((1.0, 0.97, 0.92), 8.0), ((0.5, 0.85, 1.0), 3.0), ((0.6, 0.85, 0.95), 0.0))
+    ((1.0, 0.97, 0.92), 8.0), ((0.5, 0.85, 1.0), 3.0), ((0.6, 0.85, 0.95), 0.0),
+    ((0.03, 0.03, 0.035), 0.0), ((0.2, 0.7, 1.0), 6.0))
+
+# Display content, drawn by M_BridgeScreen from UV channel 1: x = (mode + variation) / 6, y = (palette + 0.5) / 4.
+# The display face itself gets 0-1 UVs in channel 0.
+TEXT, RADAR, BARS, WAVE, SCHEMATIC, LIGHTS = range(6)
+BLUE, AMBER, RED, GREEN = range(4)
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
 OUT = os.path.abspath(args[0] if args else "Bridge")
@@ -68,10 +75,45 @@ def ring_strip(s, cx, cy, radius, z, segments=48, width=4.0, slot=INLAY):
               (cx + radius * math.cos(a1), cy + radius * math.sin(a1)), z, width, slot)
 
 
-def screen(s, m, w, h, slot=STRIP):
-    """Display panel: dark bezel with a lit face, on local +X of matrix m."""
+def screen(s, m, w, h, mode=None, palette=None):
+    """Display panel: dark bezel with a live display face on local +X of matrix m. Large panels get
+    radar, schematic or waveform displays and small ones data or bar readouts unless mode is given."""
     s.box(None, (4, w + 6, h + 6), TRIM, matrix=m)
-    s.box(None, (1, w, h), slot, matrix=m @ Matrix.Translation((2.5, 0, 0)))
+    if mode is None:
+        mode = s.rng.choice((RADAR, SCHEMATIC, WAVE, SCHEMATIC) if w * h > 4000 else (TEXT, TEXT, BARS, WAVE))
+    display(s, m @ Matrix.Translation((2.5, 0, 0)), w, h, mode, palette)
+
+
+def display(s, m, w, h, mode, palette=None, depth=1.0):
+    """A display face (SCREEN slot) of w x h on local +X of m, recorded for its UVs."""
+    if palette is None:
+        palette = s.rng.choice((BLUE, BLUE, BLUE, AMBER, GREEN, RED) if mode != LIGHTS else (BLUE,))
+    box_m = m @ Matrix.Diagonal((depth, w, h, 1.0))
+    faces = s._cube(box_m, SCREEN)
+    if not hasattr(s, "displays"):
+        s.displays = []
+    # faces[1] is the cube's +X face
+    s.displays.append((faces[1], box_m.inverted(), (mode + s.rng.uniform(0.05, 0.95)) / 6.0, (palette + 0.5) / 4.0))
+
+
+def indicator_strip(s, m, w, h):
+    """A row of blinking status lights (red / green / amber) on a dark plate."""
+    s.box(None, (3, w + 4, h + 4), TRIM, matrix=m)
+    display(s, m @ Matrix.Translation((2.0, 0, 0)), w, h, LIGHTS)
+
+
+def apply_display_uvs(s):
+    """Channel 0: each display face spans 0-1; channel 1: the display's content seed and palette."""
+    bm = s.bm
+    uv0 = bm.loops.layers.uv.new("UVMap")
+    uv1 = bm.loops.layers.uv.new("Display")
+    for face, inv, seed, palette in getattr(s, "displays", []):
+        if not face.is_valid:
+            continue
+        for loop in face.loops:
+            local = inv @ loop.vert.co
+            loop[uv0].uv = (0.5 - local.y, 0.5 - local.z)
+            loop[uv1].uv = (seed, palette)
 
 
 def viewport_points(n):
@@ -91,11 +133,20 @@ def make_shell():
     s = Ship("SM_Bridge_Shell", 501)
     # decks: aft holotable floor, raised command walk, forward side ledges and the sunken helm pit
     floors = []
-    floors += slab(s, -HX, 200, -HY, HY, 0)
-    floors += slab(s, 200, 800, -HY, HY, WALK, WALK + 40)
-    floors += slab(s, 800, VP_X + VP_BULGE, -HY, -900, WALK, WALK + 40)
-    floors += slab(s, 800, VP_X + VP_BULGE, 900, HY, WALK, WALK + 40)
-    floors += slab(s, 800, VP_X + VP_BULGE, -900, 900, PIT, 40)
+    floors += slab(s, -HX, 200, -HY, HY, 0, slot=FLOOR)
+    floors += slab(s, 200, 800, -HY, HY, WALK, WALK + 40, slot=FLOOR)
+    floors += slab(s, 800, VP_X + VP_BULGE, -HY, -900, WALK, WALK + 40, slot=FLOOR)
+    floors += slab(s, 800, VP_X + VP_BULGE, 900, HY, WALK, WALK + 40, slot=FLOOR)
+    floors += slab(s, 800, VP_X + VP_BULGE, -900, 900, PIT, 40, slot=FLOOR)
+    # deck plating: a grid of seams aft, grating down the command walk and across the pit
+    for x in range(int(-HX) + 150, 200, 150):
+        s.box((x, 0, 0.3), (3, W, 0.6), TRIM)
+    for y in range(int(-HY) + 150, int(HY), 150):
+        s.box(((-HX + 200) / 2, y, 0.3), (HX + 200, 3, 0.6), TRIM)
+    for x in range(220, 800, 30):
+        s.box((x, 0, WALK + 0.3), (8, 360, 0.6), TRIM)
+    for x in range(820, 1300, 30):
+        s.box((x, 0, PIT + 0.3), (8, 1800, 0.6), TRIM)
     # steps: holotable floor -> walk (centre and both sides), walk -> pit
     for yc in (0, -1000, 1000):
         for k, h in enumerate((40, 80)):
@@ -138,6 +189,14 @@ def make_shell():
         strip(s, (620, y), (1150, y), 700 - 1.0, 14, STRIP)
         strip(s, (20, y), (580, y), 600 - 1.0, 14, STRIP)
         strip(s, (-HX + 40, y), (-20, y), 450 - 1.0, 14, STRIP)
+    # structural ribs across the ceiling and conduits along its edges
+    for x0, x1, z in ((600, VP_X + VP_BULGE, 700), (0, 600, 600), (-HX, 0, 450)):
+        for x in range(int(x0) + 100, int(x1), 200):
+            s.box((x, 0, z - 22), (26, W - 20, 44), TRIM)
+        for sgn in (-1, 1):
+            for k, dz in enumerate((-18, -42)):
+                s.cylinder(((x0 + x1) / 2, sgn * (HY - 50 - 26 * k), z + dz), 9, x1 - x0 - 20, TRIM,
+                           axis="X", segments=10)
     # flush light rings in the ceiling over the holotable (mirrors the floor inlay)
     ring_strip(s, hx, hy, 380, 450 - 1.5, 64, 10, STRIP)
     ring_strip(s, hx, hy, 260, 450 - 1.5, 48, 4, INLAY)
@@ -177,7 +236,16 @@ def make_shell():
             s.box((x, sgn * (HY - 6), 300), (40, 12, 600), TRIM)
             s.box((x, sgn * (HY - 13), 300), (6, 2, 560), STRIP)
     s.panel_grid([f for f in walls if f.is_valid and abs(f.normal.z) < 0.2], cell=(120.0, 90.0),
-                 height=(1.0, 3.0), gap=4.0, keep=0.85, split=0.25, slots=(CERAMIC,))
+                 height=(1.0, 3.0), gap=4.0, keep=0.85, split=0.25, slots=(CERAMIC, CERAMIC, CERAMIC, TRIM))
+    # a dado of dark vent grilles along the foot of the side walls
+    for sgn in (-1, 1):
+        for x in range(int(-HX) + 80, int(VP_X), 160):
+            if sgn > 0 and -340 < x < 240:
+                continue
+            z0 = 0 if x < 200 else WALK
+            s.box((x, sgn * (HY - 4), z0 + 22), (120, 8, 30), TRIM)
+            for k in range(4):
+                s.box((x, sgn * (HY - 9), z0 + 12 + 6 * k), (110, 2, 2), CERAMIC)
     return s
 
 
@@ -247,6 +315,7 @@ def standing_console(name, seed, width, wall=True):
         y = (k - 1) * width / 3
         screen(s, at(14, y, 106, pitch=-65), width / 3 - 12, 30)
     s.box((24, 0, 90), (4, width, 3), INLAY)
+    indicator_strip(s, at(26, 0, 70), width - 30, 10)
     if wall:
         s.box((-40, 0, 170), (10, width + 40, 200), CERAMIC)
         for k in range(4):
@@ -266,6 +335,7 @@ def make_pit():
     s.box(None, (70, 165, 6), CERAMIC, matrix=at(8, 0, 74, pitch=-20))
     for k in (-1, 1):
         screen(s, at(14, k * 40, 82, pitch=-70), 66, 30)
+    indicator_strip(s, at(36, 0, 55), 140, 8)
     s.box((-50, 0, 30), (40, 50, 8), CERAMIC)            # rating's stool
     s.cylinder((-50, 0, 13), 6, 26, TRIM, axis="Z")
     return s
@@ -353,8 +423,66 @@ def make_holopad():
     return s
 
 
+def make_wall_bank():
+    """Wall-mounted computer bank (280 wide, 420 tall, 50 deep) between the wall pilasters: a stack of readouts,
+    a status-light grid, data drums, vents and conduits. Its back is against the wall at -X."""
+    s = Ship("SM_Bridge_WallBank", 530)
+    s.box((-30, 0, 210), (40, 280, 420), TRIM)                       # cabinet against the wall
+    s.box((-6, 0, 20), (12, 270, 40), TRIM)                          # kick plinth
+    s.box((-4, 0, 410), (16, 280, 20), CERAMIC)                      # cornice
+    for z in (330, 262):
+        for k in range(3):
+            screen(s, at(-8, (k - 1) * 88, z), 76, 52)
+    screen(s, at(-8, 0, 182), 250, 70, mode=s.rng.choice((RADAR, SCHEMATIC, WAVE)))
+    s.box((-8, 0, 128), (4, 254, 34), TRIM)
+    display(s, at(-5.5, 0, 128), 244, 26, LIGHTS)
+    for k in range(4):                                               # data drums
+        y = (k - 1.5) * 62
+        s.cylinder((-8, y, 78), 20, 6, TRIM, axis="X", segments=20)
+        s.cylinder((-5, y, 78), 14, 2, CERAMIC, axis="X", segments=20)
+    for k in range(5):                                               # vent slots
+        s.box((-8, 0, 40 + 6 * k), (3, 240, 2), CERAMIC)
+    for y in (132, -132):                                            # conduits
+        s.cylinder((-14, y, 210), 6, 400, CERAMIC, axis="Z", segments=10)
+    return s
+
+
+def make_overhead_monitor():
+    """Ceiling-hung monitor cluster: a strut 160 down from its origin at the ceiling, three angled screens
+    facing aft (-X) and three facing forward."""
+    s = Ship("SM_Bridge_OverheadMonitor", 531)
+    s.box((0, 0, -15), (60, 60, 30), TRIM)                           # ceiling mount
+    s.cylinder((0, 0, -95), 7, 160, TRIM, axis="Z", segments=12)
+    s.box((0, 0, -175), (40, 260, 14), TRIM)                         # crossbar
+    for side, yaw in ((-1, 180), (1, 0)):
+        for k in range(3):
+            y = (k - 1) * 82
+            tilt = 18 if k == 1 else 12
+            screen(s, at(side * 14, y, -225, yaw=yaw + (k - 1) * -12, pitch=tilt), 74, 52)
+    return s
+
+
+def make_pit_bank():
+    """Long crew-pit console (320 wide) with three slanted readouts, a status strip, a rear riser of small
+    readouts and two stools: the rows of ratings in the sunken pit."""
+    s = Ship("SM_Console_PitBank", 532)
+    s.box((0, 0, 38), (70, 320, 76), TRIM)
+    s.box(None, (76, 326, 6), CERAMIC, matrix=at(6, 0, 80, pitch=-18))
+    for k in range(3):
+        screen(s, at(16, (k - 1) * 102, 88, pitch=-68), 88, 32)
+    indicator_strip(s, at(36, 0, 58), 290, 10)
+    s.box((-8, 0, 118), (24, 320, 50), TRIM)                         # rear riser with a readout row
+    for k in range(4):
+        screen(s, at(4, (k - 1.5) * 78, 120, pitch=-10), 66, 30)
+    for y in (-80, 80):                                              # the ratings sit facing the screens (+X)
+        s.box((80, y, 30), (40, 46, 8), CERAMIC)
+        s.cylinder((80, y, 13), 6, 26, TRIM, axis="Z")
+    return s
+
+
 BUILDERS = [make_shell, make_viewport, make_chair, make_holotable, make_tactical, make_pit, make_vex, make_cradle,
-            make_engineering, make_medical, make_loom, make_holopad]
+            make_engineering, make_medical, make_loom, make_holopad, make_wall_bank, make_overhead_monitor,
+            make_pit_bank]
 
 if __name__ == "__main__":
     for build in BUILDERS:
@@ -363,4 +491,5 @@ if __name__ == "__main__":
         s = build()
         if ONLY and s.name not in ONLY:
             continue
+        apply_display_uvs(s)
         s.export(OUT, bevel=1.0)

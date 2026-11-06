@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AetheriaFlagship.h"
+#include "AetheriaAudio.h"
+#include "Components/AudioComponent.h"
 #include "AetheriaBeamVFX.h"
 #include "AetheriaGameInstance.h"
 #include "AetheriaWeaponVFX.h"
@@ -93,6 +95,9 @@ void AAetheriaFlagship::FireBeam(FVector Target)
 	AttackTarget = nullptr;
 	SetActorRotation(FRotator(0.0f, BeamDir.Rotation().Yaw, 0.0f));
 	PostComms(E_Speaker::VexAI, TEXT("Prismatic array charging."));
+	// the 1.6 s whine stretched to the charge time
+	ChargeAudio = AetheriaAudio::Loop(this, TEXT("S_Beam_Charge"), GetMuzzle(), AetheriaAudio::ERange::Battle, 0.9f,
+		FMath::Clamp(1.6f / FMath::Max(BeamChargeTime, 0.1f), 0.5f, 2.0f));
 
 	// charge flare swelling at the emitter; its lifespan pauses with the game like the charge timer
 	if (AAetheriaImpactFlash* Flare = AAetheriaImpactFlash::Spawn(GetWorld(), GetMuzzle()->GetComponentLocation(),
@@ -114,6 +119,8 @@ void AAetheriaFlagship::DischargeBeam()
 
 	const FVector Start = GetMuzzle()->GetComponentLocation();
 	const FVector End = Start + BeamDir * BeamLength;
+	ChargeAudio = nullptr;
+	AetheriaAudio::PlayAt(this, TEXT("S_Beam_Fire"), Start, AetheriaAudio::ERange::Battle, 0.8f);
 
 	TArray<FHitResult> Hits;
 	FCollisionQueryParams Params(TEXT("PrismaticBeam"), false, this);
@@ -133,7 +140,7 @@ void AAetheriaFlagship::DischargeBeam()
 	int32 Kills = 0;
 	for (AAetheriaShipBase* Victim : Victims)
 	{
-		UGameplayStatics::ApplyDamage(Victim, BeamDamage * DamageMultiplier * ArchitectBoost, nullptr, this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(Victim, BeamDamage * DamageMultiplier * ArchitectBoost, nullptr, this, UAetheriaBeamDamage::StaticClass());
 		AAetheriaImpactFlash::Spawn(GetWorld(), Victim->GetActorLocation(), FLinearColor(0.85f, 0.95f, 1.0f), 500.0f, 0.6f, 600.0f);
 		if (!Victim->IsAlive())
 		{
@@ -174,6 +181,11 @@ void AAetheriaFlagship::InterruptBeam()
 	}
 	GetWorldTimerManager().ClearTimer(BeamChargeTimer);
 	bBeamCharging = false;
+	if (ChargeAudio)
+	{
+		ChargeAudio->FadeOut(0.15f, 0.0f);
+		ChargeAudio = nullptr;
+	}
 	HidePreview();
 	PostComms(E_Speaker::VexAI, TEXT("Silence pulse. Prismatic charge lost. The array is still ready, Captain."));
 }

@@ -72,6 +72,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Battle")
 	bool bBattleOver = false;
 
+	/** The flagship was lost (Return to Command then reopens the council that started the battle) */
+	bool bDefeated = false;
+
 	/** Battle staged from DT_Battles (Act VII); None = the slice's Lantern Drift engagement */
 	UPROPERTY(BlueprintReadOnly, Category="Battle")
 	FName BattleId = NAME_None;
@@ -115,6 +118,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Flow")
 	void RetryEngagement();
+
+	/** Ends the battle as won now, as if the objective fell or the hold ran out (playtest: win_battle) */
+	UFUNCTION(BlueprintCallable, Category="Battle")
+	void ForceVictory();
+
+	/** Ends the battle as lost now, as if the flagship fell (playtest: lose_battle) */
+	UFUNCTION(BlueprintCallable, Category="Battle")
+	void ForceDefeat();
 
 	/** Phantom vessels lost so far in this battle */
 	UFUNCTION(BlueprintPure, Category="Battle")

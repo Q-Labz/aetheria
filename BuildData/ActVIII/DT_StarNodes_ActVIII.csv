@@ -1,0 +1,7 @@
+---,NodeID,DisplayName,Description,MapPos,Encounter,HazardSurcharge
+TitheMarker,TitheMarker,"Tithe Anchorage Marker","Outer marker of Commander Vance's anchorage.","(X=120.000000,Y=420.000000)",Council,0.0
+Rustmarch,Rustmarch,"Rustmarch","A shattered planetoid belt around a small orange star.","(X=380.000000,Y=180.000000)",Event,0.0
+TollLine,TollLine,"The Toll Line","The Tithe's old blockade: derelict toll platforms and live mines.","(X=380.000000,Y=620.000000)",Combat,10.0
+SerenVael,SerenVael,"Seren Vael","The last living Severant world.","(X=700.000000,Y=150.000000)",Council,0.0
+GraftForge,GraftForge,"The Graft Forge","Orbit of Cauter, Grieve's volcanic moon.","(X=720.000000,Y=560.000000)",Combat,0.0
+Grieve,Grieve,"Grieve: Tithe Anchorage","Vance's anchorage in the ring gap of Grieve.","(X=1020.000000,Y=400.000000)",Council,0.0

@@ -115,6 +115,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Act VII")
 	void StartActVII();
 
+	/** Carry the campaign into a data-driven act and reload the command level */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void StartAct(int32 Act);
+
+	/** From an end screen: the act after the current one (Act VII after the slice) */
+	UFUNCTION(BlueprintCallable, Category="Act VII")
+	void StartNextAct();
+
 	/** Arrival at a node of a data-driven act: its arrival sequence, then its councils in order */
 	UFUNCTION(BlueprintCallable, Category="Act VII")
 	void RunNode(FName Node);
@@ -162,8 +170,14 @@ protected:
 	/** Back on the bridge after a data-act battle */
 	void AfterDataBattle();
 
-	/** The act's ending: the second revelation by leaning, then the report and the end screen */
+	/** After a won battle's debrief: the sequence its BackgroundAftermath names for the Captain's background */
+	FName PendingAftermath;
+
+	/** The act's ending: Act VII plays the second revelation by leaning first; then the report and the end screen */
 	void PlayActEnd();
+
+	/** The act-end mission report, built from the campaign state, then the end screen */
+	void PlayActReport();
 
 	/** Points the view at the level's camera tagged CommandCamera */
 	void UseCommandCamera();

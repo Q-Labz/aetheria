@@ -1,0 +1,8 @@
+---,NodeID,DisplayName,Description,MapPos,Encounter,HazardSurcharge
+Grieve,Grieve,"Grieve: Tithe Anchorage","The Anchorage in fleet hands; the act begins here.","(X=120.000000,Y=420.000000)",Council,0.0
+Rustmarch,Rustmarch,"Rustmarch","The shattered belt where the Corsairs want a home.","(X=380.000000,Y=160.000000)",Event,0.0
+SerenVael,SerenVael,"Seren Vael","The last living Severant world.","(X=420.000000,Y=660.000000)",Council,0.0
+MeridianYards,MeridianYards,"The Meridian Yards","A ring of half-built Phantom hulls around Meridian, still guarded.","(X=760.000000,Y=240.000000)",Combat,0.0
+Meridian,Meridian,"Meridian","The Answerer shipyard world; the root of the Automated Fleet Key.","(X=900.000000,Y=470.000000)",Council,0.0
+ForgeEcho,ForgeEcho,"The Forge Echo","The second Event Horizon Forge, at a black hole's photon ring.","(X=700.000000,Y=700.000000)",Event,15.0
+TheHush,TheHush,"The Hush","Starless dark at the galaxy's edge; the Listening Array.","(X=1140.000000,Y=260.000000)",Event,10.0

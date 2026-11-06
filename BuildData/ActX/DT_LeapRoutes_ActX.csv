@@ -1,0 +1,11 @@
+---,FromNode,ToNode,BaseCost
+TheHush_Vigil,TheHush,Vigil,30.0
+Vigil_TheHush,Vigil,TheHush,30.0
+TheHush_GateZero,TheHush,GateZero,55.0
+GateZero_TheHush,GateZero,TheHush,55.0
+Vigil_GateZero,Vigil,GateZero,30.0
+GateZero_Vigil,GateZero,Vigil,30.0
+TheHush_ArchWake,TheHush,ArchWake,45.0
+ArchWake_TheHush,ArchWake,TheHush,45.0
+ArchWake_GateZero,ArchWake,GateZero,50.0
+GateZero_ArchWake,GateZero,ArchWake,50.0

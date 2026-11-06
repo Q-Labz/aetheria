@@ -1,0 +1,538 @@
+[
+  {
+    "Name": "E1_TollLine",
+    "Title": "The Toll Line",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCarrack.BP_TitheCarrack_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "The Carrack is the heaviest hull in the picket. It will try to ram the Dreadnought.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "TalaVane",
+        "Text": "Mines on every flank. Keep the fleet in the lanes.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "TollLineCleared"
+    ],
+    "Debrief": "VIII_E1_Debrief",
+    "WinStates": {},
+    "HoldSecondsByFlag": {}
+  },
+  {
+    "Name": "E1_TollLineStalled",
+    "Title": "The Toll Line",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "JaxMercer",
+        "Text": "No Carrack. Stalling paid for itself, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "TollLineCleared"
+    ],
+    "Debrief": "VIII_E1_Debrief",
+    "WinStates": {},
+    "HoldSecondsByFlag": {}
+  },
+  {
+    "Name": "E2_ForgeDestroy",
+    "Title": "The Graft Forge",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_GraftForge.BP_GraftForge_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": true,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_ForgePylon.BP_ForgePylon_C",
+        "Count": 3,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_GraftedCruiser.BP_GraftedCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Dead"
+        },
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "VexAI",
+        "Text": "Three cable pylons shield the crucible. They must fall before the crucible takes damage.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The grafted cruisers carry Silence emitters. Watch for the blue ring.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "ForgeResolved"
+    ],
+    "Debrief": "VIII_E2_Debrief",
+    "WinStates": {
+      "GraftForgeState": "Destroyed"
+    },
+    "HoldSecondsByFlag": {}
+  },
+  {
+    "Name": "E2_ForgeHold",
+    "Title": "The Graft Forge",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_GraftedCruiser.BP_GraftedCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 4,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_EmitterFrigate.BP_EmitterFrigate_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Dead"
+        },
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 90.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "JaxMercer",
+        "Text": "Boarding teams are on the forge deck. Ninety seconds, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Take it back. Every spike in that crucible is mine.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "ForgeResolved",
+      "SilenceShielding"
+    ],
+    "Debrief": "VIII_E2_Debrief",
+    "WinStates": {
+      "GraftForgeState": "Seized"
+    },
+    "HoldSecondsByFlag": {}
+  },
+  {
+    "Name": "E3_Siege",
+    "Title": "Tithe Anchorage",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_WritOfSector7.BP_WritOfSector7_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": true,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCarrack.BP_TitheCarrack_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCollector.BP_TitheCollector_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_LastSilence.BP_LastSilence_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Alive"
+        },
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 1,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "SeverantAllies"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "LyraChoir",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Writ of Sector 7 to all Remnant ships. Take the Dreadnought intact.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "WardenKesh",
+        "Text": "Severant skiffs on your flank, Captain. We keep the silence off you.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "KeshSkiffsJoin"
+      },
+      {
+        "Speaker": "VexAI",
+        "Text": "The Writ of Sector 7 is the objective. Disable it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "VanceCaptured"
+    ],
+    "Debrief": "VIII_E3_Debrief",
+    "BackgroundAftermath": {
+      "SynodEnvoy": "VIII_Vault_Key",
+      "GuildEngineer": "VIII_Vault_Key",
+      "CoalitionVanguard": "VIII_Vault_Vanguard",
+      "OutcastCorsair": "VIII_Vault_Corsair"
+    },
+    "WinStates": {},
+    "HoldSecondsByFlag": {}
+  },
+  {
+    "Name": "E3_Infiltration",
+    "Title": "Tithe Anchorage",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_WritOfSector7.BP_WritOfSector7_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCollector.BP_TitheCollector_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_LastSilence.BP_LastSilence_C",
+        "Count": 1,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {
+          "ExarchStatus": "Alive"
+        },
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 1,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "SeverantAllies"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_KeshSkiff.BP_KeshSkiff_C",
+        "Count": 2,
+        "bAllied": true,
+        "bObjective": false,
+        "RequiredFlag": "LyraChoir",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 90.0,
+    "WithdrawAtHullPct": 0.0,
+    "OpeningComms": [
+      {
+        "Speaker": "Cormaker",
+        "Text": "Pods are on the spine. Hold the lane, Captain. Ninety seconds.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      },
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Writ of Sector 7 to all Remnant ships. Take the Dreadnought intact.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [
+      "VanceCaptured",
+      "PrisonersFreed"
+    ],
+    "Debrief": "VIII_E3_Debrief",
+    "BackgroundAftermath": {
+      "SynodEnvoy": "VIII_Vault_Key",
+      "GuildEngineer": "VIII_Vault_Key",
+      "CoalitionVanguard": "VIII_Vault_Vanguard",
+      "OutcastCorsair": "VIII_Vault_Corsair"
+    },
+    "HoldSecondsByFlag": {
+      "AnchorageMapped": 60.0
+    },
+    "WinStates": {}
+  },
+  {
+    "Name": "Ambush_ActVIII",
+    "Title": "Remnant Ambush",
+    "Groups": [
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_GraftedCruiser.BP_GraftedCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ForgeResolved",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheCruiser.BP_TitheCruiser_C",
+        "Count": 2,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "ForgeResolved",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      },
+      {
+        "ShipClass": "/Game/Aetheria/Ships/BP_TitheInterceptor.BP_TitheInterceptor_C",
+        "Count": 6,
+        "bAllied": false,
+        "bObjective": false,
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None",
+        "RequiredStates": {},
+        "CountFromState": "None"
+      }
+    ],
+    "HoldSeconds": 0.0,
+    "WithdrawAtHullPct": 0.5,
+    "OpeningComms": [
+      {
+        "Speaker": "CommanderVance",
+        "Text": "Every lane here was built to be watched, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None"
+      }
+    ],
+    "WinFlags": [],
+    "Debrief": "Ambush_ActVIII_Debrief",
+    "WinStates": {},
+    "HoldSecondsByFlag": {}
+  }
+]

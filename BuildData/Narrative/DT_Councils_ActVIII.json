@@ -1,0 +1,453 @@
+[
+  {
+    "Name": "Terms",
+    "Title": "COUNCIL OF COMMAND — TERMS",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Commander Vance has transmitted terms, Captain. I will read them in full. I do not recommend a reply. Surrender the Crystal Dreadnought at Tithe Anchorage, and every other vessel of the fleet goes free: the Phantom squadrons, the Corsairs, the Wayward. He gives us until the fleet reaches Grieve.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "He held Sector 7 with conscripts and called it a duty. Answer him with the fleet, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "'Every other vessel goes free.' He's bargaining with my people's lives to buy your ship.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Keep him talking. Every hour he spends writing terms is an hour he isn't fitting grafts.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "His carrier wave has a back channel in it. Give me a reply to send and I can ride it in.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "CoreArchitect",
+        "Advice": "He wants the ship because he believes the ship is the key. He is half right, Key-Bearer.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "ArchitectSilent"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Terms.DT_Council_Terms",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "FairShares",
+    "Title": "COUNCIL OF COMMAND — FAIR SHARES",
+    "SituationSpeaker": "Cormaker",
+    "Situation": "He sent it to my ship, not yours. I'm telling you because that's what fair looks like. Rustmarch, amnesty, and nobody ever calls us outcasts again. All I have to do is tell him where you are.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "That offer was meant to split the fleet. Cormaker brought it to you. That counts for something.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Four hundred and fifty people and twelve hulls. We need every one of them at Grieve.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "They have been left to die before. Whatever you choose, do not make it feel like that again.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_FairShares.DT_Council_FairShares",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "TollLine",
+    "Title": "THE TOLL LINE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "A Remnant picket holds the Toll Line among the derelict platforms: Tithe cruisers, interceptors, and a heavy siege ship the Tithe calls a Carrack. It rams.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "That Carrack is built to break capital ships. Kill it before it closes.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Or we thread the mines and let them guard an empty lane. It will cost us plating.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_TollLine.DT_Council_TollLine",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "ChoirCalls",
+    "Title": "COUNCIL OF COMMAND — THE CHOIR CALLS",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Severant council will hear the Key-Bearer. Some of them want the Silence kept. Some want it ended. None of them have forgotten who answered the Beacon.",
+    "Counsel": [
+      {
+        "Officer": "WardenKesh",
+        "Advice": "They will listen to me now, Captain. Not because of what I am. Because of what you brought us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Do not ask them for ships first. Ask them what they need.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Every Severant hull at Grieve is one less Phantom we lose.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_ChoirCalls.DT_Council_ChoirCalls",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "ExarchCell",
+    "Title": "THE EXARCH'S CELL",
+    "SituationSpeaker": "VexAI",
+    "Situation": "The Severant council holds the former Exarch Sol Ithane. The council permits one question.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Ask about the forge. That is the only answer that saves lives this week.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Ask what Vance heard. Everyone keeps not telling us.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Lyra",
+        "Advice": "Or leave the Exarch to the people the Exarch failed.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_ExarchCell.DT_Council_ExarchCell",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Choir",
+    "Title": "THE CHOIR",
+    "SituationSpeaker": "Lyra",
+    "Situation": "The Choirs want me back, Captain. For one watch. They say a Weaver of the old line should not sing alone.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "One watch is one more leap for Vance to close.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Let her go. Some debts are not ours to collect.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Choir.DT_Council_Choir",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "Crucible",
+    "Title": "COUNCIL OF COMMAND — THE CRUCIBLE",
+    "SituationSpeaker": "JaxMercer",
+    "Situation": "That crucible grows Silence like coral. Blow it and the grafts stop. Take it, and I can make the stuff work for us.",
+    "Counsel": [
+      {
+        "Officer": "ArisThorne",
+        "Advice": "Whatever that forge grows, it grows in people too. Destroy it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "TalaVane",
+        "Advice": "Destroying it costs us less. Holding it under fire costs us more.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "We know where it breaks. We do not have to fight for it at all.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "ForgeWeakPoint",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "Between Vance's own graft and the Severant agents, I can see the seams. We can take it apart from inside.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "SeverantAgentsCaptured",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Crucible.DT_Council_Crucible",
+    "RequiredFlags": [],
+    "Intro": "None"
+  },
+  {
+    "Name": "GraftedWounded",
+    "Title": "THE GRAFTED",
+    "SituationSpeaker": "ArisThorne",
+    "Situation": "There are Tithe survivors from the forge. The grafts are growing into them. I can treat them with Bio-Gel, Captain, if you allow it.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "Those crews held Sector 7 against everyone who came. Let Vance treat his own.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "They're miners and conscripts, mostly. Same as mine were.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_GraftedWounded.DT_Council_GraftedWounded",
+    "RequiredFlags": [
+      "ForgeResolved"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Approach",
+    "Title": "COUNCIL OF COMMAND — THE ANCHORAGE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "With the forge resolved, the Anchorage's guns can be engaged. Commander Vance's flagship, the Writ of Sector 7, is at the empty dock. We may lay siege with the fleet, or send Commander Cormaker's Boarding Pods for the prison block and the dock controls while the fleet holds the boarding lane.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "There are Coalition prisoners in that spine. A siege will kill some of them.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "My pods can be inside that spine before he knows they've launched.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted"
+      },
+      {
+        "Officer": "NixNull",
+        "Advice": "I mapped the whole spine through his own terms. The pods will not get lost.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "AnchorageMapped",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "Whatever we do, don't wreck the dock.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Approach.DT_Council_Approach",
+    "RequiredFlags": [
+      "ForgeResolved"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "TithePaid",
+    "Title": "COUNCIL OF COMMAND — THE TITHE PAID",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Commander Vance is aboard, under guard. Six hundred Remnant crew have surrendered. The Anchorage is intact. Commander Vance requests to speak to the Captain before sentence. He states he has information concerning the Listener. I note I cannot verify the claim.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "He held Sector 7 with conscripts and called it a duty. Try him, Captain. Under Coalition law, if you want a law.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "His collectors took a third of every ore haul my people ever cut. You want to know what he's owed? Ask a miner.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "The grafted crews are sick. Whatever you decide about him, his people need treatment.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "JaxMercer",
+        "Advice": "That anchorage is the best dock this side of the Arch. Whatever we do, don't wreck it.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "WardenKesh",
+        "Advice": "My people sold him the grafts. We share this, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "CureDelivered",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_TithePaid.DT_Council_TithePaid",
+    "RequiredFlags": [
+      "VanceCaptured"
+    ],
+    "Intro": "None"
+  },
+  {
+    "Name": "Sentence",
+    "Title": "COUNCIL OF COMMAND — SENTENCE",
+    "SituationSpeaker": "VexAI",
+    "Situation": "Commander Vance's logs are copied and sealed. The sentence remains the Captain's.",
+    "Counsel": [
+      {
+        "Officer": "TalaVane",
+        "Advice": "He held Sector 7 with conscripts and called it a duty. Try him, Captain. Under Coalition law, if you want a law.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "Cormaker",
+        "Advice": "His collectors took a third of every ore haul my people ever cut. You want to know what he's owed? Ask a miner.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "CorsairsDeparted"
+      },
+      {
+        "Officer": "ArisThorne",
+        "Advice": "The grafted crews are sick. Whatever you decide about him, his people need treatment.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      },
+      {
+        "Officer": "VexAI",
+        "Advice": "The decision is yours, Captain.",
+        "BackgroundOverride": {},
+        "RequiredFlag": "None",
+        "ForbiddenFlag": "None"
+      }
+    ],
+    "Options": "/Game/Aetheria/Data/DT_Council_Sentence.DT_Council_Sentence",
+    "RequiredFlags": [
+      "VanceHeard"
+    ],
+    "Intro": "None"
+  }
+]

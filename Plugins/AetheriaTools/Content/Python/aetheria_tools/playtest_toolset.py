@@ -13,6 +13,17 @@ def _game_world():
     return world
 
 
+def _set_captain(gi, captain_name, background):
+    """Names the Captain and sets the background, if no Captain was created yet."""
+    if gi.get_editor_property("captain_name"):
+        return
+    gi.set_editor_property("captain_name", captain_name)
+    # E_SynodEnvoy -> SYNOD_ENVOY in Python
+    member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(background)).upper()
+    if hasattr(unreal.E_Background, member):
+        gi.set_editor_property("background", getattr(unreal.E_Background, member))
+
+
 def _game_instance():
     gi = unreal.GameplayStatics.get_game_instance(_game_world())
     if not gi:
@@ -20,9 +31,35 @@ def _game_instance():
     return gi
 
 
+def _widgets(cls):
+    """Live widgets of a class in the PIE world (UMG's widget library is not exposed to Python)."""
+    world = _game_world()
+    found = []
+    for w in unreal.ObjectIterator(cls):
+        try:
+            if w.get_world() == world:
+                found.append(w)
+        except Exception:
+            pass
+    return found
+
+
+def _live(widgets):
+    return [w for w in widgets if w.is_in_viewport()]
+
+
+def _options(council):
+    """The council's option buttons (children of the council, so not in the viewport themselves)."""
+    return [b for b in _widgets(unreal.AetheriaOptionButton) if b.get_editor_property("parent_council") == council]
+
+
+def _line_text(line):
+    return f"{str(line.get_editor_property('speaker')).split('.')[-1].split(':')[0]}: {line.get_editor_property('text')}"
+
+
 @unreal.uclass()
 class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
-    """Playtest shortcuts for a running PIE session of Aetheria: jump into Act VII and read the
+    """Playtest shortcuts for a running PIE session of Aetheria: jump into Act VII or a later act and read the
     campaign state (node, act, flags, standing, supply line, battle) without replaying earlier content."""
 
     @toolset_registry.tool_call
@@ -38,17 +75,42 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             Confirmation.
         """
         gi = _game_instance()
-        if not gi.get_editor_property("captain_name"):
-            gi.set_editor_property("captain_name", captain_name)
-            # E_SynodEnvoy -> SYNOD_ENVOY in Python
-            member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(background)).upper()
-            if hasattr(unreal.E_Background, member):
-                gi.set_editor_property("background", getattr(unreal.E_Background, member))
+        _set_captain(gi, captain_name, background)
         pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
         if not pc or not hasattr(pc, "start_act_vii"):
             raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
         pc.start_act_vii()
         return "Act VII started; the command level reloads at the Ember Relay."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def start_act(act: int, captain_name: str = "Rook", background: str = "SynodEnvoy") -> str:
+        """Carries the running PIE campaign into a data-driven act (7 = The Cinder Archive, 8 = The Iron Tithe,
+        9 = The Threshold, 10 = Gate Zero)
+        at its start node. Earlier acts' choices are not replayed: set any carried flags or states with
+        set_campaign_values afterwards.
+
+        Args:
+            act: Act number, 7 or later; the act's chart (DT_StarNodes_Act<N>) must exist
+            captain_name: Captain name to use if none was entered yet
+            background: SynodEnvoy, GuildEngineer, CoalitionVanguard or OutcastCorsair, if none was chosen yet
+
+        Returns:
+            Confirmation.
+        """
+        if act < 7:
+            raise ValueError("Acts before VII are the slice; start PIE from L_Command instead.")
+        if act == 7:
+            return AetheriaPlaytestToolset.start_act_vii(captain_name, background)
+        gi = _game_instance()
+        if not gi.has_act_data(act):
+            raise RuntimeError(f"Act {act} has no chart yet (DT_StarNodes_Act<N>).")
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "start_act"):
+            raise RuntimeError("The PIE player controller is not PC_Command; start PIE from L_Command.")
+        _set_captain(gi, captain_name, background)
+        pc.start_act(act)
+        return f"Act {act} started; the command level reloads at the act's start node."
 
     @toolset_registry.tool_call
     @staticmethod
@@ -61,21 +123,29 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
         gi = _game_instance()
         flags = sorted(str(f) for f in gi.get_editor_property("story_flags"))
         states = {str(k): str(v) for k, v in gi.get_editor_property("states").items()}
-        return (f"act={gi.get_editor_property('current_act')} node={gi.get_editor_property('current_node')} "
+        loyalty = {str(k).split(".")[-1].split(":")[0]: v for k, v in gi.get_editor_property("crew_loyalty").items()}
+        return (f"act={gi.get_editor_property('current_act')} background={gi.get_editor_property('background')} node={gi.get_editor_property('current_node')} "
                 f"next={gi.get_editor_property('next_screen')} battle={gi.get_editor_property('pending_battle')} "
                 f"standing={gi.get_editor_property('severant_standing')} leaning={gi.get_editor_property('architect_leaning')} "
                 f"instability={gi.get_editor_property('instability'):.0f} pursuit={gi.get_editor_property('pursuit_clock')} "
-                f"hull={gi.get_editor_property('flagship_hull_pct'):.2f} states={states} flags={flags}")
+                f"hull={gi.get_editor_property('flagship_hull_pct'):.2f} phantoms={gi.get_editor_property('phantom_ships_active')} "
+                f"destroyed={gi.get_editor_property('phantom_ships_destroyed')} loyalty={loyalty} states={states} flags={flags}")
 
     @toolset_registry.tool_call
     @staticmethod
-    def set_campaign_values(standing: int = -1000, add_flags: list[str] = [], instability: float = -1.0) -> str:
+    def set_campaign_values(standing: int = -1000, add_flags: list[str] = [], instability: float = -1.0,
+                            set_states: list[str] = [], loyalty: list[str] = [], leaning: int = -1000,
+                            phantoms: int = -1) -> str:
         """Adjusts the running campaign for a test (only the arguments given are changed).
 
         Args:
             standing: Severant standing to set (-1000 leaves it)
             add_flags: Story flags to add
             instability: Star-Drive instability to set (-1 leaves it)
+            set_states: Campaign states as Key=Value, e.g. ExarchStatus=Alive, VanceFate=Released
+            loyalty: Officer loyalty as Officer=Value, e.g. TalaVane=80, NixNull=-10
+            leaning: Architect leaning to set, -100 (Dominion) to 100 (Custodian) (-1000 leaves it)
+            phantoms: Phantom Fleet vessels active, e.g. 180 after Squadron III was alienated (-1 leaves it)
 
         Returns:
             The new state summary.
@@ -90,16 +160,35 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             gi.set_editor_property("story_flags", flags)
         if instability >= 0.0:
             gi.set_editor_property("instability", instability)
+        if set_states:
+            states = gi.get_editor_property("states")
+            for entry in set_states:
+                key, _, value = entry.partition("=")
+                states[key] = value
+            gi.set_editor_property("states", states)
+        if loyalty:
+            crew = gi.get_editor_property("crew_loyalty")
+            for entry in loyalty:
+                officer, _, value = entry.partition("=")
+                # TalaVane -> TALA_VANE in Python
+                member = "".join("_" + c if c.isupper() and i else c for i, c in enumerate(officer)).upper()
+                crew[getattr(unreal.E_Speaker, member)] = int(value)
+            gi.set_editor_property("crew_loyalty", crew)
+        if leaning > -1000:
+            gi.set_editor_property("architect_leaning", leaning)
+        if phantoms >= 0:
+            gi.set_editor_property("phantom_ships_active", phantoms)
         return AetheriaPlaytestToolset.get_campaign_state()
 
     @toolset_registry.tool_call
     @staticmethod
-    def stage_battle(battle: str, node: str = "") -> str:
+    def stage_battle(battle: str, node: str = "", council: str = "") -> str:
         """Opens a DT_Battles battle in the running PIE session (Act VII state), as a council's StartBattle does.
 
         Args:
             battle: DT_Battles row, e.g. E1, E2, E4_Assault
             node: Star node to fight at, which picks the combat scenery (empty keeps the current node)
+            council: DT_Councils row that started the battle (marked held; reopened if the battle is lost)
 
         Returns:
             Confirmation.
@@ -109,9 +198,59 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
             gi.set_editor_property("current_node", node)
         gi.set_editor_property("current_act", max(7, gi.get_editor_property("current_act")))
         gi.set_editor_property("pending_battle", battle)
+        if council:
+            flags = gi.get_editor_property("story_flags")
+            flags.add(f"Council_{council}")
+            gi.set_editor_property("story_flags", flags)
+        gi.set_editor_property("pending_battle_council", council or "None")
         gi.set_editor_property("next_screen", "PostCombat")
         unreal.GameplayStatics.open_level(_game_world(), "L_Combat_LanternDrift")
         return f"Staging {battle} in L_Combat_LanternDrift."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def win_battle(return_to_command: bool = False) -> str:
+        """Wins the battle in the running combat level: every hostile ship dies, as if destroyed in the fight,
+        and a hold battle's timer runs out.
+
+        Args:
+            return_to_command: Then leave the after-action report for the bridge, as its Continue does
+
+        Returns:
+            How many ships died and the campaign state.
+        """
+        world = _game_world()
+        killed = 0
+        for ship in unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaShipBase):
+            if ship.get_editor_property("faction") != unreal.E_Faction.PLAYER:
+                ship.die()
+                killed += 1
+        managers = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaCombatManager)
+        if not managers:
+            raise RuntimeError("The PIE world has no combat manager; stage a battle first.")
+        managers[0].force_victory()
+        if return_to_command:
+            managers[0].return_to_command()
+        return f"{killed} hostile ships destroyed. " + AetheriaPlaytestToolset.get_campaign_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def lose_battle(return_to_command: bool = False) -> str:
+        """Loses the battle in the running combat level, as if the Crystal Dreadnought fell.
+
+        Args:
+            return_to_command: Then withdraw to the bridge, as the after-action report's Return to Command does
+
+        Returns:
+            The campaign state.
+        """
+        managers = unreal.GameplayStatics.get_all_actors_of_class(_game_world(), unreal.AetheriaCombatManager)
+        if not managers:
+            raise RuntimeError("The PIE world has no combat manager; stage a battle first.")
+        managers[0].force_defeat()
+        if return_to_command:
+            managers[0].return_to_command()
+        return AetheriaPlaytestToolset.get_campaign_state()
 
     @toolset_registry.tool_call
     @staticmethod
@@ -132,8 +271,153 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
                 flags.add(flag)
             gi.set_editor_property("story_flags", flags)
         gi.set_editor_property("current_node", node)
+        # a leap broadcasts the change, which is what switches the node scenery (AAetheriaNodeScenery)
+        gi.on_campaign_state_changed.broadcast()
         pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
         if not pc or not hasattr(pc, "run_node"):
             raise RuntimeError("The PIE player controller is not PC_Command.")
         pc.run_node(node)
         return f"At {node}."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def list_ships(ship_class: str = "AetheriaShipBase") -> str:
+        """Lists the ships of a class in the running combat level: name, faction, hull and, for synced squadrons,
+        hulls lost and whether the squadron is disabled.
+
+        Args:
+            ship_class: C++ class name without the A prefix, e.g. AetheriaSyncedSquadron, AetheriaShipBase
+
+        Returns:
+            One line per ship.
+        """
+        cls = getattr(unreal, ship_class, None)
+        if cls is None:
+            raise ValueError(f"Unknown class {ship_class}.")
+        lines = []
+        for ship in unreal.GameplayStatics.get_all_actors_of_class(_game_world(), cls):
+            line = (f"{ship.get_editor_property('display_name')} faction={ship.get_editor_property('faction')} "
+                    f"hull={ship.get_editor_property('hull'):.0f}/{ship.get_editor_property('max_hull'):.0f} "
+                    f"dead={ship.get_editor_property('is_dead')}")
+            if hasattr(ship, "is_disabled"):
+                line += f" disabled={ship.is_disabled()}"
+            if isinstance(ship, unreal.AetheriaSyncedSquadron):
+                line += f" lost={ship.get_editor_property('ships_lost')}"
+            lines.append(line)
+        return "\n".join(lines) or "No ships of that class."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def fire_beam(target_class: str = "AetheriaSyncedSquadron") -> str:
+        """Fires the Crystal Dreadnought's Prismatic Stellar Beam at the first living ship of a class, as an aimed
+        Q + click does. The beam charges in game time: unpause the battle for it to land.
+
+        Args:
+            target_class: C++ class name without the A prefix, e.g. AetheriaSyncedSquadron
+
+        Returns:
+            What was targeted, or why the beam cannot fire.
+        """
+        world = _game_world()
+        flagships = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.AetheriaFlagship)
+        if not flagships:
+            raise RuntimeError("No Crystal Dreadnought in the PIE world; stage a battle first.")
+        flagship = flagships[0]
+        if not flagship.can_fire_beam():
+            return f"The beam is not ready ({flagship.get_beam_cooldown_remaining():.0f} s)."
+        targets = [s for s in unreal.GameplayStatics.get_all_actors_of_class(world, getattr(unreal, target_class))
+                   if not s.get_editor_property("is_dead")]
+        if not targets:
+            return f"No living {target_class}."
+        flagship.fire_beam(targets[0].get_actor_location())
+        return f"Beam charging at {targets[0].get_editor_property('display_name')}."
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def screen() -> str:
+        """Says what the command level shows now: the dialogue line, the council and its available options
+        (labels and hints, as the player sees them), or the star map.
+
+        Returns:
+            One line per item on screen.
+        """
+        out = []
+        for d in _live(_widgets(unreal.AetheriaDialogue)):
+            lines = d.get_editor_property("lines")
+            i = d.get_editor_property("index")
+            if 0 <= i < len(lines):
+                out.append(f"dialogue {i + 1}/{len(lines)} " + _line_text(lines[i]))
+        for c in _live(_widgets(unreal.AetheriaCouncil)):
+            out.append(f"council {c.get_editor_property('council_def')}")
+            for b in _options(c):
+                o = b.get_editor_property("option")
+                out.append(f"  option '{o.get_editor_property('label')}' ({o.get_editor_property('approval_hint')})")
+        if _live(_widgets(unreal.AetheriaStarMap)):
+            out.append("star map")
+        return "\n".join(out) or "nothing (between screens)"
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def advance(max_lines: int = 60) -> str:
+        """Continues dialogue line by line, as Enter does, until a council or the star map is up (or nothing is).
+
+        Args:
+            max_lines: Safety limit on lines continued
+
+        Returns:
+            The lines that were shown (raw text, before background overrides), then what is on screen.
+        """
+        shown = []
+        for _ in range(max_lines):
+            dialogues = _live(_widgets(unreal.AetheriaDialogue))
+            if not dialogues:
+                break
+            d = dialogues[0]
+            lines = d.get_editor_property("lines")
+            i = d.get_editor_property("index")
+            if 0 <= i < len(lines):
+                shown.append(_line_text(lines[i]))
+            d.continue_()
+        return "\n".join(shown + ["-- now: " + AetheriaPlaytestToolset.screen()])
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def choose(label: str) -> str:
+        """Picks a council option, as clicking it does.
+
+        Args:
+            label: The option's label, or a unique part of it (case-insensitive)
+
+        Returns:
+            The outcome's first lines and what is on screen after.
+        """
+        councils = _live(_widgets(unreal.AetheriaCouncil))
+        if not councils:
+            raise RuntimeError("No council is on screen. " + AetheriaPlaytestToolset.screen())
+        options = [b.get_editor_property("option") for b in _options(councils[0])]
+        matches = [o for o in options if label.lower() in str(o.get_editor_property("label")).lower()]
+        if len(matches) != 1:
+            raise RuntimeError(f"'{label}' matches {len(matches)} options: " +
+                               "; ".join(str(o.get_editor_property("label")) for o in options))
+        councils[0].choose_option(matches[0])
+        return f"Chose '{matches[0].get_editor_property('label')}'.\n" + AetheriaPlaytestToolset.screen()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def leap(node: str) -> str:
+        """Leaps to a node as the star map's Leap does: leap cost, instability, ruptures, then the arrival.
+
+        Args:
+            node: Node to leap to; it must have a lane from the current node
+
+        Returns:
+            The leap report and the campaign state.
+        """
+        gi = _game_instance()
+        pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
+        if not pc or not hasattr(pc, "on_arrive"):
+            raise RuntimeError("The PIE player controller is not PC_Command.")
+        encounter = gi.execute_leap(node)
+        report = str(gi.get_editor_property("last_report"))
+        pc.on_arrive(encounter)
+        return report + "\n" + AetheriaPlaytestToolset.get_campaign_state()
