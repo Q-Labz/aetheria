@@ -29,7 +29,12 @@ namespace
 	}
 
 	const TCHAR* CruiserMesh = TEXT("/Game/Aetheria/Meshes/SM_TitheCruiser.SM_TitheCruiser");
-	const TCHAR* InterceptorMesh = TEXT("/Game/Aetheria/Meshes/SM_TitheInterceptor.SM_TitheInterceptor");
+	const TCHAR* CarrackMesh = TEXT("/Game/Aetheria/Meshes/SM_TitheCarrack.SM_TitheCarrack");
+	const TCHAR* CollectorMesh = TEXT("/Game/Aetheria/Meshes/SM_TitheCollector.SM_TitheCollector");
+	const TCHAR* WritMesh = TEXT("/Game/Aetheria/Meshes/SM_WritOfSector7.SM_WritOfSector7");
+
+	// where the graft spike stands on SM_WritOfSector7 (make_tithe_hd.py), in the Writ's local space
+	const FVector WritSpikeOffset(-40.0f, 0.0f, 150.0f);
 }
 
 // ---- AAetheriaGraftedShip -----------------------------------------------------------------------
@@ -91,7 +96,7 @@ AAetheriaTitheCarrack::AAetheriaTitheCarrack()
 	WeaponRange = 900.0f;
 
 	GetCollision()->InitSphereRadius(560.0f);
-	SetTitheMesh(this, CruiserMesh, 1.35f);
+	SetTitheMesh(this, CarrackMesh, 1.0f);
 }
 
 void AAetheriaTitheCarrack::Tick(float DeltaSeconds)
@@ -141,7 +146,7 @@ AAetheriaTitheCollector::AAetheriaTitheCollector()
 	WeaponRange = 500.0f;
 
 	GetCollision()->InitSphereRadius(220.0f);
-	SetTitheMesh(this, InterceptorMesh, 1.4f);
+	SetTitheMesh(this, CollectorMesh, 1.0f);
 }
 
 void AAetheriaTitheCollector::Tick(float DeltaSeconds)
@@ -219,7 +224,7 @@ AAetheriaWritOfSector7::AAetheriaWritOfSector7()
 	PulseInterval = 12.0f;
 
 	GetCollision()->InitSphereRadius(650.0f);
-	SetTitheMesh(this, CruiserMesh, 1.6f);
+	SetTitheMesh(this, WritMesh, 1.0f);
 
 	SpikeClass = TSoftClassPtr<AAetheriaWritGraftSpike>(FSoftObjectPath(TEXT("/Game/Aetheria/Ships/BP_WritGraftSpike.BP_WritGraftSpike_C")));
 }
@@ -241,7 +246,7 @@ void AAetheriaWritOfSector7::BeginPlay()
 	}
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	const FVector Where = GetActorLocation() + FVector(0.0f, 0.0f, 450.0f);
+	const FVector Where = GetActorTransform().TransformPosition(WritSpikeOffset);
 	Spike = GetWorld()->SpawnActor<AAetheriaWritGraftSpike>(Class, Where, GetActorRotation(), Params);
 	if (Spike)
 	{
@@ -343,7 +348,9 @@ AAetheriaWritGraftSpike::AAetheriaWritGraftSpike()
 	WeaponDamage = 0.0f;
 	FireInterval = 0.0f;
 	GetCollision()->InitSphereRadius(200.0f);
-	SetTitheMesh(this, TEXT("/Game/Aetheria/Environments/SM_BastionPylon.SM_BastionPylon"), 0.8f);
+	// the spike itself is part of SM_WritOfSector7; this actor is its hit volume and health bar
+	GetHullMesh()->SetVisibility(false);
+	GetHullMesh()->SetHiddenInGame(true);
 }
 
 void AAetheriaWritGraftSpike::Die()
@@ -364,12 +371,15 @@ AAetheriaForgePylon::AAetheriaForgePylon()
 {
 	DisplayName = FText::FromString(TEXT("Forge cable pylon"));
 	MaxHull = 1800.0f;
+	SetTitheMesh(this, TEXT("/Game/Aetheria/Environments/SM_ForgePylon.SM_ForgePylon"), 1.0f);
 }
 
 AAetheriaGraftForge::AAetheriaGraftForge()
 {
 	DisplayName = FText::FromString(TEXT("The Graft Forge crucible"));
 	MaxHull = 8000.0f;
+	// the whole forge at half size: the crucible ring sits on the combat plane
+	SetTitheMesh(this, TEXT("/Game/Aetheria/Environments/SM_GraftForge.SM_GraftForge"), 0.5f);
 	bHasSilenceEmitter = true;
 	PulseRadius = 2000.0f;
 	PulseInterval = 12.0f;

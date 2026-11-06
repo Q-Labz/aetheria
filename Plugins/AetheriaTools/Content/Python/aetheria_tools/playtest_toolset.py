@@ -245,6 +245,8 @@ class AetheriaPlaytestToolset(unreal.ToolsetDefinition):
                 flags.add(flag)
             gi.set_editor_property("story_flags", flags)
         gi.set_editor_property("current_node", node)
+        # a leap broadcasts the change, which is what switches the node scenery (AAetheriaNodeScenery)
+        gi.on_campaign_state_changed.broadcast()
         pc = unreal.GameplayStatics.get_player_controller(_game_world(), 0)
         if not pc or not hasattr(pc, "run_node"):
             raise RuntimeError("The PIE player controller is not PC_Command.")

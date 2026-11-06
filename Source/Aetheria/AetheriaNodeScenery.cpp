@@ -31,6 +31,8 @@ AAetheriaNodeScenery::AAetheriaNodeScenery()
 	NodeLightColors.Add(TEXT("Grieve"), FLinearColor(0.92f, 0.80f, 0.72f)); // Grieve's rust-banded glow
 	NodeLightColors.Add(TEXT("Rustmarch"), FLinearColor(1.0f, 0.74f, 0.45f)); // the small orange star
 	NodeLightColors.Add(TEXT("SerenVael"), FLinearColor(0.92f, 0.96f, 1.0f)); // salt-white glare
+	NodeLightColors.Add(TEXT("TollLine"), FLinearColor(0.96f, 0.84f, 0.80f)); // Grieve's light on derelict gunmetal
+	NodeLightColors.Add(TEXT("GraftForge"), FLinearColor(1.0f, 0.70f, 0.50f)); // Cauter's lava glow
 	NodeLightColors.Add(TEXT("MeridianYards"), FLinearColor(0.78f, 0.96f, 1.0f)); // crystal veins of the yard ring
 	NodeLightColors.Add(TEXT("Meridian"), FLinearColor(0.80f, 0.95f, 1.0f)); // the ecumenopolis lattice
 	NodeLightColors.Add(TEXT("ForgeEcho"), FLinearColor(1.0f, 0.78f, 0.52f)); // the accretion disc

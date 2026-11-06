@@ -385,3 +385,19 @@ Rustmarch}. Phantom Fleet strength: {X} of 200. Report ends."
   nothing. Playtest additions: `win_battle` also ends hold battles (`ForceVictory`), `lose_battle` (`ForceDefeat`),
   `stage_battle(..., council=...)`. Not yet seen in play: the ram, grapple and spike behaviours under real combat, and
   the state-driven groups (Ithane, loyalists, Severant allies), which need a states setter in the playtest tools.
+- **Assets and scenery (phase 5).** `Tools/Blender/make_tithe_hd.py` builds the Act VIII meshes with the HD kit
+  (1 unit = 1 uu): SM_TitheCarrack (583 long), SM_TitheCollector (256), SM_WritOfSector7 (673, graft spike to z 195),
+  SM_TitheAnchorage (3.9 km), SM_GraftForge (1.8 km tall), SM_ForgePylon, SM_TollPlatform, SM_TollMine. Like the other
+  HD meshes the FBXs are not kept in `Source_Art` (rebuild with the script); the assets are in /Game/Aetheria/Meshes and
+  /Environments with Nanite on and the Tithe hostile instances per slot (Writ, forge and pylons light Silence blue,
+  MI_Lights_Severant). The ships use their own meshes now (scale 1); the Writ's spike target is an invisible hit volume
+  on the mesh's spike; the forge objective is SM_GraftForge at half size.
+- **Node scenery.** MI_Planet_Cauter (WORLD_BIBLE 3.5.3 palette). Tagged `Node_<Id>` in both maps: the Toll Line has
+  three derelict platforms, a minefield (14 on the bridge, 18 in combat) and a distant Grieve; the Graft Forge has
+  Cauter below, Grieve behind and, through the viewport, the forge itself (in combat the forge is the E2 objective);
+  Grieve gains the Tithe Anchorage across the viewport and at the edge of the combat field. Node lights: TollLine
+  pale red-gunmetal, GraftForge lava orange. Checked in PIE: each node shows only its own scenery (TollLine 19/23,
+  GraftForge 4/3, Grieve 6/6 pieces on the bridge/in combat), and E3 with `ExarchStatus = Alive`, `SeverantAllies = 4`
+  and `LyraChoir` fields *The Last Silence* and six Kesh skiffs. `go_to_node` now broadcasts the campaign change,
+  as a leap does, so the bridge scenery follows it.
+
